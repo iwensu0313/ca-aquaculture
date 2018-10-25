@@ -1,32 +1,22 @@
 source("global.R")
 
-###Setting up the dashboard page
+### Setting up the dashboard page
 dashboardPage(
   dashboardHeader(
-    title = "OHI Global Data Explorer",
+    title = "Aquaculture in California",
     titleWidth = 300),
   
 ### Dashboard Sidebar  
   dashboardSidebar(
     
     sidebarMenu(
-      menuItem("The OHI Story", tabName = "dashboard", icon = icon("globe", lib="glyphicon")),
-      # menuItem("Livelihoods & Economies", tabName = "liveco"),
-      # menuItem("Tourism & Recreation", tabName = "tr"),
-      # menuItem("Biodiversity", tabName = "bio"),
-      # menuItem("Sense of Place", tabName = "sop"),
-      # menuItem("Artisanal Opportunities", tabName = "ao"),
-      # menuItem("Food Provision", tabName = "fp"),
-      menuItem("Mariculture", tabName = "mar")
-      #,
-      # menuItem("Fisheries", tabName = "fis"),
-      # menuItem("Coastal Protection", tabName = "cp"),
-      # menuItem("Carbon Storage", tabName = "cs")
+      menuItem("About", tabName = "dashboard"),
+      menuItem("Global Data", tabName = "mar", icon = icon("globe", lib="glyphicon"))
   ),
   
   # Footer tag, include hyperlink
-  tags$a(href="http://ohi-science.org/globalfellows/fellows.html", 
-  tags$footer("\u00a9 Iwen Su, OHI Global Fellow", align = "right", style = "
+  tags$a(href="https://iwensu0313.github.io/", 
+  tags$footer("\u00a9 Iwen Su", align = "right", style = "
               position:absolute;
               bottom:0;
               width:100%;
@@ -57,74 +47,7 @@ dashboardPage(
             
             ),
     
-    ## FOR BUILDING OUT FUTURE GOALS ##
-    # ## Livelihood and economies ## 
-    # 
-    # tabItem(tabName = "liveco",
-    #         
-    #         ## Livelihoods & Economies tab title ##
-    #         tab_title_ui(goal_text = "LIVELIHOODS & ECONOMIES",
-    #                      definition = "",
-    #                      goal_description = "")
-    #         ),
-    # 
-    #         
-    # ## Tourism & recreation ##
-    # 
-    # tabItem(tabName = "tr",
-    #         
-    #         ## Tourism & Recreation tab title ##
-    #         tab_title_ui(goal_text = "TOURISM & RECREATION",
-    #                      definition = "",
-    #                      goal_description = "")
-    #         
-    #         ),
-    # 
-    # ## Biodiversity ##
-    # 
-    # tabItem(tabName = "bio",
-    #         
-    #         ## Biodiversity tab title ##
-    #         tab_title_ui(goal_text = "BIODIVERSITY",
-    #                      definition = "",
-    #                      goal_description = "")
-    #         
-    #         ),
-    # 
-    # ## Sense of Place ##
-    # 
-    # tabItem(tabName = "sop",
-    #         
-    #         ## Sense of Place tab title ##
-    #         tab_title_ui(goal_text = "SENSE OF PLACE",
-    #                      definition = "",
-    #                      goal_description = "")
-    #         
-    #         ),
-    # 
-    # ## Local Fishing & Resource Access Opportunities  ##
-    # 
-    # tabItem(tabName = "ao",
-    #         
-    #         ## Local Fishing & Resource Access Opportunities tab title ##
-    #         tab_title_ui(goal_text = "ARTISANAL FISHING OPPORTUNITY",
-    #                      definition = "",
-    #                      goal_description = "")
-    #         
-    #         ),
-    # 
-    # ## Food Provision ##
-    # 
-    # tabItem(tabName = "fp",
-    #         
-    #         ## Food Provision tab title ##
-    #         tab_title_ui(goal_text = "FOOD PROVISION",
-    #                      definition = "",
-    #                      goal_description = "")
-    #         
-    # ),
-    
-    
+   
     ## Mariculture ##
     
     tabItem(tabName = "mar",
@@ -167,47 +90,7 @@ dashboardPage(
                       p(tags$sup("1."), tags$a(href="http://www.fao.org/fishery/statistics/software/fishstatj/en", "Food and Agriculture Organization"), ", Global Aquaculture Production Quantity (March 2018)"))
                       
                      )
-
             )
-    #,
-    
-    
-    
-    
-    
-    
-    # ## Fisheries ##
-    # 
-    # tabItem(tabName = "fis",
-    #         
-    #         ## Fisheries tab title ##
-    #         tab_title_ui(goal_text = "FISHERIES",
-    #                      definition = "the sustainable harvest of seafood from wild-caught fisheries",
-    #                      goal_description = "sustainably wild-caught seafood from fisheries")
-    #         
-    # ),
-    # 
-    # ## Coastal Protection ##
-    # 
-    # tabItem(tabName = "cp",
-    #         
-    #         ## Coastal Protection tab title ##
-    #         tab_title_ui(goal_text = "COASTAL PROTECTION",
-    #                      definition = "the amount of protection provided by marine and coastal habitats serving as natural buffers against incoming waves",
-    #                      goal_description = "storage of carbon and protection of our coasts from storm damage by living natural habitats")
-    #         
-    #         ),
-    # 
-    # ## Carbon Storage ##
-    # 
-    # tabItem(tabName = "cs",
-    #         
-    #         ## Carbon Storage tab title ##
-    #         tab_title_ui(goal_text = "CARBON STORAGE",
-    #                      definition = "the condition of coastal habitats that store and sequester atmospheric carbon",
-    #                      goal_description = "storage of carbon and protection of our coasts from storm damage by living natural habitats")
-    #         
-    # )
     
   )
     )

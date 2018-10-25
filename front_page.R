@@ -2,37 +2,37 @@ frontp = function()
   div(class = "frontp",
       
       # Create homepage title banner and image
-      div(class = "front-banner-test",
+      div(class = "front-banner",
           tags$img(src = "img/home-banner-crop.jpg", style="width:100%"),
-          div(class = "content", ("Explore the Data Behind the Global Ocean Health Index"))
+          div(class = "content", ("Farming the Ocean"))
         ),
       
       
       # Home page text
-      tags$p(h4("The Ocean Health Index Global Data Explorer lets you interact with the data behind the most recent assessment.")),
+      tags$p(h4("Cultivating food from the nutrient-rich waters of California.")),
       
       div(class = "intro-divider"), 
       
       # Additional information
-      tags$p("The Ocean Health Index is a tailorable marine assessment framework to comprehensively and quantitatively evaluate ocean health. Originally developed by an interdisciplinary team of scientists, global assessments have been repeated every year since 2012."),
+      tags$p("Aquaculture is gaining popularity with the new generation. "),
       
-      tags$p("Currently, we only have data exploration available for our Mariculture sub-goal, but the remaining 10 goals will be available in the near future. Other goals include Tourism & Recreation, Clean Waters, Biodiversity, Artisanal Opportunities, Carbon Storage, and Natural Products."),
+      tags$p("Currently, you can explore data for global mariculture production."),
       
       # Two hyperlink boxes: more info
       div(class = "box-con",
           
           tags$a(target = "_blank",
-                 href = "http://ohi-science.org/about/#what-is-the-ocean-health-index",
+                 href = "https://aquaculturematters.ca.gov/",
                  div(class = "float box box-more",
-                     tags$p(class = "intro-text", "Overview"),
-                     tags$p("What is the Ocean Health Index?")
+                     tags$p(class = "intro-text", "Stay Up to Date"),
+                     tags$p("Why aquaculture matters.")
                      )),
           
           tags$a(target = "_blank",
-                 href = "http://ohi-science.org/ohi-global/",
+                 href = "https://www.greenwave.org/california-permitting-analysis/",
                  div(class = "float box box-rear",
-                     tags$p(class = "intro-text", "Deep Dive"),
-                     tags$p("The Ocean Health Index Global Assessment is produced from a collaborative team of scientists based in Santa Barbara. Click here for documentation of methods, data, and publications.") 
+                     tags$p(class = "intro-text", "Getting Started"),
+                     tags$p("GreenWave has outlined the permitting process for setting up an ocean farm in California.") 
                      ))
           )
       )
