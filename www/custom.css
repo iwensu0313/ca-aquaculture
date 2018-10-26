@@ -1,5 +1,10 @@
 @import url('//fonts.googleapis.com/css?family=Rokkitt|Lato:400,700');
 
+/* master settings */
+.master {
+  max-width: 700px;
+}
+
 /* main text elements */
 h1, h2, h3, h4{
   font-family: 'Lato', sans-serif;
@@ -61,24 +66,31 @@ h1, h2, h3, h4{
 
 
 
-/* Testing front banner style, front-banner works and creates height of section */
+/* front banner style, front-banner works and creates height of section */
 .front-banner {
    position: relative;
-   max-width: 1000px;  /* Max width of image banner */
+   max-width: 700px;  /* Max width of image banner */
    margin: 0 auto; /* Center image banner */
 }
 
-
-.front-banner .content {
-   font-family: 'Lato', sans-serif;
-   font-size: 27px;
-   width: 40%; /* Full width */
-   height: 10px;
-   top: 0; /* top:0, bottom:1 */
-   right: 1; /* right:0, left:1 */
-   color: #f1f1f1; /* Grey text */
-   background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+.front-banner .content-box {
+  color: #f1f1f1; /* Grey text */
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+  max-width: 250px;
+  width: 250px; /* Percent of front banner width */
+  height: 120px; /* Not working */
+  position: absolute;
+  top: 0; /* top-0, bottom-1 */
+  right: 1; /* right-0, left-1 */
+  padding: 20px 20px;
 }
+
+.front-banner .content-box .text {
+  font-family: 'Lato', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+}
+
 
 
 

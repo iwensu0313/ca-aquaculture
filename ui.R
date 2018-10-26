@@ -52,6 +52,8 @@ dashboardPage(
     
     tabItem(tabName = "mar",
             
+          div(class = "master",       
+              
           ## Mariculture Tab Title ##
           tab_title_ui(goal_text = "MARICULTURE",
                        goal_description = "Global mariculture has been growing impressively since the 1980s, while wild-caught fishery production has remained relatively static.",
@@ -75,7 +77,8 @@ dashboardPage(
                    p(tags$sup("1."), tags$a(href="http://www.fao.org/fishery/statistics/software/fishstatj/en", "Food and Agriculture Organization"), ", Global Aquaculture Production Quantity (March 2018)"),
                    p(tags$sup("2."), tags$a(href="http://sedac.ciesin.columbia.edu/data/collection/gpw-v4/documentation","Center for International Earth Science Information Network"), ", Gridded Population of the World, V4 (2016).")
                    )
-                 ),
+                 ), # end of MAR map ui
+          
           
           ## Annual Mariculture Production ##
            card_ui(id = "mar_prod",
@@ -88,11 +91,11 @@ dashboardPage(
                     source_text = list(
                       p("Sources:"),
                       p(tags$sup("1."), tags$a(href="http://www.fao.org/fishery/statistics/software/fishstatj/en", "Food and Agriculture Organization"), ", Global Aquaculture Production Quantity (March 2018)"))
-                      
-                     )
-            )
-    
-  )
-    )
-  )
+                   ) # end of card UI
+           ) # end div-master
+          ) # end MAR tabItem
+    ) # end tabItems 
+
+ ) # end dashboardBody
+) # end dashboardPage
 

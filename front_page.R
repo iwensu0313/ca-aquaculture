@@ -1,10 +1,12 @@
 frontp = function() 
-  div(class = "frontp",
+  
+  div(class = "master",
       
       # Create homepage title banner and image
       div(class = "front-banner",
           tags$img(src = "img/home-banner-crop.jpg", style="width:100%"),
-          div(class = "content", ("Farming the Ocean"))
+          div(class = "content-box", 
+              tags$p(class = "text", "Farming the Ocean"))
         ),
       
       
