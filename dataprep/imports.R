@@ -1,7 +1,9 @@
 ##CALIFORNIA FISHERIES IMPORT DATA
 
 ## Data Source
-# NOAA Fisheries Statistics
+# NOAA Fisheries Statistics - Cumulative Trade Data by U.S. Customs District
+# Link: https://www.st.nmfs.noaa.gov/commercial-fisheries/foreign-trade/applications/trade-by-specific-us-customs-district
+# Downloaded each year one at a time, make sure to select December for the 'Month' drop-down to get data from Jan-Dec
 # Timeseries: 2014-2018
 # Format: ASCII
 # Downloaded: 10/30/2018
@@ -12,15 +14,17 @@
 # Check if USD needs to be corrected for inflation
 library(validate)
 library(tidyverse)
+library(plotly)
 
 
 ## Read in California Import Data from NOAA
-data_years <- 2014:2018
+data_years <- 2014:2017
 data <- list()
 
-for(i in data_years){
+for(i in data_years){ # i = 2014
   
-  dat <- read.csv(sprintf("int/trade_%s.results", i), header = FALSE, skip = 1, sep = "|")
+  dat <- read.csv(sprintf("int/trade_%s.data_in", i), header = FALSE, skip = 1, sep = "|") %>% 
+    mutate(V1 = i)
   # save each year's data into a list
   list_name <- as.character(i)
   data[[list_name]] <- dat
@@ -29,22 +33,61 @@ for(i in data_years){
 
 
 ## Clean up data tables
+# Need to hand select Edible products, change with original source online
 # Column names should be: Year, Edible, Product Name, Country, Kilos, Dollars
-colnames = c("Year", "Edible", "Product", "Country", "Kilos", "Dollars")
+colnames = c("Year", "Product", "Country", "Kilos", "Dollars")
 
 tidy <- function(x) {
   ## clean up dataframe
-  tmp <- x[!(names(x) %in% c("V1", "V8"))]
+  tmp <- x[!(names(x) %in% c("V4", "V5", "V8"))]
   tmp <- setNames(tmp, colnames)
-  
-  tmp <- tmp %>% 
-    filter(Edible == "E") %>% 
-    select(-Edible)
 }
 
 tidy_data <- lapply(data, tidy)
 
-## Combine (Note: for larger dataset, maybe we don't want to bind it into one)
+# Combine (Note: for larger dataset, maybe we don't want to bind it into one)
 all_data <- map_df(tidy_data, rbind)
 
 summary(all_data)
+
+
+## Summarize information
+
+dollas <- all_data %>% 
+  group_by(Year, Product, Country) %>% 
+  summarize(Dollars = sum(Dollars),
+            Kilos = sum(Kilos)) %>% 
+  mutate(AvgRate = Dollars/Kilos) %>%
+  ungroup() %>% 
+  group_by(Year, Product) %>%
+  mutate(TotalValue = sum(Dollars),
+         TotalKilos = sum(Kilos)) %>% 
+  ungroup()
+
+# Plot timeseries of product values (aggregate countries)
+plot_dollas <- dollas %>% 
+  select(Year, Product, TotalValue) %>%
+  mutate(Category = case_when(
+    str_detect(Product, "^ABALONE") ~ "Abalone",
+    str_detect(Product, "^ANCHOVY") ~ "Anchovy",
+    str_detect(Product, "^AQUATIC INVERTEBRATES") ~ "Aquatic Invertebrates",
+    str_detect(Product, ".*MACKEREL.*") ~ "Mackerel",
+    str_detect(Product, "^BONITO YELLOWTAIL") ~ "Bonito Yellowtail",
+    str_detect(Product, "^CARP CATFISH EELS") ~ "Carp, Catfish, Eels, Misc",
+    str_detect(Product, "^CATFISH") ~ "Catfish"
+  )) %>% 
+  distinct() %>% 
+  na.omit() %>% # remove species you haven't categorized yet 
+  group_by(Year, Category) %>% 
+  summarize(TotalValue = sum(TotalValue)) %>% 
+  ungroup
+
+my_plot <- ggplot(plot_dollas, aes(x=Year, y=TotalValue)) + 
+  geom_line(aes(col=Category))
+
+ggplotly(my_plot)
+
+
+
+
+
