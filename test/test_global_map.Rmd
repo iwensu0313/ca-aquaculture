@@ -5,11 +5,14 @@ output: html_document
 ---
 
 # Setup
-```{r}
+```{r, message=FALSE,warning=FALSE}
+
 library(rgdal)
 library(dplyr)
 library(leaflet)
+library(here)
 
+setwd(here())
 source("global.R")
 
 ## Define color palette
@@ -22,7 +25,8 @@ ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200]
 ## Read in OHI Region Shapefile 
 Note: is there a way to read in the shapefile with the github url?
 ```{r}
-ohi_regions <-  sf::st_read('../ohiprep/globalprep/spatial/downres', "rgn_all_gcs_low_res")
+
+ohi_regions <-  sf::st_read("int/spatial", "rgn_all_gcs_low_res")
 rgns_leaflet <- ohi_regions %>%
   filter(rgn_typ == "eez")
 ```
@@ -81,7 +85,7 @@ leaflet(data_shp,
               weight = 0.5, 
               smoothFactor = 0.5,
               opacity = 1.0, 
-              fillOpacity = 0.7,
+              fillOpacity = 1.0,
               fillColor = ~pal(map_data),
               popup = popup_text, 
               highlightOptions = highlightOptions(color = "white", 

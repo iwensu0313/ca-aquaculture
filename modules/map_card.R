@@ -167,24 +167,23 @@ card_map <- function(input,
                      legend_title = NA,
                      labels = NA,
                      popup_title = NA
-                     ) {
+) {
   
   # attach data to rgn shapefile
   data_shp <- rgns_leaflet %>%
     left_join(data, by = "rgn_id") 
-
+  
   # if not allowing user to select multiple inputs?
   if (field != "input") {
     output$plot <- renderLeaflet({
-     
+      
       # get popup for a single line
       popup_text <- paste("<h5><strong>", paste(data_shp[[popup_title]],": ", sep=""), "</strong>", prettyNum(signif(data_shp[[field]],3), big.mark=",", scientific=FALSE), data_shp[[display_units]], "</h5>")
       
       # get color pal
       pal <- colorQuantile(palette = color_palette,
-                          domain = data_shp[[field]],
-                          na.color = "#00000000",
-                          alpha = 0.4)
+                           domain = data_shp[[field]],
+                           na.color = "#DCDCDC", alpha = 0.4)
       
       leaflet(data_shp,
               options = leafletOptions(zoomControl = FALSE)) %>%
@@ -219,24 +218,23 @@ card_map <- function(input,
       df <- data_shp %>% filter(!!filter_field == input$select)
       
       return(df)
-    
+      
     })
     
-  
+    
     # render the map plot based on the selected data
     output$plot <- renderLeaflet({
       
       
       # get popup for a single line
       popup_text <- paste("<h5><strong>", selected_data()[[popup_title]], ": ", "</strong>" ,       prettyNum(signif(selected_data()[[display_field]],3), big.mark=",", scientific=FALSE), selected_data()[[display_units]], "</h5>")
-
+      
       
       # get color pal
       pal <- colorQuantile(palette = color_palette,
-                          domain = selected_data()[[display_field]],
-                          na.color = "#00000000",
-                          alpha = 0.4)
-
+                           domain = selected_data()[[display_field]],
+                           na.color = "#DCDCDC", alpha = 0.4)
+      
       
       leaflet(selected_data(),
               options = leafletOptions(zoomControl = FALSE)) %>%
@@ -259,7 +257,7 @@ card_map <- function(input,
                   layerId = "colorLegend") %>%
         addProviderTiles(providers$CartoDB.Positron
                          #,options = providerTileOptions(noWrap = TRUE) ## prevents global
-                          ) %>%
+        ) %>%
         setView(-9.718568, 34.331989, zoom = 2)
     })
     
