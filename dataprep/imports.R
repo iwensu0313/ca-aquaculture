@@ -15,6 +15,7 @@
 library(validate)
 library(tidyverse)
 library(plotly)
+library(viridis)
 
 
 ## Read in California Import Data from NOAA
@@ -52,21 +53,24 @@ summary(all_data)
 
 
 ## Summarize information
+### Average Dollars/Kilos
 
 dollas <- all_data %>% 
   group_by(Year, Product, Country) %>% 
   summarize(Dollars = sum(Dollars),
             Kilos = sum(Kilos)) %>% 
-  mutate(AvgRate = Dollars/Kilos) %>%
+  mutate(AvgRate = Dollars/Kilos) %>% # per country avg
   ungroup() %>% 
-  group_by(Year, Product) %>%
-  mutate(TotalValue = sum(Dollars),
-         TotalKilos = sum(Kilos)) %>% 
+  group_by(Year, Product) %>% # aggregate avg across countries
+  mutate(TotalValue = sum(Dollars), 
+         TotalKilos = sum(Kilos),
+         AllAvgRate = mean(AvgRate, na.rm=TRUE)) %>% 
   ungroup()
 
-# Plot timeseries of product values (aggregate countries)
-plot_dollas <- dollas %>% 
-  select(Year, Product, TotalValue) %>%
+# Plot timeseries of product values 
+# Group by and aggregate mean value per category
+plot_rate <- dollas %>% 
+  select(Year, Product, AllAvgRate) %>%
   mutate(Category = case_when(
     str_detect(Product, "^ABALONE") ~ "Abalone",
     str_detect(Product, "^ANCHOVY") ~ "Anchovy",
@@ -77,17 +81,31 @@ plot_dollas <- dollas %>%
     str_detect(Product, "^CATFISH") ~ "Catfish"
   )) %>% 
   distinct() %>% 
-  na.omit() %>% # remove species you haven't categorized yet 
+  na.omit() %>%  # remove species you haven't categorized yet 
   group_by(Year, Category) %>% 
-  summarize(TotalValue = sum(TotalValue)) %>% 
-  ungroup
+  summarize(AvgRateCat = mean(AllAvgRate)) %>% # aggreg per category
+  ungroup()
 
-my_plot <- ggplot(plot_dollas, aes(x=Year, y=TotalValue)) + 
+my_plot <- ggplot(plot_rate, aes(x=Year, y=AvgRateCat)) + 
   geom_line(aes(col=Category))
 
 ggplotly(my_plot)
 
 
+## Summarize information
+### Total Value Imported!
+plot_total <- dollas %>%
+  select(Year, Product, TotalValue, TotalKilos) %>% 
+  arrange(Year, desc(TotalValue)) %>% 
+  distinct() %>% 
+  #filter(grepl('Farmed', Product, ignore.case =TRUE))
+  filter(Year == 2017) %>% 
+  top_n(20, TotalValue)
 
+### Set manual palette from viridis pkg
+pal <- viridis(length(unique(plot_total$Product)))
 
-
+my_plot <- ggplot(plot_total, aes(x=Year, y=TotalValue)) + 
+  geom_line(aes(col=Product)) +
+  scale_colour_manual(name = "Product", values = pal) +
+  theme_minimal()
