@@ -1,5 +1,236 @@
 ---
 title: "US Production"
-date: "November 15, 2018"
 output: html_document
 ---
+
+# Summary
+
+# Data Source
+USDA Quick Stats Census
+
+Source: https://quickstats.nass.usda.gov/
+Downloaded: Nov. 15, 2018
+Timeseries: 2013
+Format: CSV
+Metadata: https://quickstats.nass.usda.gov/src/glossary.pdf
+Notes: Data tables include sales (in $, head, and lb) and no. of operations per state. I don't believe inflation is accounted for
+
+# Setup
+
+```{r setup, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+
+## raw data file directory
+rawdata <- "data/raw/USDA_Quickstats"
+  
+```
+
+# Import Data
+
+1998, 2005, and 2013 Census Data for Fish Food 
+```{r import}
+
+data <- read.csv(file.path(rawdata, "food_fish_sales.csv"), stringsAsFactors = FALSE)
+
+```
+
+# Wrangle
+
+Tidy and reorganize categories of fish sales. Set US TOTAL category to have code of 0.
+```{r wrangle}
+
+# remove columns that only contain NA values
+data <- data[ ,colSums(!is.na(data)) > 0]
+
+# remove unnecessary columns
+fishprod <- data %>% 
+  select(-Program, -Period, -Geo.Level, -watershed_code, -Domain.Category) %>%
+  rename(Region_Code = State.ANSI, Region = State) %>% 
+  mutate(Region_Code = ifelse(is.na(Region_Code), 0, Region_Code)) %>% 
+  mutate(Region = ifelse(Region == "US TOTAL", "US", Region))
+
+DT::datatable(fishprod)
+
+```
+
+## Select Totals
+
+### Tidy
+
+Summary
+* There are two categories in `Domain`: TOTAL and SALES. Select TOTAL.
+* Split `Data.Item` column into `Product` and `Unit`. Tidy strings.
+* Split `Product` into species and product type.
+
+Definitions
+* In the `Data.Item` column, `Sales` is defined as sales in US dollars.
+* Operations: Depending upon the data series, may refer to farms, ranches,
+growers, or producers (original USDA metadata). 
+
+
+*Select TOTALS and Split `Data.Item` into `Product` and `Unit`*
+```{r}
+
+# split Data.Item into Product and Unit
+fishunit <- fishprod %>% 
+  filter(Domain == "TOTAL") %>% 
+  select(-Domain) %>% 
+  separate(Data.Item, c("Product", "Unit"), " - ") %>%
+  mutate(Product = str_replace(Product, "FOOD FISH, ", "")) %>% 
+  mutate(Unit = case_when(
+    str_detect(Unit, "OPERATIONS WITH SALES$") ~ "OPERATIONS",
+    str_detect(Unit, "SALES, MEASURED IN \\$$") ~ "DOLLARS",
+    str_detect(Unit, "SALES, MEASURED IN \\$ \\/ OPERATION$") ~ "DOLLARS_PER_OPERATION",
+    str_detect(Unit, "SALES, MEASURED IN EGGS$") ~ "EGGS",
+    str_detect(Unit, "SALES, MEASURED IN HEAD$") ~ "HEAD",
+    str_detect(Unit, "SALES, MEASURED IN LB$") ~ "LB",
+    str_detect(Unit, "SALES, MEASURED IN LB \\/ HEAD$") ~ "LB_PER_HEAD",
+    str_detect(Unit, "SALES, MEASURED IN PCT BT SIZE GROUP") ~ "PCT BT SIZE GROUP",
+    str_detect(Unit, "SALES, MEASURED IN PCT BY OUTLET") ~ "PCT BY OUTLET"
+  ))
+
+# Save unique category of values (e.g. dollars, head, lb) 
+data_cat <- unique(fishunit$Unit)
+
+DT::datatable(fishunit)
+
+```
+
+*Split `Product` into species, product type, and wholesale type.*
+
+Not all will split perfectly, will need to fix a few things.
+
+1. Species and Product Type
+REGEX `,\\s*(?=[^,]+$)` Explained: look for a comma (`,`) that is followed by zero or more (`*`) white space (`\\s`), which is immediately followed by one or more non-comma values (`?=[^,]+`) at the end of the string (`$`). See (Regex cheatsheet)[https://www.rexegg.com/regex-quickstart.html].
+
+2. Wholesale Product Types
+Check values (e.g. EXPORTS) in column Product_Type that are associated with WHOLESALE in Species and create new wholesale category column. For these, assign a Species value of NA and Product_Type as WHOLESALE.
+
+3. Correct Species w/o Product Type
+The only values in `Product_Type` should be:
+* FINGERLINGS & FRY
+* FOODSIZE
+* STOCKERS
+* BROODSTOCK
+* EGGS
+* WHOLESALE
+
+```{r}
+
+## first split: separate by last comma
+firstsplit <- fishunit %>% 
+  separate(Product, c("Species", "Product_Type"), ",\\s*(?=[^,]+$)", fill="right")
+
+## second split: wholesale types & retail
+whole <- firstsplit %>% filter(Species == "WHOLESALE")
+wholesale_types <- str_c(unique(whole$Product_Type), collapse="|")
+
+secsplit <- firstsplit %>% 
+  mutate(Wholesale_Type = ifelse(str_detect(Product_Type, wholesale_types), Product_Type, NA),
+         Product_Type = ifelse(Species == "WHOLESALE" | Species == "RETAIL", Species, Product_Type),
+         Species = ifelse(Species == "WHOLESALE" | Species == "RETAIL", NA, Species))
+  
+## fix species names
+
+# first rearrange Species column separated by commas, placing second part before the first (except for "CARP, (EXCL GRASS)"")
+secsplit$Species <- sub('(.*)\\,\\s+\\w+(.*)','\\2 \\1', secsplit$Species)
+secsplit$Species <- trimws(secsplit$Species, which = "left") # fix leading white spaces
+secsplit$Species <- sub(', ', ' ', secsplit$Species) # remove commas
+
+unique(secsplit$Species) # check names, should be 17 types
+
+# find parts of species names that got placed in product type
+unique(secsplit$Product_Type) 
+sp_names <- str_c(c("HYBRID STRIPED", "(EXCL GRASS)", "GRASS", "RED", "YELLOW", "ATLANTIC", "PACIFIC", "ARCTIC"), collapse="|")
+
+totalfish <- secsplit %>% 
+  mutate(Species = ifelse(str_detect(Product_Type, sp_names), Product_Type, NA)
+  
+
+
+
+totalfish <-
+
+```
+
+### Checkpoint
+
+Check whether there are repeated values (lb per head is just lb divided by head, or if each row is just reported in different units.
+
+```{r}
+
+test <- totalfish %>% filter(Unit %in% c("HEAD","LB","LB_PER_HEAD"))
+
+test$Value = as.factor(test$Value)
+
+test2 <- test %>%  
+  mutate(Value = str_replace_all(Value, ",", "")) %>% 
+  spread(Unit, Value) %>% 
+  mutate(HEAD = as.numeric(HEAD), # convert from character to numeric
+         LB = as.numeric(LB), 
+         LB_PER_HEAD = as.numeric(LB_PER_HEAD),
+         testval = LB/HEAD) # check testval against LB_PER_HEAD
+
+# use validate to do a second check - should be no fails
+k = check_that(test2, round(LB/HEAD,1) == LB_PER_HEAD)
+summary(k)
+
+DT::data.table(test2)
+
+```
+
+### Filter
+
+Within totals, just select raw,  not calculated, data. Select for most recent year (2013).
+
+Summary of fish food types:
+* No Indication, just species name (BASS, HYBRID STRIPED)
+* Fingerlings and fry
+* Foodsize
+* Stockers
+* Broodstocks
+* Eggs
+
+```{r}
+
+rawfish <- totalfish %>% 
+  filter(Unit %in% c("OPERATIONS", "HEAD", "LB", "DOLLARS", "EGGS")) %>% 
+  select(-Region_Code) %>% 
+  filter(Year == 2013)
+
+```
+
+### Add Spatial Data
+Combine with US States Shapefile
+
+```{r}
+
+library(USAboundaries)
+library(sf)
+
+test <- us_states(resolution = "low") %>% 
+  select(state_name)
+
+plot(test[1])
+
+leaflet(test) %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addPolygons(fillColor = "white",
+              color = "black",
+              weight = 0.5) %>%
+  setView(-98.5795, 39.8282, zoom=3)
+
+
+```
+
+
+### Chloropleth w/ Leaflet
+
+
+
+
+## Select Sales (not Totals)
+
+
+
