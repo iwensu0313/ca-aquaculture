@@ -1,0 +1,144 @@
+---
+title: "US Fish Aquaculture Production"
+author: "Iwen Su"
+date: "November 26, 2018"
+output: html_document
+---
+
+# Setup
+```{r, message=FALSE,warning=FALSE}
+
+library(tidyverse)
+library(rgdal)
+library(leaflet)
+library(here)
+library(RColorBrewer)
+library(USAboundaries)
+library(sf)
+
+setwd(here())
+source("global.R")
+
+## Define color palette
+ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200]
+
+```
+
+# Test US Fish Mariculture Map
+
+## Read in State Spatial Object
+Use R dataset `us_states`
+```{r}
+
+rgns_leaflet <- us_states(resolution = "low") %>% 
+  select(state_name) %>% 
+  rename(State = state_name) %>% 
+  mutate(State = toupper(State))
+```
+
+## Identify arguments for map_card
+```{r}
+data = fish_US_map
+#filter_field = data$type
+display_field = "map_data"
+color_palette = ygb
+legend_title = "Legend"
+popup_title = "Fish Production: "
+popup_units = "US Dollars"
+popup_add_field = "State"
+#popup_add_field_title = ""
+```
+
+## Attach data to rgn shapefile
+
+Define data table: `fish_US_map` is prepared in prod.Rmd
+```{r}
+data <- fish_US_map
+```
+
+Filter out territories
+```{r}
+
+data_shp <- rgns_leaflet %>%
+  full_join(data, by = "State") %>% 
+  filter(!State %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>% 
+  mutate(map_data = ifelse(is.na(map_data), 0, map_data))
+  
+```
+
+## Specify Attributes
+```{r}
+
+# Get color pal
+pal <- colorQuantile(palette = color_palette,
+                     domain = data_shp$map_data,
+                     na.color = "#00000000",
+                     alpha = 0.4)
+
+
+## Popup attributes
+popup_title = "Aquaculture Production: "
+popup_add_field_title = "State: "
+
+popup_text <- paste("<h5><strong>", popup_add_field_title, "</strong>", data_shp$State, "</h5>", 
+                    "<h5><strong>", popup_title, "</strong>", as.character(signif(data_shp$map_data,3)), "US Dollars", "</h5>",
+                     sep=" ")
+
+#prettyNum(data_shp$map_data, big.mark=",", scientific=FALSE)
+```
+
+## Plot with leaflet!
+```{r}
+
+leaflet(data_shp,
+        options = leafletOptions(zoomControl = FALSE)) %>%
+  addPolygons(color = "#A9A9A9", 
+              weight = 0.5, 
+              smoothFactor = 0.5,
+              opacity = 1.0, 
+              fillOpacity = 1.0,
+              fillColor = ~pal(map_data),
+              popup = popup_text, 
+              highlightOptions = highlightOptions(color = "white", 
+                                                  weight = 2,
+                                                  bringToFront = TRUE)) %>% 
+  addLegend("bottomright",
+            pal = pal,
+            values = ~map_data,
+            title = legend_title,
+            opacity = 1,
+            layerId = "colorLegend") %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+      setView(-9.718568, 34.331989, zoom = 2)
+
+```
+
+Testing Legend Customization
+```{r}
+leaflet(data_shp,
+        options = leafletOptions(zoomControl = FALSE)) %>%
+  addPolygons(color = "#A9A9A9", 
+              weight = 0.5, 
+              smoothFactor = 0.5,
+              opacity = 1.0, 
+              fillOpacity = 0.7,
+              fillColor = ~pal(map_data),
+              popup = popup_text, 
+              highlightOptions = highlightOptions(color = "white", 
+                                                  weight = 2,
+                                                  bringToFront = TRUE)) %>% 
+  addLegend("bottomright",
+            pal = pal,
+            values = ~map_data,
+            title = legend_title,
+            opacity = 1,
+            labFormat = labelFormat(
+              prefix = "(", 
+              suffix = ")%", 
+              between = ", ",
+              transform = identity
+              )
+            ) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+      setView(-9.718568, 34.331989, zoom = 2)
+```

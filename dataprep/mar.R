@@ -10,7 +10,7 @@ data_yr <- 2016 # most recent year of data for mar
 
 
 ## MARICULTURE PRODUCTION TIME SERIES ##
-mar_harvest <- read.csv("int/mar_harvest.csv")
+mar_harvest <- read.csv("data/int/global/mar_harvest.csv")
 
 # # Prepare time-series data for graphing annual production per country; read in gapfilled and tidied mariculture production data set
 # mar_out <- read.csv(paste0("https://rawgit.com/OHI-Science/", prep_repo, "/master/globalprep/mar/", assess_yr, "/output/MAR_FP_data.csv"))
@@ -54,7 +54,7 @@ mar_harvest <- read.csv("int/mar_harvest.csv")
 
 
 ## GLOBAL MAP SUMMARY DATA ##
-mar_global_map <- read.csv("int/mar_global_map.csv")
+mar_global_map <- read.csv("data/int/global/mar_global_map.csv")
 
 # ## Top Producing Countries (Seafood/Capita)
 # mar_pop <- read.csv(paste0("https://rawgit.com/OHI-Science/", prep_repo,"/master/globalprep/mar_prs_population/", assess_yr, "/output/mar_pop_25mi.csv")) %>%

@@ -23,6 +23,9 @@ The life cycle of fish products goes from EGGS to FINGERLINGS & FRY to STOCKERS 
 
 library(tidyverse)
 library(validate)
+library(devtools)
+library(choroplethr)
+library(Hmisc) 
 
 ## raw data file directory
 rawdata <- "data/raw/USDA_Quickstats"
@@ -39,7 +42,7 @@ data <- read.csv(file.path(rawdata, "food_fish_sales.csv"), stringsAsFactors = F
 
 ```
 
-# Wrangle
+# Wrangle: 2013 Total
 
 Tidy and reorganize categories of fish sales. Set US TOTAL category to have code of 0.
 ```{r wrangle}
@@ -50,9 +53,9 @@ data <- data[ ,colSums(!is.na(data)) > 0]
 # remove unnecessary columns
 fishprod <- data %>% 
   select(-Program, -Period, -Geo.Level, -watershed_code, -Domain.Category) %>%
-  rename(Region_Code = State.ANSI, Region = State) %>% 
-  mutate(Region_Code = ifelse(is.na(Region_Code), 0, Region_Code)) %>% 
-  mutate(Region = ifelse(Region == "US TOTAL", "US", Region))
+  rename(State_Code = State.ANSI) %>% 
+  mutate(State_Code = ifelse(is.na(State_Code), 0, State_Code)) %>% 
+  mutate(State = ifelse(State == "US TOTAL", "US", State))
 
 DT::datatable(fishprod)
 
@@ -169,18 +172,21 @@ unique(secsplit$Species)
 unique(secsplit$Product_Type) 
 sp_names <- str_c(c("HYBRID STRIPED", "^GRASS$", "RED", "YELLOW", "ATLANTIC", "PACIFIC", "ARCTIC"), collapse="|")
 
+# Replace any NAs with "NONE" to prevent it from being removed in filters later
 sp_fix <- secsplit %>% 
   mutate(
-    Product_Type = ifelse(is.na(Product_Type), "TEMP", Product_Type), 
+    Product_Type = ifelse(is.na(Product_Type), "NONE", Product_Type), 
     Species = ifelse(str_detect(Product_Type, sp_names),
                      paste(Product_Type, Species, sep=" "), Species),
-        Species = ifelse(str_detect(Product_Type, "(EXCL GRASS)"),
-                     paste(Species, Product_Type, sep=" "), Species)) 
+    Species = ifelse(str_detect(Product_Type, "(EXCL GRASS)"),
+                     paste(Species, Product_Type, sep=" "), Species),
+    Species = ifelse(is.na(Species), "NONE", Species)) 
 
-# remove species names and TEMP from Product_Type
-sp_remove <- str_c(c(sp_names, "TEMP", "(EXCL GRASS)"), collapse="|")
+# remove species names from Product_Type
+sp_remove <- str_c(c(sp_names, "(EXCL GRASS)"), collapse="|")
+
 totalfish <- sp_fix %>% 
-  mutate(Product_Type = ifelse(str_detect(Product_Type, sp_remove), NA, Product_Type))
+  mutate(Product_Type = ifelse(str_detect(Product_Type, sp_remove), "NONE", Product_Type))
 
 # Check 
 unique(totalfish$Product_Type) # should have 8 values incl NA
@@ -188,7 +194,7 @@ unique(totalfish$Species) # should have 20 values incl NA
 
 ```
 
-### Checkpoint
+# Checkpoint
 
 Check whether there are repeated values (lb per head is just lb divided by head, or if each row is just reported in different units.
 
@@ -196,7 +202,7 @@ Check whether there are repeated values (lb per head is just lb divided by head,
 
 test <- totalfish %>% 
   filter(Unit %in% c("HEAD","LB","LB_PER_HEAD")) %>% 
-  select(-Wholesale_Type, -Region_Code, -Commodity)
+  select(-Wholesale_Type, -State_Code, -Commodity)
 
 test$Value = as.factor(test$Value)
 
@@ -216,9 +222,11 @@ DT::datatable(test2)
 
 ```
 
-### Filter: 2013 Raw Data
+# Filter: 2013 Raw Data
 
-Within totals, just select raw,  not calculated, data. Select for most recent year (2013). Remove wholesale and retail information - the units for this is PCT BY OUTLET.
+Within totals, just select raw,  not calculated, data. Select for most recent year (2013). 
+
+Remove wholesale and retail information - the units for this is PCT BY OUTLET.
 
 Average 2013 sales in dollars per operation in the US is 564,928 USD. in 2005 it was 364,038 USD and in 1998 it was 319,056 USD.
 
@@ -226,15 +234,17 @@ Average 2013 sales in dollars per operation in the US is 564,928 USD. in 2005 it
 
 dolperop <- totalfish %>% 
   filter(Unit == "DOLLARS_PER_OPERATION") %>% 
-  select(Year, Region, Species, Unit, Value) %>% 
+  select(Year, State, Species, Unit, Value) %>% 
   mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
+
 write.csv(dolperop, file.path(intdata, "States_Totals_2013/US_sales_per_operation.csv"))
 
+# Filter removes NA
 rawfish <- totalfish %>% 
-  filter(Product_Type != "WHOLESALE" & Product_Type != "RETAIL",
-         Unit %in% c("OPERATIONS", "HEAD", "LB", "DOLLARS", "EGGS"),
-         Region != "US") %>%
-  select(-Wholesale_Type, -Region_Code) %>% 
+  filter(Product_Type != "WHOLESALE" & Product_Type != "RETAIL") %>% 
+  filter(Unit %in% c("OPERATIONS", "HEAD", "LB", "DOLLARS", "EGGS")) %>%
+  filter(State != "US") %>%
+  select(-Wholesale_Type, -State_Code) %>% 
   filter(Year == 2013) %>% 
   mutate(Value = ifelse(str_detect(Value, "\\(.*\\)"), NA, Value),
          Value = as.numeric(str_replace_all(Value, ",", "")))
@@ -253,55 +263,97 @@ NA_count <- rawfish %>%
             pct_NA = round(sum(is.na(Value))/length(Value),2)) %>% 
   ungroup()
 
-write.csv(NA_count, file.path(intdata, "States_Totals_2013/data_type_NAs.csv"))
+write.csv(NA_count, file.path(intdata, "States_Totals_2013/data_NA_count.csv"))
 
 ```
 
-### Gapfill
+# Gapfill
 
-Yipes.. lots of gapfilling using linear regression.. lots of missing data!!
+Yipes.. lots of gapfilling using linear regression.. lots of missing data!! Improve gapfill method later. Investigate linear regression and imputation.
 
+* For states with at least 1 non-missing value, use state average
+* For states with all missing values, use the regionalaverage.
+
+## DOLLARS
 ```{r}
 
 fishdolla <- rawfish %>% filter(Unit == "DOLLARS")
-## Compare models to select a gapfilling method
-mod1 <- lm(Value ~ r2, data = rawfish, na.action="na.exclude")
-mod2 <- lm(score ~ r2 + wgi_score, data = rawfish, na.action="na.exclude")
 
+# Check if every state has at least 1 value
+NA_count <- fishdolla %>% 
+  group_by(State) %>% 
+  mutate(NAs = sum(is.na(Value)), 
+         nonNAs = sum(!is.na(Value))) %>% 
+  ungroup()
+
+# Combine State Region Information
+state_df <- cbind(state.name, as.character(state.region)) %>%
+  as.data.frame() %>% 
+  rename(State = state.name, Region = V2) %>% 
+  mutate(State = toupper(State))
+
+fishdolla <- fishdolla %>% 
+  left_join(state_df, by = "State")
+
+# Add gapfill info based on number of non-missing values
+# Gapfill column: 1 means gapfilled, 0 means not gapfilled
+fish_gf <- fishdolla %>% 
+  group_by(State) %>% 
+  mutate(NAs = sum(is.na(Value)), 
+         nonNAs = sum(!is.na(Value))) %>% 
+  ungroup() %>% 
+  mutate(Gapfill = ifelse(is.na(Value), 1, 0),
+         GF_Method = ifelse(Gapfill == 1 & nonNAs > 0, "State Average", NA),
+         GF_Method = ifelse(Gapfill == 1 & nonNAs == 0, "Region Average", GF_Method))
+
+fish_gf_final <- fish_gf %>% 
+  group_by(State) %>% 
+  mutate(State_Avg = mean(Value, na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Value = ifelse(is.na(Value) & GF_Method == "State Average", State_Avg, Value)) %>% 
+  group_by(Region) %>% 
+  mutate(Region_Avg = mean(Value, na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Value = ifelse(is.na(Value) & GF_Method == "Region Average", Region_Avg, Value))
+
+write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill.csv"))
+          
+## Predict values with linear model- try this later
+# Compare models to select a gapfilling method
+# mod1 <- lm(Value ~ State + Species + Product_Type, data = fish_gf, na.action="na.exclude")
+# mod2 <- lm(Value ~ Species + Product_Type, data = fish_gf, na.action="na.exclude")
+# mod3 <- lm(Value ~ State + Product_Type, data = fish_gf, na.action="na.exclude")
+# 
+# summary(mod1)
+# summary(mod2)
+# summary(mod3)
+# 
+# AIC(mod1) # best model
+# AIC(mod2)
+# AIC(mod3)
 
 ```
 
-
-### Add Spatial Data
-Combine with US States Shapefile
+# Total Sales in 2013 per State
 
 ```{r}
 
-library(USAboundaries)
-library(sf)
+fish_sales <- fish_gf_final %>% 
+  select(Year, State, Species, Product_Type, Unit, Value) %>% 
+  group_by(State) %>% 
+  summarize(Total = sum(Value)) %>% 
+  ungroup()
 
-test <- us_states(resolution = "low") %>% 
-  select(state_name)
+fish_US_map <- fish_sales %>% 
+  rename(map_data = Total)
 
-plot(test[1])
-
-leaflet(test) %>% 
-  addProviderTiles("CartoDB.Positron") %>% 
-  addPolygons(fillColor = "white",
-              color = "black",
-              weight = 0.5) %>%
-  setView(-98.5795, 39.8282, zoom=3)
-
+write.csv(fish_US_map, file.path(intdata, "fish_us_map.csv"))
 
 ```
 
 
-### Chloropleth w/ Leaflet
 
-
-
-
-## Select Sales (not Totals)
+# Wrangle: 2013 Sales
 
 
 
