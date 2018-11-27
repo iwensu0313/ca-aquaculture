@@ -42,7 +42,7 @@ data <- read.csv(file.path(rawdata, "food_fish_sales.csv"), stringsAsFactors = F
 
 ```
 
-# Wrangle: 2013 Total
+# Wrangle: Total
 
 Tidy and reorganize categories of fish sales. Set US TOTAL category to have code of 0.
 ```{r wrangle}
@@ -271,20 +271,10 @@ write.csv(NA_count, file.path(intdata, "States_Totals_2013/data_NA_count.csv"))
 
 Yipes.. lots of gapfilling using linear regression.. lots of missing data!! Improve gapfill method later. Investigate linear regression and imputation.
 
-* For states with at least 1 non-missing value, use state average
+* For states with at least the mean number of non-missing values, use state average
 * For states with all missing values, use the regionalaverage.
 
-## DOLLARS
 ```{r}
-
-fishdolla <- rawfish %>% filter(Unit == "DOLLARS")
-
-# Check if every state has at least 1 value
-NA_count <- fishdolla %>% 
-  group_by(State) %>% 
-  mutate(NAs = sum(is.na(Value)), 
-         nonNAs = sum(!is.na(Value))) %>% 
-  ungroup()
 
 # Combine State Region Information
 state_df <- cbind(state.name, as.character(state.region)) %>%
@@ -292,22 +282,23 @@ state_df <- cbind(state.name, as.character(state.region)) %>%
   rename(State = state.name, Region = V2) %>% 
   mutate(State = toupper(State))
 
-fishdolla <- fishdolla %>% 
+fish_rgns <- rawfish %>% 
   left_join(state_df, by = "State")
+
 
 # Add gapfill info based on number of non-missing values
 # Gapfill column: 1 means gapfilled, 0 means not gapfilled
-fish_gf <- fishdolla %>% 
-  group_by(State) %>% 
+fish_gf <- fish_rgns %>% 
+  group_by(State, Unit) %>% 
   mutate(NAs = sum(is.na(Value)), 
          nonNAs = sum(!is.na(Value))) %>% 
   ungroup() %>% 
   mutate(Gapfill = ifelse(is.na(Value), 1, 0),
-         GF_Method = ifelse(Gapfill == 1 & nonNAs > 0, "State Average", NA),
-         GF_Method = ifelse(Gapfill == 1 & nonNAs == 0, "Region Average", GF_Method))
+         GF_Method = ifelse(Gapfill == 1 & nonNAs >= 6, "State Average", NA),
+         GF_Method = ifelse(Gapfill == 1 & nonNAs < 6, "Region Average", GF_Method))
 
 fish_gf_final <- fish_gf %>% 
-  group_by(State) %>% 
+  group_by(State, Unit, Species) %>% 
   mutate(State_Avg = mean(Value, na.rm=TRUE)) %>% 
   ungroup() %>% 
   mutate(Value = ifelse(is.na(Value) & GF_Method == "State Average", State_Avg, Value)) %>% 
@@ -340,12 +331,13 @@ write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill
 
 fish_sales <- fish_gf_final %>% 
   select(Year, State, Species, Product_Type, Unit, Value) %>% 
-  group_by(State) %>% 
+  group_by(State, Unit) %>% 
   summarize(Total = sum(Value)) %>% 
   ungroup()
 
 fish_US_map <- fish_sales %>% 
-  rename(map_data = Total)
+  rename(map_data = Total,
+         type = Unit)
 
 write.csv(fish_US_map, file.path(intdata, "fish_us_map.csv"))
 
