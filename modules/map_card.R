@@ -166,12 +166,16 @@ card_map <- function(input,
                      color_palette = ygb,
                      legend_title = NA,
                      labels = NA,
-                     popup_title = NA
+                     popup_title = NA,
+                     long = -95.7128906, # US longitudinal center
+                     lat = 37.0902, # US latitudinal center
+                     zoom = 4
 ) {
   
   # attach data to rgn shapefile
-  data_shp <- rgns_leaflet %>%
-    left_join(data, by = "rgn_id") 
+  data_shp <- data
+  # data_shp <- rgns_leaflet %>%
+  #   left_join(data, by = "rgn_id") 
   
   # if not allowing user to select multiple inputs?
   if (field != "input") {
@@ -205,7 +209,7 @@ card_map <- function(input,
                   labels = labels,
                   layerId = "colorLegend") %>%
         addProviderTiles(providers$CartoDB.Positron) %>%
-        setView(-9.718568, 34.331989, zoom = 2) 
+        setView(long, lat, zoom) 
     })
     
   } else {
@@ -258,7 +262,7 @@ card_map <- function(input,
         addProviderTiles(providers$CartoDB.Positron
                          #,options = providerTileOptions(noWrap = TRUE) ## prevents global
         ) %>%
-        setView(-9.718568, 34.331989, zoom = 2)
+        setView(long, lat, zoom)
     })
     
   }

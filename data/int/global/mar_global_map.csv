@@ -232,13 +232,13 @@
 196,"Nigeria","prodTonnesAll",NA,"tonnes","Fish"
 154,"Niue","prodTonnesAll",NA,"tonnes",NA
 3,"Norfolk Island","prodTonnesAll",NA,"tonnes",NA
-13,"Northern Mariana Islands and Guam","prodTonnesAll",63,"tonnes","Crustacean"
-13,"Northern Mariana Islands and Guam","prodTonnesAll",63,"tonnes","Fish"
-221,"Northern Saint-Martin","prodTonnesAll",NA,"tonnes",NA
 21,"North Korea","prodTonnesAll",549385,"tonnes","Fish"
 21,"North Korea","prodTonnesAll",549385,"tonnes","Seaweed"
 21,"North Korea","prodTonnesAll",549385,"tonnes","Invertebrate"
 21,"North Korea","prodTonnesAll",549385,"tonnes","Bivalve and Molluscs"
+13,"Northern Mariana Islands and Guam","prodTonnesAll",63,"tonnes","Crustacean"
+13,"Northern Mariana Islands and Guam","prodTonnesAll",63,"tonnes","Fish"
+221,"Northern Saint-Martin","prodTonnesAll",NA,"tonnes",NA
 223,"Norway","prodTonnesAll",1326079.4,"tonnes","Fish"
 223,"Norway","prodTonnesAll",1326079.4,"tonnes","Bivalve and Molluscs"
 223,"Norway","prodTonnesAll",1326079.4,"tonnes","Crustacean"
@@ -604,13 +604,13 @@
 196,"Nigeria","prodPerCap",NA,"lb/person","Fish"
 154,"Niue","prodPerCap",NA,"lb/person",NA
 3,"Norfolk Island","prodPerCap",NA,"lb/person",NA
-13,"Northern Mariana Islands and Guam","prodPerCap",0.5,"lb/person","Crustacean"
-13,"Northern Mariana Islands and Guam","prodPerCap",0.5,"lb/person","Fish"
-221,"Northern Saint-Martin","prodPerCap",NA,"lb/person",NA
 21,"North Korea","prodPerCap",66.51,"lb/person","Fish"
 21,"North Korea","prodPerCap",66.51,"lb/person","Seaweed"
 21,"North Korea","prodPerCap",66.51,"lb/person","Invertebrate"
 21,"North Korea","prodPerCap",66.51,"lb/person","Bivalve and Molluscs"
+13,"Northern Mariana Islands and Guam","prodPerCap",0.5,"lb/person","Crustacean"
+13,"Northern Mariana Islands and Guam","prodPerCap",0.5,"lb/person","Fish"
+221,"Northern Saint-Martin","prodPerCap",NA,"lb/person",NA
 223,"Norway","prodPerCap",525.27,"lb/person","Fish"
 223,"Norway","prodPerCap",525.27,"lb/person","Bivalve and Molluscs"
 223,"Norway","prodPerCap",525.27,"lb/person","Crustacean"

@@ -1,6 +1,29 @@
 
 function(input, output, session) {
   
+  ## Mariculture Baseline Metrics ##
+  callModule(summary_stats, "mar_baseline",
+             number_boxes = 3,
+             statistic = list("19%", "68%", "51%"),
+             text = list("of global seafood comes from mariculture. Aquaculture, which includes marine and inland production, contributes 53% to all seafood provision.",
+                         "of mariculture produced in 2016 for human consumption came from China. They are followed by South Korea at only 4%!",
+                         "of mariculture is comprised of shellfish production by weight. The remaining 33% is from seaweed and 15% from fish."))
+  
+
+  # Mariculture Global Map ##
+  callModule(card_map, "mar_global_map",
+             data = mar_global_map,
+             field = "input",
+             filter_field = type, # type of data to plot
+             display_field = "map_data",
+             display_units = "units",
+             color_palette = ygb,
+             legend_title = "Legend",
+             popup_title = "country",
+             long = -9.718568,
+             lat = 34.331989,
+             zoom = 2)
+
   
   ## Mariculture Production ##
   callModule(card_plot, "mar_prod",
@@ -18,27 +41,17 @@ function(input, output, session) {
              yaxis_label = "Annual Production (tonnes)")
   
   
-  ## Mariculture Baseline Metrics ##
-  callModule(summary_stats, "mar_baseline",
-             number_boxes = 3,
-             statistic = list("19%", "68%", "51%"),
-             text = list("of global seafood comes from mariculture. Aquaculture, which includes marine and inland production, contributes 53% to all seafood provision.",
-                         "of mariculture produced in 2016 for human consumption came from China. They are followed by South Korea at only 4%!",
-                         "of mariculture is comprised of shellfish production by weight. The remaining 33% is from seaweed and 15% from fish."))
   
-
-  ## Mariculture Global Map ##
-  callModule(card_map, "mar_global_map",
-             data = mar_global_map,
+  ## Finfish Aquaculture US Map ##
+  callModule(card_map, "fish_us_map",
+             data = fish_us_map,
              field = "input",
              filter_field = type, # type of data to plot
              display_field = "map_data",
              display_units = "units",
              color_palette = ygb,
              legend_title = "Legend",
-             popup_title = "country")
-
-  
+             popup_title = "state")
 
 
   }

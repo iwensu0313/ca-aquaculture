@@ -54,11 +54,19 @@ mar_harvest <- read.csv("data/int/global/mar_harvest.csv")
 
 
 ## GLOBAL MAP SUMMARY DATA ##
-mar_global_map <- read.csv("data/int/global/mar_global_map.csv")
+mar_data_to_map <- read.csv("data/int/global/mar_global_map.csv")
+mar_global_map <- rgns_leaflet %>%
+  left_join(mar_data_to_map, by = "rgn_id")
 
 # ## Top Producing Countries (Seafood/Capita)
-# mar_pop <- read.csv(paste0("https://rawgit.com/OHI-Science/", prep_repo,"/master/globalprep/mar_prs_population/", assess_yr, "/output/mar_pop_25mi.csv")) %>%
+# mar_pop <- read.csv(paste0("http://ohi-science.org/", prep_repo,"/globalprep/mar_prs_population/", assess_yr, "/output/mar_pop_25mi.csv")) %>%
 #   na.omit()
+# 
+#  ## OHI Region Shapefile
+# ohi_regions <-  sf::st_read("data/int/global/spatial", "rgn_all_gcs_low_res")
+# rgns_leaflet <- ohi_regions %>%
+#   filter(rgn_typ == "eez", rgn_id != 213, rgn_id <= 250) %>% # remove Antarctica
+#   select(-are_km2, -ant_typ, -ant_id, -rgn_key)
 # 
 # ## Join coastal population and mariculture production tables
 # mar_harvest$tonnes <- as.numeric(mar_harvest$tonnes) # turn it back to numeric
@@ -75,6 +83,7 @@ mar_global_map <- read.csv("data/int/global/mar_global_map.csv")
 #   ungroup()
 # 
 # 
+# 
 # ## Add missing regions back into food production data frame
 # temp_rgns <- rgns_leaflet %>%
 #   select(rgn_id, rgn_nam)
@@ -83,7 +92,7 @@ mar_global_map <- read.csv("data/int/global/mar_global_map.csv")
 # food_all_countries <- summary_food %>%
 #   full_join(temp_rgns, by = "rgn_id") %>% # add in all regions from temp
 #   mutate(rgn_nam = as.character(rgn_nam)) %>%
-#   mutate(country = as.character(country)) %>% 
+#   mutate(country = as.character(country)) %>%
 #   mutate(country = ifelse(is.na(country), rgn_nam, country)) %>%
 #   select(-rgn_nam)
 # 
@@ -103,4 +112,4 @@ mar_global_map <- read.csv("data/int/global/mar_global_map.csv")
 #   mutate(map_data = as.numeric(format(round(map_data, 2), nsmall=2))) %>%   # round to two decimal places
 #   mutate(map_data = ifelse(map_data == 0, NA, map_data)) # so visually values < 0.1 are greyed out
 # 
-# write.csv(mar_global_map, "int/mar_global_map.csv", row.names=FALSE)
+# write.csv(mar_global_map, "data/int/global/mar_global_map.csv", row.names=FALSE)

@@ -1,14 +1,17 @@
 library(shiny)
 library(shinydashboard)
 
-tab_title_ui <- function(goal_text, definition, goal_description) {
+tab_title_ui <- function(title, 
+                         lead,
+                         subtitle,
+                         description) {
   
   fluidRow(box(
-    h1(strong(goal_text)),
-    tags$div(class = "goal_description", h3(goal_description)),
+    h1(strong(title)),
+    tags$div(class = "title_section", h3(lead)),
     tags$br(),
-    h4(paste("As Defined by the Ocean Health Index:")),
-    tags$i(definition),
+    h4(paste(subtitle)),
+    tags$i(description),
     width = 12)
   )
   
