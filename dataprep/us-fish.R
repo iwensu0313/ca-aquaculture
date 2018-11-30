@@ -12,7 +12,57 @@
 # The life cycle of fish products goes from EGGS to FINGERLINGS & FRY to STOCKERS to FOODSIZE or BROODSTOCK. STOCKERS are young fish kept until mature or food size. BROODSTOCK are mature fish that are used in aquaculture for breeding purposes. 
 
 
-data_for_map <- read.csv(file.path(intdata, "fish_us_map.csv"), stringsAsFactors = FALSE)
+## Setup
+# library(tidyverse)
+# library(USAboundaries)
+# library(validate)
+# library(devtools)
+# library(Hmisc)
+
+## raw data file directory
+rawdata <- "data/raw/USDA_Quickstats"
+intdata <- "data/int/US/Fish"
+
+## FOR WRANGLING FISH PRODUCTION STATS
+## which species has the largest $ share
+# stats <- read.csv(file.path(intdata, "States_Totals_2013/US_sales.csv"), stringsAsFactors = FALSE)
+# stats_sp <- stats %>%
+#   group_by(Species) %>%
+#   summarise(Species_Value = sum(Value)) %>%
+#   ungroup() %>%
+#   arrange(desc(Species_Value)) %>%
+#   mutate(Total_Sales = sum(Species_Value),
+#          Pct_Sales = round(100*(Species_Value/Total_Sales),2))
+# 
+# # which state has the largest $ share
+# stats_state <- stats %>%
+#   group_by(State) %>%
+#   summarise(State_Value = sum(Value)) %>%
+#   ungroup() %>%
+#   arrange(desc(State_Value)) %>% 
+#   mutate(Total_Sales = sum(State_Value),
+#          Pct_Sales = round(100*(State_Value/Total_Sales),2))
+# 
+# # which state has the most $/operation
+# US_sales_gapfill <- read_csv("data/int/US/Fish/States_Totals_2013/US_sales_gapfill.csv") 
+# op <- US_sales_gapfill %>% 
+#   select(Year, State, Species, Product_Type, Unit, Value) %>% 
+#   filter(Unit == "OPERATIONS") %>% 
+#   group_by(State) %>% 
+#   summarise(Total_Val = sum(Value)) %>% 
+#   ungroup() %>% 
+#   arrange(desc(Total_Val)) %>% 
+#   mutate(US_Total_Val = sum(Total_Val),
+#          Pct_Total = round(100*(Total_Val/US_Total_Val),2))
+# 
+# # Sales per operation
+# stats_state[stats_state$State == "MISSISSIPPI",][["State_Value"]]/op[op$State == "MISSISSIPPI",][["Total_Val"]]
+# stats_state[stats_state$State == "ALABAMA",][["State_Value"]]/op[op$State == "ALABAMA",][["Total_Val"]]
+
+
+
+## FOR PLOTTING FISH PRODUCTION MAP
+data_for_map <- read.csv(file.path(intdata, "fish_us_map.csv"))
 
 fish_us_map <- us_states(resolution = "low") %>%
   select(state_name) %>%
@@ -23,15 +73,7 @@ fish_us_map <- us_states(resolution = "low") %>%
   mutate(map_data = ifelse(is.na(map_data), 0, map_data))
 
 
-# # Setup
-# library(tidyverse)
-# library(validate)
-# library(devtools)
-# library(Hmisc)
-# 
-# ## raw data file directory
-# rawdata <- "data/raw/USDA_Quickstats"
-# intdata <- "data/int/US/Fish"
+
 # 
 # 
 # # Import Data
@@ -302,7 +344,7 @@ fish_us_map <- us_states(resolution = "low") %>%
 # ungroup() %>%
 # mutate(Value = ifelse(is.na(Value), Unit_Avg, Value))
 # 
-# write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill.csv"))
+# write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill.csv"), row.names=FALSE)
 # 
 # ## Predict values with linear model- try this later
 # # Compare models to select a gapfilling method

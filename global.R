@@ -15,6 +15,7 @@ library(plotly)
 library(sunburstR)
 library(viridis)
 library(stringr)
+library(USAboundaries)
 
 ## Color Palettes
 ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue shades
@@ -60,11 +61,6 @@ options(scipen = 999,
 ## OHI Region ID and Names
 regions <- georegion_labels %>% 
   select(rgn_id, region=r2_label, country=rgn_label)
-
-
-
-## GLOBAL MARICULTURE DATA SOURCES ##
-source("dataprep/mar.R")
 
 ## US AQUACULTURE DATA SOURCES ##
 source("dataprep/us-fish.R")

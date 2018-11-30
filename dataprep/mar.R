@@ -55,6 +55,10 @@ mar_harvest <- read.csv("data/int/global/mar_harvest.csv")
 
 ## GLOBAL MAP SUMMARY DATA ##
 mar_data_to_map <- read.csv("data/int/global/mar_global_map.csv")
+ohi_regions <-  sf::st_read("data/int/global/spatial", "rgn_all_gcs_low_res")
+rgns_leaflet <- ohi_regions %>%
+  filter(rgn_typ == "eez", rgn_id != 213, rgn_id <= 250) %>% # remove Antarctica 
+  select(-are_km2, -ant_typ, -ant_id, -rgn_key)
 mar_global_map <- rgns_leaflet %>%
   left_join(mar_data_to_map, by = "rgn_id")
 
