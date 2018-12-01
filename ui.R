@@ -75,9 +75,9 @@ dashboardPage(
                    select_location = "above",
                    select_choices = c("Dollars" = "DOLLARS",
                                           "Pounds" = "LB",
-                                          "Fish" = "FISH",
+                                          "Fish" = "HEAD",
                                           "Eggs" = "EGGS",
-                                          "Operations" = "FARMS"),
+                                          "Farms" = "OPERATIONS"),
                    select_label = NULL,
                    source_text = list(
                          p("Sources:"),
@@ -92,7 +92,7 @@ dashboardPage(
             div(class = "master",
                 
                 tab_title_ui(title = "Shellfish Aquaculture",
-                             lead = "Coming Soon!",
+                             lead = "Anticipated completion will mid-December!",
                              subtitle = "",
                              description = "")
                 

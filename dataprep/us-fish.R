@@ -64,18 +64,33 @@ intdata <- "data/int/US/Fish"
 ## FOR PLOTTING FISH PRODUCTION MAP
 data_for_map <- read.csv(file.path(intdata, "fish_us_map.csv"))
 
-fish_us_map <- us_states(resolution = "low") %>%
+# just state and lat/lon
+state_tidy <- us_states(resolution = "low") %>%
   select(state_name) %>%
   rename(state = state_name) %>%
-  mutate(state = toupper(state)) %>%
+  mutate(state = toupper(state))
+
+## maybe there's a more efficient way to add values back into the states with missing values.. but for now this is fine..
+fish_us <- state_tidy %>%
   full_join(data_for_map, by = "state") %>%
   filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>%
-  mutate(map_data = ifelse(is.na(map_data), 0, map_data))
+  complete(state, type) %>%  # fill in categories where there is no data
+  filter(!is.na(type)) %>% # remove extra NA rows created
+  select(-geometry) %>%  # temporarily remove geometry 
+  mutate(units = case_when( # add back in where there are NAs..
+    str_detect(type, "EGGS") ~ "eggs",
+    str_detect(type, "DOLLARS") ~ "USD",
+    str_detect(type, "HEAD") ~ "fish",
+    str_detect(type, "OPERATIONS") ~ "operations",
+    str_detect(type, "LB") ~ "lbs"
+  )) %>% 
+  mutate(taxon = "Fish") # add back in where there are NAs..
+
+fish_us_map <- state_tidy %>% 
+  left_join(fish_us, by = "state") # add lat/lon back in
 
 
 
-# 
-# 
 # # Import Data
 # # 1998, 2005, and 2013 Census Data for Fish Food
 # data <- read.csv(file.path(rawdata, "food_fish_sales.csv"), stringsAsFactors = FALSE)

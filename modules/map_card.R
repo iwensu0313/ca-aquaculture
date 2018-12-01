@@ -201,13 +201,12 @@ card_map <- function(input,
                     highlightOptions = highlightOptions(color = "white", 
                                                         weight = 2,
                                                         bringToFront = TRUE)) %>% 
-        addLegend("bottomright",
-                  pal = pal,
-                  values = data_shp[[field]],
-                  title = legend_title,
-                  opacity = 1,
-                  labels = labels,
-                  layerId = "colorLegend") %>%
+        addLegend_desc("bottomright",
+                       pal = pal,
+                       values = selected_data()[[display_field]],
+                       opacity = 1,
+                       labels = labels,
+                       decreasing = TRUE) %>% 
         addProviderTiles(providers$CartoDB.Positron) %>%
         setView(long, lat, zoom) 
     })
@@ -252,13 +251,12 @@ card_map <- function(input,
                     highlightOptions = highlightOptions(color = "white", 
                                                         weight = 2,
                                                         bringToFront = TRUE)) %>% 
-        addLegend("bottomright",
-                  pal = pal,
-                  values = selected_data()[[display_field]],
-                  title = legend_title,
-                  opacity = 1,
-                  labels = labels,
-                  layerId = "colorLegend") %>%
+        addLegend_desc("bottomright",
+                             pal = pal,
+                             values = selected_data()[[display_field]],
+                             opacity = 1,
+                             labels = labels,
+                             decreasing = TRUE) %>% 
         addProviderTiles(providers$CartoDB.Positron
                          #,options = providerTileOptions(noWrap = TRUE) ## prevents global
         ) %>%
