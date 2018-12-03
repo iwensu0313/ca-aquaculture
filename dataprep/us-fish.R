@@ -7,7 +7,7 @@
 # Timeseries: 2013
 # Format: CSV
 # Metadata: https://quickstats.nass.usda.gov/src/glossary.pdf
-# Notes: Data tables include sales (in $, head, and lb) and no. of operations per state. I don't believe inflation is accounted for. 
+# Notes: Queried for Census, Aquaculture, Mollusk, Sales (clicking the Get Data button should extract all data items, all years, and both state and national data. Data tables include sales (in $, head, and lb) and no. of operations per state. I don't believe inflation is accounted for. 
 
 # The life cycle of fish products goes from EGGS to FINGERLINGS & FRY to STOCKERS to FOODSIZE or BROODSTOCK. STOCKERS are young fish kept until mature or food size. BROODSTOCK are mature fish that are used in aquaculture for breeding purposes. 
 
@@ -21,74 +21,7 @@
 
 ## raw data file directory
 rawdata <- "data/raw/USDA_Quickstats"
-intdata <- "data/int/US/Fish"
-
-## FOR WRANGLING FISH PRODUCTION STATS
-## which species has the largest $ share
-# stats <- read.csv(file.path(intdata, "States_Totals_2013/US_sales.csv"), stringsAsFactors = FALSE)
-# stats_sp <- stats %>%
-#   group_by(Species) %>%
-#   summarise(Species_Value = sum(Value)) %>%
-#   ungroup() %>%
-#   arrange(desc(Species_Value)) %>%
-#   mutate(Total_Sales = sum(Species_Value),
-#          Pct_Sales = round(100*(Species_Value/Total_Sales),2))
-# 
-# # which state has the largest $ share
-# stats_state <- stats %>%
-#   group_by(State) %>%
-#   summarise(State_Value = sum(Value)) %>%
-#   ungroup() %>%
-#   arrange(desc(State_Value)) %>% 
-#   mutate(Total_Sales = sum(State_Value),
-#          Pct_Sales = round(100*(State_Value/Total_Sales),2))
-# 
-# # which state has the most $/operation
-# US_sales_gapfill <- read_csv("data/int/US/Fish/States_Totals_2013/US_sales_gapfill.csv") 
-# op <- US_sales_gapfill %>% 
-#   select(Year, State, Species, Product_Type, Unit, Value) %>% 
-#   filter(Unit == "OPERATIONS") %>% 
-#   group_by(State) %>% 
-#   summarise(Total_Val = sum(Value)) %>% 
-#   ungroup() %>% 
-#   arrange(desc(Total_Val)) %>% 
-#   mutate(US_Total_Val = sum(Total_Val),
-#          Pct_Total = round(100*(Total_Val/US_Total_Val),2))
-# 
-# # Sales per operation
-# stats_state[stats_state$State == "MISSISSIPPI",][["State_Value"]]/op[op$State == "MISSISSIPPI",][["Total_Val"]]
-# stats_state[stats_state$State == "ALABAMA",][["State_Value"]]/op[op$State == "ALABAMA",][["Total_Val"]]
-
-
-
-## FOR PLOTTING FISH PRODUCTION MAP
-data_for_map <- read.csv(file.path(intdata, "fish_us_map.csv"))
-
-# just state and lat/lon
-state_tidy <- us_states(resolution = "low") %>%
-  select(state_name) %>%
-  rename(state = state_name) %>%
-  mutate(state = toupper(state))
-
-## maybe there's a more efficient way to add values back into the states with missing values.. but for now this is fine..
-fish_us <- state_tidy %>%
-  full_join(data_for_map, by = "state") %>%
-  filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>%
-  complete(state, type) %>%  # fill in categories where there is no data
-  filter(!is.na(type)) %>% # remove extra NA rows created
-  select(-geometry) %>%  # temporarily remove geometry 
-  mutate(units = case_when( # add back in where there are NAs..
-    str_detect(type, "EGGS") ~ "eggs",
-    str_detect(type, "DOLLARS") ~ "USD",
-    str_detect(type, "HEAD") ~ "fish",
-    str_detect(type, "OPERATIONS") ~ "operations",
-    str_detect(type, "LB") ~ "lbs"
-  )) %>% 
-  mutate(taxon = "Fish") # add back in where there are NAs..
-
-fish_us_map <- state_tidy %>% 
-  left_join(fish_us, by = "state") # add lat/lon back in
-
+intdata <- "data/int"
 
 
 # # Import Data
@@ -284,7 +217,7 @@ fish_us_map <- state_tidy %>%
 # select(Year, State, Species, Unit, Value) %>%
 # mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
 # 
-# write.csv(dolperop, file.path(intdata, "States_Totals_2013/US_sales_per_operation.csv"))
+# write.csv(dolperop, file.path(intdata, "fish_totals/US_sales_per_operation.csv"))
 # 
 # # Filter removes NA
 # rawfish <- totalfish %>%
@@ -310,7 +243,7 @@ fish_us_map <- state_tidy %>%
 # pct_NA = round(sum(is.na(Value))/length(Value),2)) %>%
 # ungroup()
 # 
-# write.csv(NA_count, file.path(intdata, "States_Totals_2013/data_NA_count.csv"))
+# write.csv(NA_count, file.path(intdata, "fish_totals/data_NA_count.csv"))
 # 
 # 
 # 
@@ -359,7 +292,7 @@ fish_us_map <- state_tidy %>%
 # ungroup() %>%
 # mutate(Value = ifelse(is.na(Value), Unit_Avg, Value))
 # 
-# write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill.csv"), row.names=FALSE)
+# write.csv(fish_gf_final, file.path(intdata, "fish_totals/US_sales_gapfill.csv"), row.names=FALSE)
 # 
 # ## Predict values with linear model- try this later
 # # Compare models to select a gapfilling method
@@ -400,5 +333,75 @@ fish_us_map <- state_tidy %>%
 # )) %>%
 # mutate(taxon = "Fish")
 # 
-# write.csv(fish_us_map, file.path(intdata, "fish_us_map.csv"), row.names = FALSE)
+# write.csv(fish_us_map, "data/output/fish_us_map.csv", row.names = FALSE)
 # 
+
+
+
+
+## FOR WRANGLING FISH PRODUCTION STATS
+## which species has the largest $ share
+# stats <- read.csv(file.path(intdata, "fish_totals/US_sales.csv"), stringsAsFactors = FALSE)
+# stats_sp <- stats %>%
+#   group_by(Species) %>%
+#   summarise(Species_Value = sum(Value)) %>%
+#   ungroup() %>%
+#   arrange(desc(Species_Value)) %>%
+#   mutate(Total_Sales = sum(Species_Value),
+#          Pct_Sales = round(100*(Species_Value/Total_Sales),2))
+# 
+# # which state has the largest $ share
+# stats_state <- stats %>%
+#   group_by(State) %>%
+#   summarise(State_Value = sum(Value)) %>%
+#   ungroup() %>%
+#   arrange(desc(State_Value)) %>% 
+#   mutate(Total_Sales = sum(State_Value),
+#          Pct_Sales = round(100*(State_Value/Total_Sales),2))
+# 
+# # which state has the most $/operation
+# US_sales_gapfill <- read_csv("data/int/fish_totals/US_sales_gapfill.csv") 
+# op <- US_sales_gapfill %>% 
+#   select(Year, State, Species, Product_Type, Unit, Value) %>% 
+#   filter(Unit == "OPERATIONS") %>% 
+#   group_by(State) %>% 
+#   summarise(Total_Val = sum(Value)) %>% 
+#   ungroup() %>% 
+#   arrange(desc(Total_Val)) %>% 
+#   mutate(US_Total_Val = sum(Total_Val),
+#          Pct_Total = round(100*(Total_Val/US_Total_Val),2))
+# 
+# # Sales per operation
+# stats_state[stats_state$State == "MISSISSIPPI",][["State_Value"]]/op[op$State == "MISSISSIPPI",][["Total_Val"]]
+# stats_state[stats_state$State == "ALABAMA",][["State_Value"]]/op[op$State == "ALABAMA",][["Total_Val"]]
+
+
+
+
+## FOR PLOTTING FISH PRODUCTION MAP
+data_for_map <- read.csv("data/output/fish_us_map.csv")
+
+# just state and lat/lon
+state_tidy <- us_states(resolution = "low") %>%
+  select(state_name) %>%
+  rename(state = state_name) %>%
+  mutate(state = toupper(state))
+
+## maybe there's a more efficient way to add values back into the states with missing values.. but for now this is fine..
+fish_us <- state_tidy %>%
+  full_join(data_for_map, by = "state") %>%
+  filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>%
+  complete(state, type) %>%  # fill in categories where there is no data
+  filter(!is.na(type)) %>% # remove extra NA rows created
+  select(-geometry) %>%  # temporarily remove geometry 
+  mutate(units = case_when( # add back in where there are NAs..
+    str_detect(type, "EGGS") ~ "eggs",
+    str_detect(type, "DOLLARS") ~ "USD",
+    str_detect(type, "HEAD") ~ "fish",
+    str_detect(type, "OPERATIONS") ~ "operations",
+    str_detect(type, "LB") ~ "lbs"
+  )) %>% 
+  mutate(taxon = "Fish") # add back in where there are NAs..
+
+fish_us_map <- state_tidy %>% 
+  left_join(fish_us, by = "state") # add lat/lon back in

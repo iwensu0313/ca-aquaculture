@@ -1,4 +1,4 @@
-Aquaculture Production Totals in 2013 by State
+Finfish Aquaculture Production Totals in 2013 by State
 
 Created: 11/21/2018
 Data Source: USDA Quickstats
