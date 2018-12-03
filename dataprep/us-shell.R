@@ -231,7 +231,6 @@ mutate(Value = ifelse(str_detect(Value, "\\(.*\\)"), NA, Value),
 
 
 # Count number of NAs per data type
-#
 # Lots of NAs for Sales measured in dollars.
 
 
@@ -241,14 +240,14 @@ NA_count <- rawmoll %>%
             pct_NA = round(sum(is.na(Value))/length(Value),2)) %>%
   ungroup()
 
-write.csv(NA_count, file.path(intdata, "States_Totals_2013/data_NA_count.csv"))
+write.csv(NA_count, file.path(intdata, "mollusk_totals/US_sales_NA_2013.csv"))
 
 
 
 # Gapfill
 
 # Yipes.. lots of gapfilling using linear regression.. lots of missing data!! Improve gapfill method later. Investigate linear regression and imputation.
-#
+
 # * For states with at least the mean number of non-missing values, use state-unit average
 # * For states with all missing values, use the regional-unit average.
 # * For remaining missing values, use unit average
@@ -257,17 +256,19 @@ write.csv(NA_count, file.path(intdata, "States_Totals_2013/data_NA_count.csv"))
 
 # Combine State Region Information from R `datasets` database
 state_df <- cbind(state.name, as.character(state.region)) %>%
-as.data.frame() %>%
-rename(State = state.name, Region = V2) %>%
-mutate(State = toupper(State))
+  as.data.frame() %>%
+  rename(State = state.name, Region = V2) %>%
+  mutate(State = toupper(State))
 
-fish_rgns <- rawfish %>%
-left_join(state_df, by = "State")
+write.csv(state_df, file.path(intdata, "state_region.csv"))
+
+moll_rgns <- rawmoll %>%
+  left_join(state_df, by = "State")
 
 
 # Add gapfill info based on number of non-missing values
 # Gapfill column: 1 means gapfilled, 0 means not gapfilled
-fish_gf <- fish_rgns %>%
+moll_gf <- moll_rgns %>%
 group_by(State, Unit) %>%
 mutate(NAs = sum(is.na(Value)),
 nonNAs = sum(!is.na(Value))) %>%
@@ -276,7 +277,7 @@ mutate(Gapfill = ifelse(is.na(Value), 1, 0),
 GF_Method = ifelse(Gapfill == 1 & nonNAs >= 6, "State Average", NA),
 GF_Method = ifelse(Gapfill == 1 & nonNAs < 6, "Region Average", GF_Method))
 
-fish_gf_final <- fish_gf %>%
+moll_gf_final <- moll_gf %>%
 group_by(State, Unit) %>%
 mutate(State_Avg = mean(Value, na.rm=TRUE)) %>%
 ungroup() %>%
@@ -290,7 +291,7 @@ mutate(Unit_Avg = mean(Value, na.rm=TRUE)) %>%
 ungroup() %>%
 mutate(Value = ifelse(is.na(Value), Unit_Avg, Value))
 
-write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill.csv"), row.names=FALSE)
+write.csv(moll_gf_final, file.path(intdata, "mollusk_totals/US_sales_gapfill.csv"), row.names=FALSE)
 
 ## Predict values with linear model- try this later
 # Compare models to select a gapfilling method
@@ -310,34 +311,31 @@ write.csv(fish_gf_final, file.path(intdata, "States_Totals_2013/US_sales_gapfill
 # Total Sales in 2013 per State
 
 
-fish_sales <- fish_gf_final %>%
+moll_sales <- moll_gf_final %>%
 select(Year, State, Species, Product_Type, Unit, Value) %>%
 group_by(State, Unit) %>%
 summarise(Total = sum(Value)) %>%
 ungroup()
 
 # create columns needed for mapping in map module
-fish_us_map <- fish_sales %>%
-rename(state = State,
-map_data = Total,
-type = Unit) %>%
-mutate(units = case_when(
-str_detect(type, "DOLLARS") ~ "USD",
-str_detect(type, "HEAD") ~ "fish",
-str_detect(type, "LB") ~ "lbs",
-str_detect(type,"OPERATIONS") ~ "operations",
-str_detect(type, "EGGS") ~ "eggs",
-TRUE ~ type
-)) %>%
-mutate(taxon = "Fish")
+moll_us_map <- moll_sales %>%
+  rename(state = State,
+         map_data = Total,
+         type = Unit) %>%
+  mutate(units = case_when(
+    str_detect(type, "DOLLARS") ~ "USD",
+    str_detect(type,"OPERATIONS") ~ "operations",
+    TRUE ~ type
+  )) %>%
+  mutate(taxon = "Mollusk")
 
-write.csv(fish_us_map, file.path(intdata, "fish_us_map.csv"), row.names = FALSE)
+write.csv(moll_us_map, file.path(intdata, "mollusk_us_map.csv"), row.names = FALSE)
 
 
 
 
-## FOR PLOTTING FISH PRODUCTION MAP
-data_for_map <- read.csv(file.path(intdata, "fish_us_map.csv"))
+## FOR PLOTTING MOLLUSK PRODUCTION MAP
+data_for_map <- read.csv(file.path(intdata, "mollusk_us_map.csv"))
 
 # just state and lat/lon
 state_tidy <- us_states(resolution = "low") %>%
