@@ -35,6 +35,41 @@ function(input, output, session) {
              color_palette = ygb,
              legend_title = "Legend",
              popup_title = "state")
+  
+  
+  ## US Shellfish Aquaculture Baseline Metrics ##
+  callModule(summary_stats, "shell_baseline",
+             number_boxes = 3,
+             statistic = list("39%", "48%", "20%"),
+             text = list("of US shellfish sales are unidentified species, 22% are oysters and 15% are clams.",
+                         "of shellfish aquaculture sales was produced in Washington during 2013, totalling $366 million.",
+                         "of shellfish farms were in Washington, but Connecticut had greater sales per farm on average at $1 million."))
+  
+  ## Shellfish Aquaculture US Map ##
+  callModule(card_map, "shell_us_map",
+             data = shell_us_map,
+             field = "input",
+             filter_field = type, # type of data to plot
+             display_field = "map_data",
+             display_units = "units",
+             color_palette = ygb,
+             legend_title = "Legend",
+             popup_title = "state")
+  
+  
+  
+  
+  
+  output$downloadData <- downloadHandler(
+    filename="shellfish.csv",  # desired file name on client 
+    content=function(con) {
+      file.copy("data/int/mollusk_totals/US_sales_2013.csv", con)
+    }
+  )
+
+
+
+    
 
 
   }

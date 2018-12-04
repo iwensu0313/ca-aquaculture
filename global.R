@@ -26,10 +26,6 @@ ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue
 
 ## SOURCE EXTERNAL SCRIPTS ##
 
-## source OHI scripts
-source(paste0("http://ohi-science.org/", prep_repo, "/src/R/fao_fxn.R"))
-source(paste0("http://ohi-science.org/", prep_repo, "/globalprep/mar/", assess_yr, "/mar_fxs.R"))
-
 ## source modules
 source("modules/chart_card.R")
 source("modules/map_card.R")
@@ -52,3 +48,4 @@ options(scipen = 999,
 
 ## US AQUACULTURE DATA SOURCES ##
 source("dataprep/us-fish.R")
+source("dataprep/us-shell.R")

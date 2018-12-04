@@ -12,9 +12,10 @@ dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "dashboard"),
       menuItem("Finfish", tabName = "us-fish"),
-      menuItem("Shellfish", tabName = "us-shell"),
-      menuItem("Resources"), tabName ="resources",
-      menuItem("Contact", tabName = "contact")
+      menuItem("Shellfish", tabName = "us-shell")
+      #,
+      #menuItem("Resources"), tabName ="resources",
+      #menuItem("Contact", tabName = "contact")
   ),
   
   # Footer tag, include hyperlink
@@ -67,7 +68,7 @@ dashboardPage(
             summary_stats_ui(id = "fish_baseline",
                                  number_boxes = 3),
                 
-            ## Mariculture Global Map
+            ## Finfish US Map
             map_ui(id = "fish_us_map",
                    title_text = paste0("Finfish Aquaculture Sales in 2013"),
                    sub_title_text = "Start exploring! Select type of data to view: 1) sales in dollars 2) production in weight, no. of fish, or eggs 3) total farm operations. Click on states to see values. It may take a few seconds to load. The data in the map categorizes countries into 4 quantiles with 75-100% being the top producing countries. Don't forget to check out Hawaii!",
@@ -91,11 +92,32 @@ dashboardPage(
             
             div(class = "master",
                 
-                tab_title_ui(title = "Shellfish Aquaculture",
-                             lead = "Anticipated completion will mid-December!",
-                             subtitle = "",
-                             description = "")
-                
+            tab_title_ui(title = "Shellfish Aquaculture",
+                         lead = "",
+                         subtitle = "About the Data:",
+                         description = "Below you will find shellfish aquaculture production data across US states from the US Department of Aquaculture Quick Stats database. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Shellfish species include clams, mussels, oysters, and abalones. Farms surveyed have sales of $1,000 or more. In most cases, 50-60% of production information for individual farms was withheld from the public to avoid disclosing data where requested. Undisclosed data was estimated using state or regional averages within each data type. The fourth USDA aquaculture census will be conducted in December 2018 by the National Agriculture Statistics Service (NASS)."),
+            
+            ## Baseline Metrics ##
+            summary_stats_ui(id = "shell_baseline",
+                             number_boxes = 3),
+            
+            ## Shellfish US Map
+            map_ui(id = "shell_us_map",
+                   title_text = paste0("Shellfish Aquaculture Sales in 2013"),
+                   sub_title_text = "Start exploring! Select type of data to view: 1) sales in dollars 2) total farm operations. Click on states to see values. It may take a few seconds to load. The data in the map categorizes countries into 4 quantiles with 75-100% being the top producing countries. Don't forget to check out Hawaii!",
+                   select_type = "radio",
+                   select_location = "above",
+                   select_choices = c("Dollars" = "DOLLARS",
+                                      "Farms" = "OPERATIONS"),
+                   select_label = NULL,
+                   source_text = list(
+                     p("Sources:"),
+                     p(tags$sup("1."), tags$a(href="https://quickstats.nass.usda.gov/", "US Department of Agriculture"), ", Quick Stats Census (2013)"))
+            ), # end of map ui
+
+
+            downloadButton('downloadData', 'Download')   
+            
             ) # end div master
     ) # end us-shell tabItem
     

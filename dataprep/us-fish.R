@@ -341,7 +341,7 @@ intdata <- "data/int"
 
 ## FOR WRANGLING FISH PRODUCTION STATS
 ## which species has the largest $ share
-# stats <- read.csv(file.path(intdata, "fish_totals/US_sales.csv"), stringsAsFactors = FALSE)
+# stats <- read.csv(file.path(intdata, "fish_totals/US_sales_2013.csv"), stringsAsFactors = FALSE)
 # stats_sp <- stats %>%
 #   group_by(Species) %>%
 #   summarise(Species_Value = sum(Value)) %>%
