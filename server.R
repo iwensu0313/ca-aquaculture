@@ -50,10 +50,10 @@ function(input, output, session) {
   ## US Shellfish Aquaculture Baseline Metrics ##
   callModule(summary_stats, "shell_metrics",
              number_boxes = 3,
-             statistic = list("39%", "48%", "20%"),
-             text = list("of US shellfish sales are unidentified species, 22% are oysters and 15% are clams.",
-                         "of shellfish aquaculture sales was produced in Washington during 2013, totalling $366 million.",
-                         "of shellfish farms were in Washington, but Connecticut had greater sales per farm on average at $1 million."))
+             statistic = list("55%", "39%", "52%"),
+             text = list("of US shellfish sales are oysters, 38% are clams and 4% are mussels.",
+                         "of shellfish aquaculture sales was produced in Washington during 2013.",
+                         "of shellfish farms are in Florida, Massachusetts and Washington."))
   
   ## Shellfish Aquaculture US Map ##
   callModule(card_map, "shell_us_map",

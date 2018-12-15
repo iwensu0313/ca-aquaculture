@@ -349,43 +349,60 @@ shell_us_map <- state_tidy %>%
 
 ## FOR WRANGLING SHELLFISH PRODUCTION STATS
 # which species has the largest $ share
-stats <- read.csv(file.path(intdata, "mollusk_totals/US_sales_2013.csv"), stringsAsFactors = FALSE)
-stats_sp <- stats %>%
-  group_by(Species) %>%
-  summarise(Species_Value = sum(Value, na.rm=T)) %>%
-  ungroup() %>%
-  arrange(desc(Species_Value)) %>%
-  mutate(Total_Sales = sum(Species_Value, na.rm=T),
-         Pct_Sales = round(100*(Species_Value/Total_Sales),2))
+180150/328567
+123293/328567
+12253/328567
+# stats <- read.csv(file.path(intdata, "mollusk_totals/US_sales_2013.csv"), stringsAsFactors = FALSE)
+# stats_sp <- stats %>%
+#   group_by(Species) %>%
+#   summarise(Species_Value = sum(Value, na.rm=T)) %>%
+#   ungroup() %>%
+#   arrange(desc(Species_Value)) %>%
+#   mutate(Total_Sales = sum(Species_Value, na.rm=T),
+#          Pct_Sales = round(100*(Species_Value/Total_Sales),2))
 
 # which state has the largest $ share
-stats_state <- stats %>%
-  group_by(State) %>%
-  summarise(State_Value = sum(Value, na.rm=T)) %>%
-  ungroup() %>%
-  arrange(desc(State_Value)) %>%
-  mutate(Total_Sales = sum(State_Value, na.rm=T),
-         Pct_Sales = round(100*(State_Value/Total_Sales),2))
+k <- gf_moll %>% 
+  filter(Unit == "DOLLARS") %>%
+  arrange(desc(Value)) %>% 
+  group_by(Year) %>% 
+  mutate(Total_Sales = sum(Value, na.rm=T),
+         Pct_Sales = round(100*(Value/Total_Sales),2))
+
+# stats_state <- stats %>%
+#   group_by(State) %>%
+#   summarise(State_Value = sum(Value, na.rm=T)) %>%
+#   ungroup() %>%
+#   arrange(desc(State_Value)) %>%
+#   mutate(Total_Sales = sum(State_Value, na.rm=T),
+#          Pct_Sales = round(100*(State_Value/Total_Sales),2))
 
 # which state has the most $/operation
-US_sales_gapfill <- read_csv("data/int/mollusk_totals/US_sales_gapfill.csv")
-op <- US_sales_gapfill %>%
-  select(Year, State, Species, Product_Type, Unit, Value) %>%
+j <- gf_moll %>% 
   filter(Unit == "OPERATIONS") %>%
-  group_by(State) %>%
-  summarise(Total_Val = sum(Value, na.rm=T)) %>%
-  ungroup() %>%
-  arrange(desc(Total_Val)) %>%
-  mutate(US_Total_Val = sum(Total_Val, na.rm=T),
-         Pct_Total = round(100*(Total_Val/US_Total_Val),2))
+  arrange(desc(Value)) %>% 
+  group_by(Year) %>% 
+  mutate(Total_Op = sum(Value, na.rm=T),
+         Pct_Op = round(100*(Value/Total_Op),2))
 
-# Sales per operation
-stats_state[stats_state$State == "WASHINGTON",][["State_Value"]]/op[op$State == "WASHINGTON",][["Total_Val"]]
-stats_state[stats_state$State == "MASSACHUSETTS",][["State_Value"]]/op[op$State == "MASSACHUSETTS",][["Total_Val"]]
-
-sales_per_op <- stats_state %>% 
-  full_join(op, by = "State") %>% 
-  rename(No_Operations = Total_Val,
-         Sales = State_Value) %>% 
-  mutate(sales_pr_op = Sales/No_Operations) %>% 
-  arrange(desc(sales_pr_op))
+# US_sales_gapfill <- read_csv("data/int/mollusk_totals/US_sales_gapfill.csv")
+# op <- US_sales_gapfill %>%
+#   select(Year, State, Species, Product_Type, Unit, Value) %>%
+#   filter(Unit == "OPERATIONS") %>%
+#   group_by(State) %>%
+#   summarise(Total_Val = sum(Value, na.rm=T)) %>%
+#   ungroup() %>%
+#   arrange(desc(Total_Val)) %>%
+#   mutate(US_Total_Val = sum(Total_Val, na.rm=T),
+#          Pct_Total = round(100*(Total_Val/US_Total_Val),2))
+# 
+# # Sales per operation
+# stats_state[stats_state$State == "WASHINGTON",][["State_Value"]]/op[op$State == "WASHINGTON",][["Total_Val"]]
+# stats_state[stats_state$State == "MASSACHUSETTS",][["State_Value"]]/op[op$State == "MASSACHUSETTS",][["Total_Val"]]
+# 
+# sales_per_op <- stats_state %>% 
+#   full_join(op, by = "State") %>% 
+#   rename(No_Operations = Total_Val,
+#          Sales = State_Value) %>% 
+#   mutate(sales_pr_op = Sales/No_Operations) %>% 
+#   arrange(desc(sales_pr_op))
