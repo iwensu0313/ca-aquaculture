@@ -119,7 +119,7 @@ dashboardPage(
             div(class = "master",
                 
             tab_title_ui(title = "US Shellfish Aquaculture",
-                         lead = "Shellfish cultivation can improve water quality and contribute to the global increase in protein demand.",
+                         lead = "Shellfish cultivation can significantly improve water quality, has little to no environmental impact, and can contribute protein demand.",
                          subtitle = "About the Data:",
                          description = "Below you will find shellfish aquaculture production data across US states from the US Department of Aquaculture Quick Stats database. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Shellfish species include clams, mussels, oysters, and abalones. Farms surveyed have sales of $1,000 or more. In most cases, 50-60% of production information for individual farms was withheld from the public to avoid disclosing data where requested. Undisclosed data was estimated using state or regional averages within each data type. The fourth USDA aquaculture census will be conducted in December 2018 by the National Agriculture Statistics Service (NASS)."),
             
