@@ -50,23 +50,24 @@ DT::datatable(molprod)
 
 ## Select Totals
 # Summary
-# 1. There are two categories in `Domain`: TOTAL and SALES. Select TOTAL. SALES category is a smaller subset of TOTAL (ironically) and only provides aggregated value for the US.
+# 1. Unsure what the two categories in `Domain` are: TOTAL and SALES. At times, SALES category seems to be a smaller subset of TOTAL (ironically) and only provides aggregated value for the US, but unclear..
 # 2. Split `Data.Item` column into `Product` and `Unit`. Tidy strings.
 # 3. Split `Product` into species and product type.
 # 4. Separate WHOLESALE types
 # 5. Fix species names
 
 # Definitions
-#* In the `Data.Item` column, `Sales` is defined as sales in US dollars.
-#* Operations: Depending upon the data series, may refer to farms, ranches, growers, or producers (original USDA metadata).
+# In the `Data.Item` column, `Sales` is defined as sales in US dollars.
+# Operations: Depending upon the data series, may refer to farms, ranches, growers, or producers (original USDA metadata).
 
 ### Step 1-2
-#*Select TOTALS and Split `Data.Item` into `Product` and `Unit`*
+#Split `Data.Item` into `Product` and `Unit`*
 
 # split Data.Item into Product and Unit
+# simplify Unit category names
 molunit <- molprod %>%
-#  filter(Domain == "TOTAL") %>%
-#  select(-Domain) %>%
+  filter(Domain == "TOTAL") %>% 
+  select(-Domain) %>% 
   separate(Data.Item, c("Product", "Unit"), " - ") %>%
   mutate(Product = str_replace(Product, "MOLLUSKS, ", "")) %>%
   mutate(Unit = case_when(
@@ -81,8 +82,8 @@ molunit <- molprod %>%
     str_detect(Unit, "SALES, MEASURED IN PCT BY OUTLET") ~ "PCT BY OUTLET"
   ))
 
-# Save unique category of values (e.g. dollars, head, lb)
-data_cat <- unique(molunit$Unit)
+# See unique category of values (e.g. dollars, head, lb)
+unique(molunit$Unit)
 
 DT::datatable(molunit)
 
@@ -92,14 +93,12 @@ DT::datatable(molunit)
 #REGEX `,\\s*(?=[^,]+$)` Explained: look for a comma (`,`) that is followed by zero or more (`*`) white space (`\\s`), which is immediately followed by one or more non-comma values (`?=[^,]+`) at the end of the string (`$`). See (Regex cheatsheet)[https://www.rexegg.com/regex-quickstart.html].
 
 # first split: separate by last comma
-firstsplit <-  molunit %>%
+firstsplit <- molunit %>%
   separate(Product, c("Species", "Product_Type"), ",\\s*(?=[^,]+$)", fill="right")
 
 ### Step 4
 # Second split: remove wholesale types & retail from Species column
-# Wholesale Product Types
-# Check values (e.g. EXPORTS) in column Product_Type that are associated with WHOLESALE in Species and create new wholesale category column. For these, assign a Species value of NA and Product_Type as WHOLESALE.
-
+# Check values (e.g. EXPORTS) in column Product_Type that are associated with WHOLESALE (in col Species) and create new wholesale category column. For these, assign a Species value of NA and Product_Type as WHOLESALE.
 whole <- firstsplit %>% filter(Species == "WHOLESALE")
 wholesale_types <- str_c(unique(whole$Product_Type), collapse="|")
 
@@ -120,52 +119,56 @@ secsplit <- firstsplit %>%
 # check which ones are not product types (e.g. species names)
 unique(secsplit$Product_Type)
 
-# First rearrange Species column separated by commas, placing second part before the first (except for those with parentheses, just turn them into generic taxa: "CLAMS, (EXCL HARD & MANILA)" = "CLAMS").
+# First rearrange Species column separated by commas, placing second part before the first and convert all Species with a specified exclusion into "OTHER". Ex: "CLAMS, (EXCL HARD & MANILA)" = "OTHER CLAMS".
 #Second, move parts of species names (e.g. `MANILA`, `PACIFIC`) in the `Product_Type` column back into `Species`.
 # REGEX `'(.*)\\,\\s+(\\w+)','\\2 \\1'` explained: Substitute any strings in `Species` that have a comma separating two word phrases and place the second phrase in front of the first.
+secsplit$Species <- sub('(.*)\\,\\s+(.*)','\\2 \\1', secsplit$Species)
+secsplit$Species <- sub('\\(.*\\)', 'OTHER', secsplit$Species)
 
-secsplit$Species <- sub('(.*)\\,\\s+(\\w+)','\\2 \\1', secsplit$Species)
-secsplit$Species <- sub(',.*$', '', secsplit$Species) # remove taxa with ", (EXCL...)"
-
-# check names, should be 12 types incl NA
+# check names, should be 14 types incl NA
 unique(secsplit$Species)
+# Check that any NAs in Species is associated with WHOLESALE data
+check <- secsplit %>% 
+  mutate(check = ifelse(is.na(Species) | Product_Type == "WHOLESALE", 1,0))
+table(check$check)[2] == sum(is.na(check$Species)) # should be TRUE
 
-# find parts of species names that got placed in product type - do "(EXCL GRASS)" separately
+# find parts of species names that got placed in product type
+# replace (EXCL) with "OTHER" and save species names
 unique(secsplit$Product_Type)
-sp_names <- str_c(c("GEODUCK", "HARD", "MANILA", "EASTERN", "PACIFIC"), collapse="|")
-# names to remove
-rm_names <- str_c(c("(EXCL GEODUCK & HARD & MANILA)", "(EXCL EASTERN & PACIFIC)", "(EXCL HARD & MANILA)"), collapse="|")
+secsplit$Product_Type <- sub('\\(.*\\)', 'OTHER', secsplit$Product_Type)
+sp_names <- str_c(c("GEODUCK", "HARD", "MANILA", "EASTERN", "PACIFIC", "^OTHER$"), collapse="|")
 
-# Replace any NAs with "NONE" to prevent it from being removed in filters later
+# Replace missing product type with ALL PRODUCTS, fix species names in product type col
 sp_fix <- secsplit %>%
   mutate(
-    Product_Type = ifelse(is.na(Product_Type), "NONE", Product_Type),
+    Product_Type = ifelse(is.na(Product_Type), "ALL PRODUCTS", Product_Type),
     Species = ifelse(str_detect(Product_Type, sp_names),
-                     paste(Product_Type, Species, sep=" "), Species),
-    Species = ifelse(str_detect(Product_Type, "(EXCL GEODUCK & HARD & MANILA)"), "NONE", Species), # remove parentheses contents
-    Species = ifelse(str_detect(Product_Type, rm_names), "NONE", Species),
-    Species = ifelse(is.na(Species), "NONE", Species)
+                     paste(Product_Type, Species, sep=" "), Species)#,
+    #Species = ifelse(is.na(Species), "NONE", Species)
   )
 
-# remove species names from Product_Type
-sp_remove <- str_c(c(sp_names, rm_names), collapse="|")
-
+# remove species names from Product_Type, replace with "ALL PRODUCTS"
 totalmol <- sp_fix %>%
-  mutate(Product_Type = ifelse(str_detect(Product_Type, sp_remove), "NONE", Product_Type))
-
-# Check
-unique(totalmol$Product_Type) # should have 7 values incl NONE
-unique(totalmol$Species) # should have 12 values incl NONE
+  mutate(Product_Type = ifelse(str_detect(Product_Type, sp_names), "ALL PRODUCTS", Product_Type))
 
 
 
 
-## Save Tidied Shellfish
-# unclear what Domain == SALES is.... check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
+## Check
+unique(totalmol$Product_Type) # should have 7 values
+unique(totalmol$Species) # should have 14 values incl NA
+# make sure remaining NAs in Species column are all WHOLESALE or RETAIL data
+# IN THE FUTURE ADD IN IF STATEMENT TO STOP IF FALSE
+k <- totalmol %>% filter(is.na(Species))
+unique(k$Product_Type)
+
+
+
+
+## Save Tidied TOTAL Shellfish Data
+# check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
 tidy_mol <- totalmol %>% 
-  mutate(Value = as.numeric(str_replace_all(Value, ",", ""))) %>% 
-  filter(Domain == "TOTAL")
-
+  mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
 write.csv(tidy_mol, "data/int/mollusk_totals/US_sales_all_tidy.csv")
 
 
@@ -180,10 +183,12 @@ rawmoll <- tidy_mol %>%
   filter(State != "US") %>%
   select(-Wholesale_Type, -State_Code) %>%
   filter(Year == 2013) %>%
-  mutate(Value = ifelse(str_detect(Value, "\\(.*\\)"), NA, Value)) %>% 
-  filter(Species == "MOLLUSKS", Product_Type == "NONE") # this is a temp solution for getting the total number of mollusk data per state... fix later
+  #mutate(Value = ifelse(str_detect(Value, "\\(.*\\)"), NA, Value)) %>% 
+  filter(Species == "MOLLUSKS", Product_Type == "ALL PRODUCTS") # this is a temp solution for getting the total number of mollusk data per state... fix later
 
 DT::datatable(rawmoll)
+
+
 
 
 ## Gapfill
@@ -206,9 +211,13 @@ gf_moll <- rawmoll %>%
                   prod(Value, na.rm=TRUE)*dolperop2013,
                   Value))
 
-# check total sales after gapfilling
+
+
+
+## Check 
+# total sales after gapfilling, actual number is ~328,567,000
 gf_moll %>% 
-  filter(Species == "MOLLUSKS", Product_Type == "NONE") %>% 
+  filter(Species == "MOLLUSKS", Product_Type == "ALL PRODUCTS") %>% 
   group_by(Unit) %>% 
   summarize(tots = sum(Value, na.rm = TRUE))
 
@@ -294,12 +303,9 @@ write.csv(NA_count, file.path(intdata, "mollusk_totals/US_sales_NA_2013.csv"))
 
 
 
-# Total Sales in 2013 per State
+## Total Sales in 2013 per State
 moll_sales <- gf_moll %>%
-  select(Year, State, Unit, Value) #%>%
-  # group_by(State, Unit) %>%
-  # summarise(Total = sum(Value)) %>%
-  # ungroup()
+  select(Year, State, Unit, Value)
 
 # create columns needed for mapping in map module
 moll_us_map <- moll_sales %>%

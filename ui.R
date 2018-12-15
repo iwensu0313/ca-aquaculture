@@ -3,7 +3,7 @@ source("global.R")
 ### Setting up the dashboard page
 dashboardPage(
   dashboardHeader(
-    title = "Shellfish Aquaculture",
+    title = "Aqculture Data",
     titleWidth = 200),
   
 ### Dashboard Sidebar  
@@ -13,7 +13,7 @@ dashboardPage(
       menuItem("About", tabName = "dashboard"),
       #menuItem("California", tabName = "cali"),
       #menuItem("Finfish Production", tabName = "us-fish"),
-      menuItem("US Production", tabName = "us-shell")
+      menuItem("US Shellfish", tabName = "us-shell")
       #,
       #menuItem("Resources"), tabName ="resources",
       #menuItem("Contact", tabName = "contact")
@@ -119,9 +119,9 @@ dashboardPage(
             div(class = "master",
                 
             tab_title_ui(title = "US Shellfish Aquaculture",
-                         lead = "Shellfish cultivation can significantly improve water quality, be environmentally sustainable, and contribute to the increase in protein demand.",
+                         lead = "Shellfish cultivation can significantly improve water quality, is environmentally sustainable, and contribute to the increase in protein demand.",
                          subtitle = "About the Data:",
-                         description = "Below you will find shellfish aquaculture production data across US states from the US Department of Aquaculture Quick Stats database. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Shellfish species include clams, mussels, oysters, and abalones. Farms surveyed have sales of $1,000 or more. In most cases, 50-60% of production information for individual farms was withheld from the public to avoid disclosing data where requested. Undisclosed data was estimated using state or regional averages within each data type. The fourth USDA aquaculture census will be conducted in December 2018 by the National Agriculture Statistics Service (NASS)."),
+                         description = "Below you will find shellfish aquaculture production data across US states from the US Department of Aquaculture Quick Stats database. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Shellfish species include clams, mussels, oysters, and abalones. Farms surveyed have sales of $1,000 or more. Total sales in dollars had to be estimated for Alaska, Georgia, Hawaii, Maine, Massachusetts, and Pennsylvania due to undisclosed data. This was estimated by multiplying the number of farm operations by the average US sales per operation. The 2018 USDA aquaculture census will not be released until late 2019."),
             
             ## Baseline Metrics ##
             summary_stats_ui(id = "shell_metrics",
