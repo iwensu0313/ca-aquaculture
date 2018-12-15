@@ -16,7 +16,7 @@ frontp = function()
       div(class = "intro-divider"), 
       
       # Additional information
-      tags$p("We strive to provide the most relevant and current information. Sources of aquaculture data include the USDA Quick Stats and NOAA Fish Stats database. Currently you can explore data for US finfish production. We will continue to add to this site over time and welcome any suggestions."),
+      tags$p("We strive to provide the most relevant and current information. Sources of aquaculture data include the USDA Quick Stats and NOAA Fish Stats database. Currently you can explore data for US shellfish production. We will continue to add to this site over time and welcome any suggestions."),
 
       
       # Two hyperlink boxes: more info

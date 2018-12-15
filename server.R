@@ -17,8 +17,18 @@ function(input, output, session) {
   #            yaxis_label = "Annual Production (tonnes)")
   
   
+  
+  ## California Aquaculture Baseline Metrics ##
+  callModule(summary_stats, "cali_metrics",
+             number_boxes = 3,
+             statistic = list("39%", "48%", "20%"),
+             text = list("of US shellfish sales are unidentified species, 22% are oysters and 15% are clams.",
+                         "of shellfish aquaculture sales was produced in Washington during 2013, totalling $366 million.",
+                         "of shellfish farms were in Washington, but Connecticut had greater sales per farm on average at $1 million."))
+  
+  
   ## US Finfish Aquaculture Baseline Metrics ##
-  callModule(summary_stats, "fish_baseline",
+  callModule(summary_stats, "fish_metrics",
              number_boxes = 3,
              statistic = list("30%", "$703 M", "15%"),
              text = list("of US finfish aquaculture sales in USD are from catfish, followed by unidentified fish at 23%, and trout at 17%.",
@@ -38,7 +48,7 @@ function(input, output, session) {
   
   
   ## US Shellfish Aquaculture Baseline Metrics ##
-  callModule(summary_stats, "shell_baseline",
+  callModule(summary_stats, "shell_metrics",
              number_boxes = 3,
              statistic = list("39%", "48%", "20%"),
              text = list("of US shellfish sales are unidentified species, 22% are oysters and 15% are clams.",
@@ -60,12 +70,12 @@ function(input, output, session) {
   
   
   
-  output$downloadData <- downloadHandler(
-    filename="shellfish.csv",  # desired file name on client 
-    content=function(con) {
-      file.copy("data/int/mollusk_totals/US_sales_2013.csv", con)
-    }
-  )
+  # output$downloadData <- downloadHandler(
+  #   filename="shellfish.csv",  # desired file name on client 
+  #   content=function(con) {
+  #     file.copy("data/int/mollusk_totals/US_sales_2013.csv", con)
+  #   }
+  # )
 
 
 

@@ -218,7 +218,8 @@ card_map <- function(input,
     
     selected_data <- reactive({
       
-      df <- data_shp %>% filter(!!filter_field == input$select)
+      df <- data_shp %>% 
+        filter(!!filter_field == input$select)
       
       return(df)
       
