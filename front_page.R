@@ -16,9 +16,9 @@ frontp = function()
       div(class = "intro-divider"), 
       
       # Additional information
-      tags$p("This project strives to provide the most relevant information. Sources of aquaculture data include the US Department of Agriculture Quick Stats database. Currently you can explore data for US shellfish production. More data will continuously be added to this site over time. Contact ",
+      tags$p("This project strives to provide the most relevant information. Sources of aquaculture data include the US Department of Agriculture Quick Stats database. Currently you can explore data for US finfish and shellfish production. More data will continuously be added to this site over time. Contact ",
              tags$a(href="https://iwensu0313.github.io", "Iwen Su"), 
-             "for more information or with any suggestions."),
+             "for more information."),
       
       # Two hyperlink boxes: more info
       div(class = "box-con",

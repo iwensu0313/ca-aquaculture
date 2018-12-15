@@ -30,10 +30,10 @@ function(input, output, session) {
   ## US Finfish Aquaculture Baseline Metrics ##
   callModule(summary_stats, "fish_metrics",
              number_boxes = 3,
-             statistic = list("30%", "$703 M", "15%"),
-             text = list("of US finfish aquaculture sales in USD are from catfish, followed by unidentified fish at 23%, and trout at 17%.",
-                         "in finfish aquaculture products was sold in Alabama, the highest finfish producing state in 2013.",
-                         "of finfish farms were located in Mississippi, but Alabama had greater sales per farm at an average of $1.5M."))
+             statistic = list("51%", "$202 M", "35%"),
+             text = list("of US food fish aquaculture sales in USD are from catfish, followed by trout at 15%, and bass at 7%.",
+                         "in finfish aquaculture products was sold in Mississippi, the highest food fish producing state in 2013.",
+                         "of food fish farms were located in Mississippi, Alabama, and North Carolina."))
   
   ## Finfish Aquaculture US Map ##
   callModule(card_map, "fish_us_map",

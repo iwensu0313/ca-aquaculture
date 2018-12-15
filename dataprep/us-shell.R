@@ -219,7 +219,7 @@ gf_moll <- rawmoll %>%
 gf_moll %>% 
   filter(Species == "MOLLUSKS", Product_Type == "ALL PRODUCTS") %>% 
   group_by(Unit) %>% 
-  summarize(tots = sum(Value, na.rm = TRUE))
+  summarise(tots = sum(Value, na.rm = TRUE))
 
 
 
