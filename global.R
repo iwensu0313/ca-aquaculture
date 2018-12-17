@@ -15,6 +15,7 @@ library(sunburstR)
 library(viridis)
 library(stringr)
 library(USAboundaries)
+library(DescTools)
 
 ## Color Palettes
 ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue shades
@@ -51,4 +52,5 @@ source("dataprep/us-fish.R")
 source("dataprep/us-shell.R")
 
 ## CA AQUACULTURE DATA SOURCES ##
-source("dataprep/ca-shell.R")
+source("dataprep/ca-aqua.R")
+source("dataprep/ca-imports.R")

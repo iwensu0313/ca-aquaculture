@@ -188,7 +188,7 @@ unique(totalfish$Species) # should have 27 values incl NA
 # check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
 tidy_fish <- totalfish %>% 
   mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
-write.csv(tidy_fish, "data/int/fish_totals/US_sales_all_tidy.csv")
+write.csv(tidy_fish, "data/int/fish_totals/US_sales_all_tidy.csv", row.names = FALSE)
 
 
 
