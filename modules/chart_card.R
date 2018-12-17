@@ -2,7 +2,7 @@
 #' Chart Card Module
 #'
 #' This script contains two functions:
-#' \code{card_ui} generates the user interface for each card
+#' \code{plot_ui} generates the user interface for each card
 #' \code{card_plot} generates the plot shown in a card
 #' 
 #' The functions together generate a box within a fluid row that has a width 
@@ -17,7 +17,7 @@ library(plotly)
 library(assertthat)
 
 #'
-#' @title card_ui function
+#' @title plot_ui function
 #' 
 #' @description Generates the ui for cards.
 #' 
@@ -25,7 +25,7 @@ library(assertthat)
 #' the function inputs.
 #' 
 #' @details
-#' \code{card_ui} needs the text that will surround the chart on 
+#' \code{plot_ui} needs the text that will surround the chart on 
 #' the card as well as information about the select inputs if 
 #' applicable.
 #' 
@@ -68,7 +68,7 @@ library(assertthat)
 #' 
 
 ## Card UI Function ##
-card_ui <- function(id, 
+plot_ui <- function(id, 
                     title_text = NULL,
                     sub_title_text = NULL,
                     select_type = c(NULL, "radio", "drop_down", "search", "select"),
@@ -159,7 +159,7 @@ card_ui <- function(id,
 #' 
 #' @param input autofilled by shiny.
 #' @param output autofilled by shiny.
-#' @param session character, must be the exact same as the id passed to the card_ui function.
+#' @param session character, must be the exact same as the id passed to the plot_ui function.
 #' @param df name of dataframe or "input". The function is built to handle one of three senarios:
 #' \itemize{
 #'   \item{There is no select input. In this case df is the name of the dataframe being used 

@@ -169,7 +169,7 @@ unique(k$Product_Type)
 # check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
 tidy_mol <- totalmol %>% 
   mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
-write.csv(tidy_mol, "data/int/mollusk_totals/US_sales_all_tidy.csv")
+write.csv(tidy_mol, "data/int/mollusk_totals/US_sales_all_tidy.csv", row.names = FALSE)
 
 
 
