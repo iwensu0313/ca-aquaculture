@@ -49,3 +49,6 @@ options(scipen = 999,
 ## US AQUACULTURE DATA SOURCES ##
 source("dataprep/us-fish.R")
 source("dataprep/us-shell.R")
+
+## CA AQUACULTURE DATA SOURCES ##
+source("dataprep/ca-shell.R")

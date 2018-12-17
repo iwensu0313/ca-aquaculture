@@ -11,7 +11,7 @@ dashboardPage(
     
     sidebarMenu(
       menuItem("About", tabName = "dashboard"),
-      #menuItem("California", tabName = "cali"),
+      menuItem("California", tabName = "ca"),
       menuItem("US Finfish", tabName = "us-fish"),
       menuItem("US Shellfish", tabName = "us-shell")
       #,
@@ -55,21 +55,39 @@ dashboardPage(
     
     
     ## California Aquaculture
-    tabItem(tabName = "cali",
+    tabItem(tabName = "ca",
             
             div(class = "master",
                 
             ## Tab Title ##  
-            tab_title_ui(title = "",
+            tab_title_ui(title = "California Aquaculture",
                          lead = "",
-                         subtitle = "",
-                         description = list()
+                         subtitle = "About the Data:",
+                         description = list("Current information is from the 2013 USDA Census of Aquaculture. The 2018 data will be available at the end of 2019, so stay tuned!")
                          ), # end tab title ui
             
-            
             ## Baseline Metrics ##
-            summary_stats_ui(id = "cali_metrics",
-                             number_boxes = 3)
+            summary_stats_ui(id = "ca_metrics",
+                             number_boxes = 3),
+            
+            
+            ## Plot ##
+            plot_ui(id = "ca_shell_plot",
+                    title_text = "California Shellfish Operations",
+                    select_type = "radio",
+                    select_location = "above",
+                    select_choice = c(
+                      "2013" = "2013",
+                      "2005" = "2005",
+                      "1998" = "1998"),
+                    select_label = NULL,
+                    source_text = list(
+                      p("Sources:"),
+                      p(tags$sup("1."), 
+                        tags$a(href="https://quickstats.nass.usda.gov/", 
+                               "US Department of Agriculture"), 
+                        ", Quick Stats Census (2013)"))
+            ) # end plot ui
             
                 
                 ) # end div master

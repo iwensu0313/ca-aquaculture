@@ -1,30 +1,30 @@
 
 function(input, output, session) {
-
-  ## Mariculture Production ##
-  # callModule(card_plot, "mar_prod",
-  #            df = mar_harvest,
-  #            x = "year",
-  #            y = "tonnes",
-  #            color_group = "species",
-  #            filter_field = "country",
-  #            colors = cols,
-  #            plot_type = "scatter",
-  #            mode = "lines+markers",
-  #            tooltip_text = ~paste("Tonnes:", prettyNum(tonnes, big.mark=","), # format numbers > 1,000
-  #                                  "<br>Species:", species, sep=" "),
-  #            xaxis_label = "Year",
-  #            yaxis_label = "Annual Production (tonnes)")
   
   
-  
-  ## California Aquaculture Baseline Metrics ##
-  callModule(summary_stats, "cali_metrics",
+  ## California Mollusk Baseline Metrics ##
+  callModule(summary_stats, "ca_metrics",
              number_boxes = 3,
-             statistic = list("39%", "48%", "20%"),
-             text = list("of US shellfish sales are unidentified species, 22% are oysters and 15% are clams.",
-                         "of shellfish aquaculture sales was produced in Washington during 2013, totalling $366 million.",
-                         "of shellfish farms were in Washington, but Connecticut had greater sales per farm on average at $1 million."))
+             statistic = list("22%", "20%", "29%"),
+             text = list("of aquaculture farms in California were cultivating shellfish in 2013. 67% of them were selling Pacific Oysters.",
+                         "of California aquaculture sales came from shellfish, totalling approximately $17 M in 2013.",
+                         "increase in farms from 21 to 27 operations over 8 years, but sales declined by 15%."))
+  
+  ## California Mollusk Farm Plot ##
+  callModule(card_plot, "ca_shell_plot",
+             df = ca_operations_plot,
+             x = "Species",
+             y = "Value",
+             color_group = "Species",
+             filter_field = "Year",
+             colors = cols,
+             plot_type = "bar",
+             mode = NULL,
+             tooltip_text = ~paste("No. of Farms:", Value, sep=" "),
+             xaxis_label = "Type of Shellfish",
+             yaxis_label = "Number of Shellfish Farms")
+  
+  
   
   
   ## US Finfish Aquaculture Baseline Metrics ##
