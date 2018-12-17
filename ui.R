@@ -113,7 +113,7 @@ dashboardPage(
             ## Plot CA Seafood Import ##
             plot_ui(id = "ca_import_plot",
                     title_text = "California Seafood Imports",
-                    sub_title_text = "Search for an imported seafood product. Data includes only those explicitly described as farmed in the NOAA database. Other imported products such as seaweed are likely farmed, but not displayed below.",
+                    sub_title_text = "Select an imported seafood product from the drop down and view sales per country of origin. Data includes only those explicitly described as farmed in the NOAA database. Other imported products such as seaweed are likely farmed, but not displayed below.",
                     select_type = "search",
                     select_location = "above",
                     select_choice = list(
