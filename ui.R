@@ -65,7 +65,7 @@ dashboardPage(
             tab_title_ui(title = "California Aquaculture",
                          lead = "The land-based aquaculture industry in California has been around for several decades, but there has been recent expansion into coastal and open-ocean production.",
                          subtitle = "About the Data:",
-                         description = list("Below you will find information on types of shellfish and food fish species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture. Farms are defined as operations that have produced $1,000 or more in sales from aquaculture products. The fourth census will provide data for 2018 and will be available at the end of 2019, so stay tuned! You will also find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. The only products shown are those explicitly described as farmed.")
+                         description = list("Below you will find information on types of shellfish and food fish species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture. Farms are defined as operations that have produced $1,000 or more in sales from aquaculture products. The fourth census will provide data for 2018 and will be available at the end of 2019, so stay tuned! You will also find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. Seafood imports can provide an idea of consumer demand, as the majority of our seafood is not local. However, as local production increases, proper evaluation of demand will have to incorporate both domestic and foreign sources of seafood. The only products shown are those explicitly described as farmed.")
                          ), # end tab title ui
             
             ## Baseline Metrics ##
@@ -113,7 +113,7 @@ dashboardPage(
             ## Plot CA Seafood Import ##
             plot_ui(id = "ca_import_plot",
                     title_text = "California Seafood Imports",
-                    sub_title_text = "Search for an imported seafood product. Data includes only those explicitly described as farmed in the NOAA database. Other imported products such as seaweed are likely farmed, but not displayed below. Seafood imports can provide an idea of consumer demand, as the majority of our seafood is not local. However, as local production increases, proper evaluation of demand will have to incorporate both domestic and foreign sources of seafood.",
+                    sub_title_text = "Search for an imported seafood product. Data includes only those explicitly described as farmed in the NOAA database. Other imported products such as seaweed are likely farmed, but not displayed below.",
                     select_type = "search",
                     select_location = "above",
                     select_choice = list(
