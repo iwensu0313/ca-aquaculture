@@ -123,11 +123,15 @@ plot_ui <- function(id,
     
     # Chart layout
     if (select_location == "above") {
+      
       items <- list(select,
                     plotlyOutput(ns("plot")))
+      
     } else if (select_location == "below") {
+      
       items <- list(plotlyOutput(ns("plot")),
                     select)
+      
     }
   }
 
