@@ -51,14 +51,7 @@ all_data <- map_df(tidy_data, rbind)
 
 summary(all_data)
 
-
 ## Combine some products and fix some country names
-# "Frozen or Processed Oysters" = "OYSTERS FROZEN/DRIED/SALTED/BRINE FARMED"
-# "Frozen or Processed Oysters" = "OYSTERS FROZEN FARMED"
-# "Frozen or Processed Oysters" = "OYSTERS FROZEN FARMED"
-# "Fresh Atlantic Salmon" = "SALMON ATLANTIC FILLET FRESH FARMED",
-# "Fresh Atlantic Salmon" = "SALMON ATLANTIC MEAT FRESH FARMED",
-# "Fresh Atlantic Salmon" = "SALMON ATLANTIC FRESH FARMED",
 frozen_oysters = str_c(c("OYSTERS FROZEN/DRIED/SALTED/BRINE FARMED", "OYSTERS FROZEN FARMED", "OYSTERS FROZEN FARMED"), collapse = "|")
 atl_salmon = str_c(c("SALMON ATLANTIC FILLET FRESH FARMED", "SALMON ATLANTIC MEAT FRESH FARMED", "SALMON ATLANTIC FRESH FARMED"), collapse = "|")
 
@@ -75,7 +68,7 @@ combine_prod <- all_data %>%
   ))
 
 ## Summarize information
-### Average Dollars/Kilos for FARMED PRODUCTS
+# Average Dollars/Kilos for FARMED PRODUCTS
 summary_plot <- combine_prod %>% 
   filter(str_detect(Product, "FARM")) %>% 
   group_by(Year, Product, Country) %>% 
@@ -91,17 +84,23 @@ summary_plot <- combine_prod %>%
   filter(Dollars != 0) %>% 
   mutate(Year = as.character(Year))  # so the x-axis values don't show half years
 
-# add in totals to plot
+## Tidy for Plotting
+# Combine total imports per country into data table
 totals <- summary_plot %>% 
-  select(Year, Product, Country, Dollars = TotalValue) %>% 
-  mutate(Country = "TOTAL") %>% 
-  distinct()
+  group_by(Year, Country) %>% 
+  summarise(Dollars = sum(Dollars)) %>% 
+  mutate(Product = "ALL PRODUCTS") %>% 
+  as.data.frame()
 
 ca_import_plot <- summary_plot %>%
   select(Year, Product, Country, Dollars) %>% 
   rbind(totals)
 
+write.csv(ca_import_plot, "data/output/ca_import_plot.csv")
 
+
+
+# Was testing something....
 # Plot timeseries of product values 
 # Group by and aggregate mean value per category
 

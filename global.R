@@ -16,6 +16,7 @@ library(viridis)
 library(stringr)
 library(USAboundaries)
 library(DescTools)
+library(janitor)
 
 ## Color Palettes
 ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue shades
