@@ -61,7 +61,7 @@ function(input, output, session) {
   ## US Finfish Aquaculture Baseline Metrics ##
   callModule(summary_stats, "fish_metrics",
              number_boxes = 3,
-             statistic = list("51%", "$202 M", "35%"),
+             statistic = list("51%", "$203 M", "35%"),
              text = list("of sales in USD are from catfish, followed by trout at 15%, and bass at 7%.",
                          "in finfish aquaculture products was sold in Mississippi, the highest food fish producing state.",
                          "of food fish farms were located in Mississippi, Alabama, and North Carolina."))
@@ -83,7 +83,7 @@ function(input, output, session) {
   ## US Shellfish Aquaculture Baseline Metrics ##
   callModule(summary_stats, "shell_metrics",
              number_boxes = 3,
-             statistic = list("55%", "39%", "52%"),
+             statistic = list("55%", "45%", "52%"),
              text = list("of US shellfish sales are oysters, 38% are clams and 4% are mussels.",
                          "of shellfish aquaculture sales was produced in Washington during 2013.",
                          "of shellfish farms are in Florida, Massachusetts, and Washington."))

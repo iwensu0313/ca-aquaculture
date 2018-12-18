@@ -3,8 +3,8 @@ source("global.R")
 ### Setting up the dashboard page
 dashboardPage(
   dashboardHeader(
-    title = "Aqculture Data",
-    titleWidth = 200),
+    title = "Aquaculture Data",
+    titleWidth = 210), # 200 will line it up with the sidebar
   
 ### Dashboard Sidebar  
   dashboardSidebar(
@@ -63,7 +63,7 @@ dashboardPage(
                 
             ## Tab Title ##  
             tab_title_ui(title = "California Aquaculture",
-                         lead = "The land-based aquaculture industry in California has been around for several decades, but there has been recent expansion into coastal and open-ocean production.",
+                         lead = "California's aquaculture industry includes land-based and coastal systems, but there has been recent expansion into open-ocean production.",
                          subtitle = "About the Data:",
                          description = list("Below you will find information on types of shellfish and food fish species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture. Farms are defined as operations that have produced $1,000 or more in sales from aquaculture products. The fourth census will provide data for 2018 and will be available at the end of 2019, so stay tuned! You will also find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. Seafood imports can provide an idea of consumer demand, as the majority of our seafood is not local. However, as local production increases, proper evaluation of demand will have to incorporate both domestic and foreign sources of seafood. The only products shown are those explicitly described as farmed.")
                          ), # end tab title ui
@@ -113,10 +113,11 @@ dashboardPage(
             ## Plot CA Seafood Import ##
             plot_ui(id = "ca_import_plot",
                     title_text = "California Seafood Imports",
-                    sub_title_text = "Select an imported seafood product from the drop down and view sales per country of origin. Data includes only those explicitly described as farmed in the NOAA database. Other imported products such as seaweed are likely farmed, but not displayed below.",
+                    sub_title_text = "Select an imported seafood product from the drop down and view sales per country of origin. Double-click on a country of interest to view a single timeseries. Data include only those explicitly described as farmed in the NOAA database.",
                     select_type = "search",
                     select_location = "above",
                     select_choice = list(
+                      "All Products" = "ALL PRODUCTS",
                       "Live Mussels" = "MUSSELS LIVE/FRESH FARMED",
                       "Live Oysters" = "OYSTERS LIVE/FRESH FARMED",
                       "Frozen or Processed Oysters" = "FARMED FROZEN OR PROCESSED OYSTERS",

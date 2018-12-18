@@ -1,5 +1,6 @@
-## US Production
-# Data Source
+## US Food Fish Production ##
+
+## Data Source
 # USDA Quick Stats Census
 
 # Source: https://quickstats.nass.usda.gov/
@@ -10,6 +11,14 @@
 # Notes: Queried for Census, Aquaculture, Mollusk, Sales (clicking the Get Data button should extract all data items, all years, and both state and national data. Data tables include sales (in $, head, and lb) and no. of operations per state. I don't believe inflation is accounted for. 
 
 # The life cycle of fish products goes from EGGS to FINGERLINGS & FRY to STOCKERS to FOODSIZE or BROODSTOCK. STOCKERS are young fish kept until mature or food size. BROODSTOCK are mature fish that are used in aquaculture for breeding purposes. 
+
+# Outputs:
+# data/int/fish_totals/data_NA_count.csv
+# data/int/fish_totals/US_sales_2013.csv
+# data/int/fish_totals/US_sales_all_tidy.csv
+# data/int/fish_totals/US_sales_gapfill_2013.csv
+# # data/int/fish_totals/US_sales_per_operation
+# data/output/fish_us_map.csv
 
 
 ## Setup
@@ -24,13 +33,9 @@ rawdata <- "data/raw/USDA_Quickstats"
 intdata <- "data/int"
 
 
-
-
 ## Import Data
 # 1998, 2005, and 2013 Census Data for Fish Food
 data <- read.csv(file.path(rawdata, "food_fish_sales.csv"), stringsAsFactors = FALSE)
-
-
 
 
 ## Wrangle: Total
@@ -47,8 +52,6 @@ fishprod <- data %>%
   mutate(State = ifelse(State == "US TOTAL", "US", State))
 
 DT::datatable(fishprod)
-
-
 
 
 ## Select Totals
@@ -154,8 +157,6 @@ totalfish <- sp_fix %>%
   mutate(Product_Type = ifelse(str_detect(Product_Type, sp_names), "ALL PRODUCTS", Product_Type))
 
 
-
-
 ## Check
 unique(totalfish$Product_Type) # should have 9 values 
 unique(totalfish$Species) # should have 27 values incl NA
@@ -182,15 +183,11 @@ unique(totalfish$Species) # should have 27 values incl NA
 # DT::datatable(test2)
 
 
-
-
 ## Save Tidied TOTAL Finfish Data
 # check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
 tidy_fish <- totalfish %>% 
   mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
 write.csv(tidy_fish, "data/int/fish_totals/US_sales_all_tidy.csv", row.names = FALSE)
-
-
 
 
 ## Filter: 2013 Raw Data
@@ -238,8 +235,6 @@ gf_fish <- rawfish %>%
                         Value))
 
 
-
-
 ## NA Count 
 # per data type
 # Lots of NAs for Sales measured in dollars.
@@ -250,8 +245,6 @@ NA_count <- rawfish %>%
   ungroup()
 
 write.csv(NA_count, file.path(intdata, "fish_totals/data_NA_count.csv"))
-
-
 
 
 ## Gapfill
@@ -313,14 +306,12 @@ write.csv(NA_count, file.path(intdata, "fish_totals/data_NA_count.csv"))
 # # AIC(mod3)
 
 
-
-
 # Total Sales in 2013 per State
 fish_sales <- gf_fish %>%
   select(Year, State, Unit, Value) 
 
 # create columns needed for mapping in map module
-fish_us_map <- fish_sales %>%
+data_for_map <- fish_sales %>%
   rename(state = State,
          map_data = Value,
          type = Unit) %>%
@@ -334,21 +325,15 @@ fish_us_map <- fish_sales %>%
   )) %>%
   mutate(taxon = "Fish")
 
-write.csv(fish_us_map, "data/output/fish_us_map.csv", row.names = FALSE)
 
-
-
-
-## FOR PLOTTING FISH PRODUCTION MAP
-data_for_map <- read.csv("data/output/fish_us_map.csv")
-
+## TIDY FOR PLOTTING MAP
 # just state and lat/lon
 state_tidy <- us_states(resolution = "low") %>%
   select(state_name) %>%
   rename(state = state_name) %>%
   mutate(state = toupper(state))
 
-## maybe there's a more efficient way to add values back into the states with missing values.. but for now this is fine..
+# maybe there's a more efficient way to add values back into the states with missing values.. but for now this is fine..
 fish_us <- state_tidy %>%
   full_join(data_for_map, by = "state") %>%
   filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>%
@@ -368,54 +353,41 @@ fish_us_map <- state_tidy %>%
   left_join(fish_us, by = "state") # add lat/lon back in
 
 
+#st_write(fish_us_map, "data/output/fish_us_map.csv") # saves sf object as data frame
 
 
-## FOR WRANGLING FISH PRODUCTION STATS
+
+
+## FOOD FISH PRODUCTION STATS
+# Read in tidied US Food Fish data
+stats <- read.csv("data/int/fish_totals/US_sales_all_tidy.csv")
+
 ## which species has the largest $ share
-375865/732147 # catfish
-110203/732147 # trout
-50799/732147 # bass
+sales <- stats %>%
+  filter(Unit == "DOLLARS",
+         Year == 2013,
+         Product_Type == "ALL PRODUCTS", # select totals for all products
+         State == "US") %>% 
+  filter(!Species %in% c("GRASS CARP", "OTHER CARP")) %>%  # remove sub categories
+  select(Species, Unit, Value) %>% 
+  arrange(desc(Value)) %>% 
+  mutate(Percent = Value/.[.$Species == "FOOD FISH",][["Value"]]) # divide by total value
 
-# stats <- read.csv(file.path(intdata, "fish_totals/US_sales_2013.csv"), stringsAsFactors = FALSE)
-# stats_sp <- stats %>%
-#   group_by(Species) %>%
-#   summarise(Species_Value = sum(Value)) %>%
-#   ungroup() %>%
-#   arrange(desc(Species_Value)) %>%
-#   mutate(Total_Sales = sum(Species_Value),
-#          Pct_Sales = round(100*(Species_Value/Total_Sales),2))
-# 
-# # which state has the largest $ share
-stats_state <- gf_fish %>% 
-  filter(Unit == 'DOLLARS') %>% 
+# which state has the largest $ share and what was the sales
+state <- stats %>%
+  filter(Unit == "DOLLARS",
+         Year == 2013,
+         Species == "FOOD FISH",
+         Product_Type == "ALL PRODUCTS") %>% 
+  select(State, Unit, Value) %>% 
   arrange(desc(Value))
-# stats_state <- stats %>%
-#   group_by(State) %>%
-#   summarise(State_Value = sum(Value)) %>%
-#   ungroup() %>%
-#   arrange(desc(State_Value)) %>%
-#   mutate(Total_Sales = sum(State_Value),
-#          Pct_Sales = round(100*(State_Value/Total_Sales),2))
-# 
-# # which state has the most $/operation
-op <- gf_fish %>% 
-  filter(Unit == 'OPERATIONS') %>% 
-  group_by(Year) %>% 
-  mutate(tot_op = sum(Value),
-         pct_op = round(Value/tot_op,2)) %>% 
-  ungroup() %>% 
-  arrange(desc(pct_op)) 
-# US_sales_gapfill <- read_csv("data/int/fish_totals/US_sales_gapfill.csv")
-# op <- US_sales_gapfill %>%
-#   select(Year, State, Species, Product_Type, Unit, Value) %>%
-#   filter(Unit == "OPERATIONS") %>%
-#   group_by(State) %>%
-#   summarise(Total_Val = sum(Value)) %>%
-#   ungroup() %>%
-#   arrange(desc(Total_Val)) %>%
-#   mutate(US_Total_Val = sum(Total_Val),
-#          Pct_Total = round(100*(Total_Val/US_Total_Val),2))
-# 
-# # Sales per operation
-# stats_state[stats_state$State == "MISSISSIPPI",][["State_Value"]]/op[op$State == "MISSISSIPPI",][["Total_Val"]]
-# stats_state[stats_state$State == "ALABAMA",][["State_Value"]]/op[op$State == "ALABAMA",][["Total_Val"]]
+
+# where are most of the food fish operations?
+op <- stats %>%
+  filter(Unit == "OPERATIONS",
+         Year == 2013,
+         Species == "FOOD FISH",
+         Product_Type == "ALL PRODUCTS") %>%
+  select(State, Unit, Value) %>%  
+  arrange(desc(Value)) %>% 
+  mutate(Percent = Value/.[.$State == "US",][["Value"]]) # divide by US value
