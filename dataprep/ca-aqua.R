@@ -23,7 +23,7 @@
 
 
 ## Read in Tidied US Mollusk Sales Data
-all_sales <- read.csv("data/int/mollusk_totals/US_sales_all_tidy.csv")
+all_sales <- read.csv("data/int/usda_mollusk/US_sales_all_tidy.csv")
 
 
 ## Filter for California Mollusk Sales
@@ -61,7 +61,7 @@ write.csv(ca_shell_plot, "data/output/ca_shell_plot.csv")
 
 
 ## Read in Tidied US Food Fish Sales
-all_sales <- read.csv("data/int/fish_totals/US_sales_all_tidy.csv")
+all_sales <- read.csv("data/int/usda_fish/US_sales_all_tidy.csv")
 
 
 ## Filter for CA Food Fish Sales

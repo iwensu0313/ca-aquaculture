@@ -51,6 +51,8 @@ all_data <- map_df(tidy_data, rbind)
 
 summary(all_data)
 
+write.csv(all_data, "data/int/noaa_ca_imports.csv", row.names = FALSE)
+
 ## Combine some products and fix some country names
 frozen_oysters = str_c(c("OYSTERS FROZEN/DRIED/SALTED/BRINE FARMED", "OYSTERS FROZEN FARMED", "OYSTERS FROZEN FARMED"), collapse = "|")
 atl_salmon = str_c(c("SALMON ATLANTIC FILLET FRESH FARMED", "SALMON ATLANTIC MEAT FRESH FARMED", "SALMON ATLANTIC FRESH FARMED"), collapse = "|")
@@ -99,6 +101,10 @@ ca_import_plot <- summary_plot %>%
 write.csv(ca_import_plot, "data/output/ca_import_plot.csv")
 
 
+
+
+## Data Download
+noaaimportTable <- read.csv("data/int/noaa_ca_imports.csv")
 
 # Was testing something....
 # Plot timeseries of product values 

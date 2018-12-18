@@ -102,11 +102,84 @@ function(input, output, session) {
              popup_title = "state")
   
   
+  
+  
+  ## Download Data ##
+
+  # Two ways to render DT
+  # output$usdaTable <- renderDT(
+  #   USDA_shell, # data
+  #   class = "display nowrap compact", # style
+  #   filter = "top" # location of column filters
+  # )
+  
+  output$usdaTable <- renderDataTable(
+    datatable(data = usdaTable,
+              extensions = 'Buttons'
+              ,
+              options = list(
+                 dom = "Blfrtip",
+                 buttons =
+                   list("copy", list(
+                     extend = "collection",
+                     buttons = "csv",
+                     text = "Download"
+                   ) ), # end of buttons customization
+
+              # customize the length menu
+              lengthMenu = list( c(10, 20, -1) # declare values
+                                   , c(10, 20, "All") # declare titles
+              ), # end of lengthMenu customization
+              pageLength = 10
+              ) # end of options
+               ) # end of datatables
+  )
+
+  output$noaaimportTable <- renderDataTable(
+    datatable(data = noaaimportTable,
+              extensions = 'Buttons',
+              options = list(
+                dom = "Blfrtip",
+                buttons =
+                  list("copy", list(
+                    extend = "collection",
+                    buttons = "csv",
+                    text = "Download"
+                  ) ), # end of buttons customization
+
+                # customize the length menu
+                lengthMenu = list( c(10, 20, -1) # declare values
+                                   , c(10, 20, "All") # declare titles
+                ), # end of lengthMenu customization
+                pageLength = 10
+              ) # end of options
+    ) # end of datatables
+
+
+
+    ) # end render DT
+  
+  
+  
+  
+  
+  # ## Contact Page ##
+  # observe({
+  #   if(is.null(input$send) || input$send==0) return(NULL)
+  #   from <- "du.iwensu@gmail.com" #isolate(input$from)
+  #   to <- "du.iwensu@gmail.com" #isolate(input$to)
+  #   subject <-  "test" #isolate(input$subject)
+  #   msg <-"test"  #isolate(input$message)
+  #   sendmail(from, to, subject, msg, control=list(smtpServer="serverinfo"))
+  # })
+  
+  
+  
   # testing int data download button
   # output$downloadData <- downloadHandler(
   #   filename="shellfish.csv",  # desired file name on client 
   #   content=function(con) {
-  #     file.copy("data/int/mollusk_totals/US_sales_2013.csv", con)
+  #     file.copy("data/int/usda_mollusk/US_sales_2013.csv", con)
   #   }
   # )
 

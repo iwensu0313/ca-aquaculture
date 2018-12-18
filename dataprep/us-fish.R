@@ -13,11 +13,11 @@
 # The life cycle of fish products goes from EGGS to FINGERLINGS & FRY to STOCKERS to FOODSIZE or BROODSTOCK. STOCKERS are young fish kept until mature or food size. BROODSTOCK are mature fish that are used in aquaculture for breeding purposes. 
 
 # Outputs:
-# data/int/fish_totals/data_NA_count.csv
-# data/int/fish_totals/US_sales_2013.csv
-# data/int/fish_totals/US_sales_all_tidy.csv
-# data/int/fish_totals/US_sales_gapfill_2013.csv
-# # data/int/fish_totals/US_sales_per_operation
+# data/int/usda_fish/data_NA_count.csv
+# data/int/usda_fish/US_sales_2013.csv
+# data/int/usda_fish/US_sales_all_tidy.csv
+# data/int/usda_fish/US_sales_gapfill_2013.csv
+# # data/int/usda_fish/US_sales_per_operation
 # data/output/fish_us_map.csv
 
 
@@ -187,7 +187,7 @@ unique(totalfish$Species) # should have 27 values incl NA
 # check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
 tidy_fish <- totalfish %>% 
   mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
-write.csv(tidy_fish, "data/int/fish_totals/US_sales_all_tidy.csv", row.names = FALSE)
+write.csv(tidy_fish, "data/int/usda_fish/US_sales_all_tidy.csv", row.names = FALSE)
 
 
 ## Filter: 2013 Raw Data
@@ -216,7 +216,7 @@ dolperop <- tidy_fish %>%
   select(Year, State, Species, Unit, Value) #%>%
 #mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
 dolperop2013 <- dolperop[1,5]
-write.csv(dolperop, file.path(intdata, "fish_totals/US_sales_per_operation.csv"))
+write.csv(dolperop, file.path(intdata, "usda_fish/US_sales_per_operation.csv"))
 
 # Check: 
 # should only be two entries per state, one for OPERATIONS, one for DOLLARS
@@ -244,7 +244,7 @@ NA_count <- rawfish %>%
             pct_NA = round(sum(is.na(Value))/length(Value),2)) %>%
   ungroup()
 
-write.csv(NA_count, file.path(intdata, "fish_totals/data_NA_count.csv"))
+write.csv(NA_count, file.path(intdata, "usda_fish/data_NA_count.csv"))
 
 
 ## Gapfill
@@ -289,7 +289,7 @@ write.csv(NA_count, file.path(intdata, "fish_totals/data_NA_count.csv"))
 #   ungroup() %>%
 #   mutate(Value = ifelse(is.na(Value), Unit_Avg, Value))
 # 
-# write.csv(fish_gf_final, file.path(intdata, "fish_totals/US_sales_gapfill.csv"), row.names=FALSE)
+# write.csv(fish_gf_final, file.path(intdata, "usda_fish/US_sales_gapfill.csv"), row.names=FALSE)
 # 
 # ## Predict values with linear model- try this later
 # # Compare models to select a gapfilling method
@@ -360,7 +360,7 @@ fish_us_map <- state_tidy %>%
 
 ## FOOD FISH PRODUCTION STATS
 # Read in tidied US Food Fish data
-stats <- read.csv("data/int/fish_totals/US_sales_all_tidy.csv")
+stats <- read.csv("data/int/usda_fish/US_sales_all_tidy.csv")
 
 ## which species has the largest $ share
 sales <- stats %>%

@@ -11,11 +11,11 @@
 # Notes: Queried for Census, Aquaculture, Mollusk, Sales (clicking the Get Data button should extract all data items, all years, and both state and national data. Data tables include sales (in $, head, and lb) and no. of operations per state. I don't believe inflation is accounted for. 
 
 # Outputs:
-# data/int/mollusk_totals/data_NA_count.csv
-# data/int/mollusk_totals/US_sales_2013.csv
-# data/int/mollusk_totals/US_sales_all_tidy.csv
-# data/int/mollusk_totals/US_sales_gapfill_2013.csv
-# # data/int/mollusk_totals/US_sales_per_operation
+# data/int/usda_mollusk/data_NA_count.csv
+# data/int/usda_mollusk/US_sales_2013.csv
+# data/int/usda_mollusk/US_sales_all_tidy.csv
+# data/int/usda_mollusk/US_sales_gapfill_2013.csv
+# # data/int/usda_mollusk/US_sales_per_operation
 # data/output/shell_us_map.csv
 
 
@@ -168,7 +168,7 @@ unique(k$Product_Type)
 # check with USDA 2013 Census Report, pg 10 (http://www.aquafeed.com/documents/1412204142_1.pdf)
 tidy_mol <- totalmol %>% 
   mutate(Value = as.numeric(str_replace_all(Value, ",", "")))
-write.csv(tidy_mol, "data/int/mollusk_totals/US_sales_all_tidy.csv", row.names = FALSE)
+write.csv(tidy_mol, "data/int/usda_mollusk/US_sales_all_tidy.csv", row.names = FALSE)
 
 
 ## Filter: 2013 Raw Data
@@ -193,7 +193,7 @@ dolperop <- tidy_mol %>%
   filter(Unit == "DOLLARS_PER_OPERATION") %>%
   select(Year, State, Species, Unit, Value)
 dolperop2013 <- dolperop[1,5] # row one, col five
-write.csv(dolperop, file.path(intdata, "mollusk_totals/US_sales_per_operation.csv"), row.names = FALSE)
+write.csv(dolperop, file.path(intdata, "usda_mollusk/US_sales_per_operation.csv"), row.names = FALSE)
 
 # Check: should only be two entries per state, one for OPERATIONS, one for DOLLARS
 table(rawmoll$State)
@@ -224,7 +224,7 @@ NA_count <- rawmoll %>%
             pct_NA = round(sum(is.na(Value))/length(Value),2)) %>%
   ungroup()
 
-write.csv(NA_count, file.path(intdata, "mollusk_totals/data_NA_count.csv"), row.names = FALSE)
+write.csv(NA_count, file.path(intdata, "usda_mollusk/data_NA_count.csv"), row.names = FALSE)
 
 
 ## WAS TESTING SOMETHING...
@@ -275,7 +275,7 @@ write.csv(NA_count, file.path(intdata, "mollusk_totals/data_NA_count.csv"), row.
 #   ungroup() %>%
 #   mutate(Value = ifelse(is.na(Value), Unit_Avg, Value))
 # 
-# write.csv(moll_gf_final, file.path(intdata, "mollusk_totals/US_sales_gapfill_2013.csv"), row.names=FALSE)
+# write.csv(moll_gf_final, file.path(intdata, "usda_mollusk/US_sales_gapfill_2013.csv"), row.names=FALSE)
 
 ## Predict values with linear model- try this later
 # Compare models to select a gapfilling method
@@ -340,7 +340,7 @@ shell_us_map <- state_tidy %>%
 
 ## SHELLFISH PRODUCTION STATS
 # Read in tidied US Mollusk data
-stats <- read.csv("data/int/mollusk_totals/US_sales_all_tidy.csv")
+stats <- read.csv("data/int/usda_mollusk/US_sales_all_tidy.csv")
 
 # which species has the largest $ share?
 sales <- stats %>%
@@ -374,3 +374,17 @@ ops <- stats %>%
   select(State, Unit, Value) %>%  
   arrange(desc(Value)) %>% 
   mutate(Percent = Value/.[.$State == "US",][["Value"]]) # divide by US value
+
+
+
+
+## Data Download
+# combine with USDA food fish dt
+USDA_shell <- read.csv('data/int/usda_mollusk/US_sales_all_tidy.csv') %>% 
+  filter(!Product_Type %in% c("RETAIL", "WHOLESALE")) %>% 
+  select(-State_Code, -Commodity, -Wholesale_Type)
+USDA_fish <- read.csv('data/int/usda_fish/US_sales_all_tidy.csv') %>% 
+  filter(!Product_Type %in% c("RETAIL", "WHOLESALE")) %>% 
+  select(-State_Code, -Commodity, -Wholesale_Type)
+usdaTable <- USDA_shell %>% 
+  rbind(USDA_fish)
