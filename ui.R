@@ -76,7 +76,7 @@ dashboardPage(
             ## Plot CA Shellfish ##
             plot_ui(id = "ca_shell_plot",
                     title_text = "California Shellfish Operations",
-                    sub_title_text = "Select different years to view change in number of farms cultivating each species. In 1998, the census only recorded 3 operating mussel farms in California (not shown below).",
+                    sub_title_text = "Select different years to view change in number of farms cultivating each species. Hover over bars to view data. Double-click or single-click on legend categories to view a subset of the data. In 1998, the census only recorded 3 operating mussel farms in California (not shown below).",
                     select_type = "radio",
                     select_location = "above",
                     select_choice = c(
@@ -94,7 +94,7 @@ dashboardPage(
             ## Plot CA Food Fish ##
             plot_ui(id = "ca_fish_plot",
                     title_text = "California Food Fish Operations",
-                    sub_title_text = "Select different years to view change in number of farms cultivating each species. This plot excludes aquaculture products categorized as sport fish, ornamental fish, and baitfish.",
+                    sub_title_text = "Select different years to view change in number of farms cultivating each species. Hover over bars to view data. Double-click or single-click on legend categories to view a subset of the data. This plot excludes aquaculture products categorized as sport fish, ornamental fish, and baitfish.",
                     select_type = "radio",
                     select_location = "above",
                     select_choice = c(

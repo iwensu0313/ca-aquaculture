@@ -23,7 +23,8 @@ function(input, output, session) {
              tooltip_text = ~paste("No. of Farms:", Value, 
                                    "<br>Species:", StrCap(tolower(Species), method="word"), sep=" "),
              xaxis_label = "Type of Shellfish",
-             yaxis_label = "Number of Shellfish Farms")
+             yaxis_label = "Number of Shellfish Farms",
+             yaxis_range = c(0,20))
   
   ## California Food Fish Plot ##
   callModule(card_plot, "ca_fish_plot",
@@ -38,7 +39,8 @@ function(input, output, session) {
              tooltip_text = ~paste("No. of Farms:", Value,
                                    "<br>Species:", StrCap(tolower(Species), method="word"), sep=" "),
              xaxis_label = "Type of Food Fish",
-             yaxis_label = "Number of Fish Farms")
+             yaxis_label = "Number of Fish Farms",
+             yaxis_range = c(0,52)) # Set y-axis range
   
   ## California Seafood Import Plot ##
   callModule(card_plot, "ca_import_plot",
@@ -50,7 +52,7 @@ function(input, output, session) {
              colors = cols,
              plot_type = "scatter",
              mode = "lines+markers",
-             tooltip_text = ~paste("Product:", StrCap(tolower(Country), method="word"),
+             tooltip_text = ~paste("Imported from", StrCap(tolower(Country), method="word"),
                                    "<br>Sales:", prettyNum(Dollars, big.mark = ","), "USD", sep=" "),
              xaxis_label = "Year",
              yaxis_label = "Sales in US Dollars")

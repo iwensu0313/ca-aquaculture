@@ -23,9 +23,6 @@ ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue
 
 
 
-## DEFINE ANNUALLY CHANGING VARIABLES ##
-
-
 ## SOURCE EXTERNAL SCRIPTS ##
 
 ## source modules
