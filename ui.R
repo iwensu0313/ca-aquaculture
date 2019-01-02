@@ -223,8 +223,9 @@ dashboardPage(
                   
                   tags$br(),
                   
-                  p("Below you will find the USDA and NOAA Fisheries data tables that were used to create the maps and plots in the Aquaculture Data dashboard. They are tidied versions of the original raw data tables, allowing users to more easily filter and search the data for categories of interest."),
-                  p(strong("A Note about Downloading:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                  ## Summary
+                  p("Below you will find the USDA and NOAA Fisheries data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data tables, allowing users to more easily search the data for categories of interest."),
+                  p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
                   
                   tags$br(),
                   
@@ -232,7 +233,7 @@ dashboardPage(
                   p(h3("USDA Census of Aquaculture: Mollusk and Food Fish")),
                   p("Aquaculture sales in dollars, number of operations, head, and head per pound as reported by the US Department of Agriculture Census of Aquaculture in 1998, 2005, and 2013. Excluded wholesale and retail information. Data that was not disclosed by USDA to protect individual farms are left blank. The data table below is an intermediate, more tidied version of the", tags$a(href="https://quickstats.nass.usda.gov/", "original USDA data"), "."),
                   p(strong("Reading the data:")),
-                  p("This data table combines subsets and totals. See", tags$a(href="data/int/README.txt", "metadata documentation"), "for more information before using the data in analysis."),
+                  p("This data table combines subsets and totals. See", tags$a(href="https://raw.githubusercontent.com/iwensu0313/aqculture-data/master/data/int/USDA_Metadata.txt", "metadata documentation"), "for more information before using the data in analysis."),
                   
                   ## USDA Data Table
                   fluidRow(
@@ -252,6 +253,7 @@ dashboardPage(
                            div(dataTableOutput("noaaimportTable"))
                     )
                   ) # end table
+                  
               ) # end div master
       ) # end data tabItem
       
