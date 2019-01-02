@@ -96,7 +96,8 @@ totals <- summary_plot %>%
 
 ca_import_plot <- summary_plot %>%
   select(Year, Product, Country, Dollars) %>% 
-  rbind(totals)
+  rbind(totals) %>% 
+  arrange(desc(Year))
 
 write.csv(ca_import_plot, "data/output/ca_import_plot.csv")
 
@@ -104,7 +105,8 @@ write.csv(ca_import_plot, "data/output/ca_import_plot.csv")
 
 
 ## Data Download
-noaaimportTable <- read.csv("data/int/noaa_ca_imports.csv")
+noaaimportTable <- read.csv("data/int/noaa_ca_imports.csv") %>% 
+  arrange(desc(Year))
 
 # Was testing something....
 # Plot timeseries of product values 

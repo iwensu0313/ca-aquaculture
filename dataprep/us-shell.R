@@ -388,3 +388,5 @@ USDA_fish <- read.csv('data/int/usda_fish/US_sales_all_tidy.csv') %>%
   select(-State_Code, -Commodity, -Wholesale_Type)
 usdaTable <- USDA_shell %>% 
   rbind(USDA_fish)
+
+write.csv(usdaTable, "data/int/usdaTable.csv", row.names = FALSE)

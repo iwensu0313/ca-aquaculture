@@ -12,9 +12,9 @@ dashboardPage(
     sidebarMenu(
       menuItem("About", tabName = "dashboard"),
       menuItem("California", tabName = "ca"),
-      menuItem("Finfish", tabName = "us-fish"),
+      menuItem("Food Fish", tabName = "us-fish"),
       menuItem("Shellfish", tabName = "us-shell"),
-      menuItem("Data Sources", tabName = "data-tables")
+      menuItem("Download Data", tabName = "data-tables")
       #menuItem("Resources"), tabName ="resources",
       #menuItem("Contact", tabName = "contact")
     ),
@@ -112,7 +112,7 @@ dashboardPage(
                   
                   ## Plot CA Seafood Import ##
                   plot_ui(id = "ca_import_plot",
-                          title_text = "California Seafood Imports",
+                          title_text = "California Farmed Seafood Imports",
                           sub_title_text = "Select an imported seafood product from the drop down and view sales per country of origin. Double-click on a country of interest to view a single timeseries. Data include only those explicitly described as farmed in the NOAA database.",
                           select_type = "search",
                           select_location = "above",
@@ -144,16 +144,16 @@ dashboardPage(
       
       
       
-      ## US Finfish Aquaculture ##
+      ## US Food Fish Aquaculture ##
       tabItem(tabName = "us-fish",
               
               div(class = "master",
                   
                   ## Tab Title ##
-                  tab_title_ui(title = "US Finfish Aquaculture",
+                  tab_title_ui(title = "US Food Fish Aquaculture",
                                lead = "Finfish aquaculture in the US primarily occurs in ponds in the Southeast, in raceways in the Northwest, as well as ocean net pens off the Northeast coast.",
                                subtitle = "About the Data:",
-                               description = list(paste0("Below you will find aquaculture production data across US states from the US Department of Aquaculture Quick Stats database. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Data excludes finfish categorized as sport fish, baitfish, or ornamental fish. Farms include those producing fish eggs, fingerlings & fry, stockers, broodstock, as well as foodsize fish with sales of $1,000 or more. Total sales in dollars had to be estimated for 15 states due to undisclosed data. This was estimated by multiplying the number of farm operations by the average US sales per operation. The 2018 USDA aquaculture census will be released in late 2019."))
+                               description = list(paste0("Food fish data excludes finfish categorized as sport fish, baitfish, or ornamental fish. Below you will find food fish production data across US states from the US Department of Aquaculture Quick Stats database. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Farms include those producing fish eggs, fingerlings & fry, stockers, broodstock, as well as foodsize fish with sales of $1,000 or more. Total sales in dollars had to be estimated for 15 states due to undisclosed data. This was estimated by multiplying the number of farm operations by the average US sales per operation. The 2018 USDA aquaculture census will be released in late 2019."))
                   ),
                   
                   ## Baseline Metrics ##
@@ -216,17 +216,37 @@ dashboardPage(
       
       
       
-      ## Data Download ##
+      ## Download Data ##
       tabItem(tabName = "data-tables",
               div(class = "master",
+                  h1(strong("Aquaculture Data Sources")),
+                  
+                  tags$br(),
+                  
+                  p("Below you will find the USDA and NOAA Fisheries data tables that were used to create the maps and plots in the Aquaculture Data dashboard. They are tidied versions of the original raw data tables, allowing users to more easily filter and search the data for categories of interest."),
+                  p(strong("A Note about Downloading:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                  
+                  tags$br(),
+                  
+                  ## USDA Data Table Intro
                   p(h3("USDA Census of Aquaculture: Mollusk and Food Fish")),
+                  p("Aquaculture sales in dollars, number of operations, head, and head per pound as reported by the US Department of Agriculture Census of Aquaculture in 1998, 2005, and 2013. Excluded wholesale and retail information. Data that was not disclosed by USDA to protect individual farms are left blank. The data table below is an intermediate, more tidied version of the", tags$a(href="https://quickstats.nass.usda.gov/", "original USDA data"), "."),
+                  p(strong("Reading the data:")),
+                  p("This data table combines subsets and totals. See", tags$a(href="data/int/README.txt", "metadata documentation"), "for more information before using the data in analysis."),
+                  
+                  ## USDA Data Table
                   fluidRow(
                     column(12, 
                            div(dataTableOutput("usdaTable"))
                     )
                   ), # end table
                   
+                  
+                  ## NOAA Data Table Intro
                   p(h3("NOAA Statistics: All California Seafood Imports")),
+                  p("The California Farmed Seafood Imports plot only displays 'farmed' seafood import values. This tidied data table contains weight and dollar value of all California seafood imports as reported by NOAA from 2014 to 2017. Access original raw data here:", tags$a(href="https://www.st.nmfs.noaa.gov/commercial-fisheries/foreign-trade/applications/trade-by-specific-us-customs-district", "NOAA Fisheries Statistics"), "."),
+                  
+                  ## NOAA Data Table
                   fluidRow(
                     column(12, 
                            div(dataTableOutput("noaaimportTable"))

@@ -8,7 +8,7 @@ function(input, output, session) {
              statistic = list("67%", "64%", "$84M"),
              text = list("of shellfish farms in CA cultivated Pacific Oysters and 59% of food fish farms grew Catfish.",
                          "of CA aquaculture sales in 2013 came from food fish and shellfish, totalling $37 M and $17 M respectively.",
-                         "Sales of all California aquaculture products in 2013, witha total of 124 operating farms."))
+                         "Sales of all California aquaculture products in 2013, with a total of 124 operating farms."))
   
   ## California Mollusk Plot ##
   callModule(card_plot, "ca_shell_plot",

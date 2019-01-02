@@ -1,0 +1,45 @@
+## USDA Census of Aquaculture ##
+## Intermediate Mollusk and Food Fish Metadata
+## Jan 2, 2019
+
+
+## References:
+USDA 2013 Census of Aquaculture summary report (page 10): http://www.aquafeed.com/documents/1412204142_1.pdf
+
+
+
+## Mollusk Data Categorization
+
+# Totals
+For total value of all products, filter for 'ALL PRODUCTS' in 'Product_Type' ('Product_Type: ALL PRODUCTS'). For example, for total production for all mollusks in the US, filter for the following.. 'State: US', 'Species: MOLLUSKS', and 'Product_Type: ALL PRODUCTS'.
+
+# Product_Type sub-categories of ALL PRODUCTS: 
+Broodstock, Foodsize, Larvae and Seed, Other Sizes
+
+# Species sub-categories of MOLLUSKS: 
+Abalone, Clams, Oysters, Mussels
+
+# Species sub-categories of OYSTERS: 
+Other Oysters, Eastern Oysters, Pacific Oysters
+
+# Species sub-categories of CLAMS: 
+Other Clams, Manila Clams
+
+Some rows are subsets of other rows. Review categorization definitions above carefully before conducting any analyses. 
+
+
+
+## Food Fish Data Categorization
+
+# Totals
+For total value of all products, filter for 'ALL PRODUCTS' in 'Product_Type' ('Product_Type: ALL PRODUCTS'). For example, for total production for all food fish in the US, filter for the following.. 'State: US', 'Species: FOOD FISH', and 'Product_Type: ALL PRODUCTS'.
+
+# Product_Type
+No sub-categories for food fish.
+
+# Species sub-categories of FOOD FISH: 
+Hybrid Striped Bass, Carp, Catfish, Flounder, Yellow Perch, Red Drum, Atlantic Sallmon, Pacific Salmon, Tilapia, Trout, Other Food Fish
+
+# Species sub-categories of CARP: 
+Grass Carp, Other Carp
+
