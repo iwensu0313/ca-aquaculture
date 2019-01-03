@@ -45,3 +45,6 @@ Hybrid Striped Bass, Carp, Catfish, Flounder, Yellow Perch, Red Drum, Atlantic S
 # Species sub-categories of CARP: 
 Grass Carp, Other Carp
 
+Some rows are subsets of other rows. Review categorization definitions above carefully before conducting any analyses.
+
+

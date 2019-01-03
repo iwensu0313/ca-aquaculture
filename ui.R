@@ -224,7 +224,7 @@ dashboardPage(
                   tags$br(),
                   
                   ## Summary
-                  p("Below you will find the USDA and NOAA Fisheries data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data tables, allowing users to more easily search the data for categories of interest."),
+                  p("Below you will find the USDA and NOAA Fisheries data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data, allowing users to more easily search the data for categories of interest."),
                   p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
                   
                   tags$br(),
