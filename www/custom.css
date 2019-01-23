@@ -1,6 +1,6 @@
 @import url('//fonts.googleapis.com/css?family=Rokkitt|Lato:400,700');
 
-/* master settings */
+/* master div settings */
 .master {
   min-width: 700px;
   max-width: 700px;
@@ -12,6 +12,88 @@ h1, h2, h3, h4{
   font-weight: 700;
 }
 
+
+
+/* Nav Bar Modification */
+/* Fix width (manually adjusted)
+   Looks better than the automatic widths if fixed correctly. */
+.navbar-default > .container {
+   width: 740px;
+}
+
+/* Hide title and arrows */
+.navbar-header, .navbar-default .caret {
+   display: none;
+}
+
+/* Set fonts */
+.navbar-default .navbar-nav > li > a, .dropdown-menu > li > a {
+   font-family: 'Lato', sans-serif;
+   font-size: 16px;
+   font-weight: 200;
+   color: #666666;
+}
+.navbar-default .navbar-nav > li.active > a, .dropdown-menu > li.active > a {
+   font-weight: 400;
+}
+
+/* Navbar background */
+.navbar-default {
+   background-color: transparent;
+   border-color: transparent;
+}
+
+/* Top-level nav buttons */
+.navbar-default .navbar-nav > li {
+   border-top: 2px solid transparent;
+}
+.navbar-default .navbar-nav > li:hover {
+   border-image: #2F4F4F;
+   border-image-width: 1 0 0 0;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
+   background-color: transparent;
+   text-decoration: underline;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+   background-color: transparent;
+}
+
+/* Drop-down navigation box */
+.dropdown-menu {
+   background-color: #e6e6e6;
+}
+/* Drop-down navigation buttons */
+.dropdown-menu > li > a:hover {
+   color: inherit;
+   background-color: inherit;
+   text-decoration: underline;
+}
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover {
+   color: inherit;
+   background-color: inherit;
+}
+
+
+
+/*.aq-topbar {
+   height: 6px;
+   background: transparent linear-gradient(to right, #157BA3 0%, #96D602 100%) repeat scroll 0% 0%;
+   margin-left: -15px;
+   margin-right: -15px;
+}*/
+
+.aq-brand {
+   float: none;
+   height: auto;
+   padding-top: 26px;
+   padding-bottom: 24px;
+}
+
+
+
+/* Main Header Modification */
+/* Not using MAIN HEADER section ATM */
 /* main header text */
 .main-header .logo {
   font-family: "Rokkitt";
@@ -29,11 +111,15 @@ h1, h2, h3, h4{
   background-color: #123752;
 }
 
-/* navbar (rest of the header) */
+/* main nav bar (rest of the header) */
 .skin-blue .main-header .navbar {
   background-color: #123752;
 }
 
+
+
+/* Side Bar Modification */
+/* Not using SIDE BAR section ATM */
 /* main sidebar */
 .skin-blue .main-sidebar {
   background-color: #708FA3;
@@ -64,12 +150,7 @@ h1, h2, h3, h4{
 
 
 
-
-
-
-
-
-/* front banner style, front-banner works and creates height of section */
+/* front banner style */
 .front-banner {
    position: relative;
    max-width: 700px;  /* Max width of image banner */
@@ -169,3 +250,6 @@ h1, h2, h3, h4{
 	border: solid #acd1d4;
   border-width: 1px 1px;
 }
+
+
+

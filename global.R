@@ -37,6 +37,8 @@ source("modules/map_minichart_card.R")
 ## source functions
 source("functions/tab_title.R")
 source("functions/addLegend_desc.R")
+source("functions/dashboardPage.R")
+source("functions/aq_header.R")
 
 ## source front page css/html customization
 source("front_page.R")

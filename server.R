@@ -154,7 +154,7 @@ function(input, output, session) {
               pageLength = 10
               ) # end of options
                ) # end of datatables
-  )
+  ) # end render data table
 
   output$noaaimportTable <- renderDataTable(
     datatable(data = noaaimportTable,
@@ -175,9 +175,6 @@ function(input, output, session) {
                 pageLength = 10
               ) # end of options
     ) # end of datatables
-
-
-
     ) # end render DT
   
   
