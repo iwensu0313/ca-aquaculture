@@ -1,0 +1,43 @@
+---
+title: "Creating Reference Datasets"
+author: "Iwen Su"
+date: "January 22, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+Creating reference or global data sets that can be set throughout the project.
+
+## Country Latitude and Longitude Data
+
+```{r}
+library(tidyverse)
+library(rworldmap)
+```
+
+`shrimp_gather` is creatd in the us-import-refusals.R data prep
+```{r}
+
+# Super roundabout way of extracting country and lat lon info lol.
+# Add global countries spatial information to dataset
+global_shp <- joinCountryData2Map(shrimp_gather, joinCode = "NAME" , nameJoinColumn = "COUNTRY_NAME")
+
+# Take subset and covert to sf object for easier manipulation
+# Change 'S. Korea' to 'South Korea'
+cntry_coord <- global_shp@data[,c(17,31,32)] %>% 
+  rename(COUNTRY_NAME = NAME) %>% # more explicit
+  mutate(COUNTRY_NAME = as.character(COUNTRY_NAME)) %>% # factor to character
+  mutate(COUNTRY_NAME = case_when(
+    str_detect(COUNTRY_NAME, "^S. Korea$") ~ "South Korea",
+    str_detect(COUNTRY_NAME, "^N. Korea$") ~ "North Korea",
+    TRUE ~ COUNTRY_NAME # need this so unmatched doesn't become NA
+  ))
+
+write.csv(cntry_coord, "data/ref/country_lat_lon.csv", row.names = FALSE)
+
+```
+
