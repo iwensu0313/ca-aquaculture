@@ -32,6 +32,7 @@ ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue
 source("modules/chart_card.R")
 source("modules/map_card.R")
 source("modules/summary_stats_card.R")
+source("modules/map_minichart_card.R")
 
 ## source functions
 source("functions/tab_title.R")
@@ -55,3 +56,6 @@ source("dataprep/us-shell.R") # combines us-fish and us-shell
 ## CA AQUACULTURE DATA SOURCES ##
 source("dataprep/ca-aqua.R")
 source("dataprep/ca-imports.R")
+
+## SHRIMP IMPORT REFUSALS ##
+source("dataprep/us-import-refusals.R")

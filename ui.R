@@ -2,6 +2,7 @@ source("global.R")
 
 ### Setting up the dashboard page
 dashboardPage(
+  
   dashboardHeader(
     title = "Aquaculture Data",
     titleWidth = 210), # 200 will line it up with the sidebar
@@ -14,6 +15,7 @@ dashboardPage(
       menuItem("California", tabName = "ca"),
       menuItem("Food Fish", tabName = "us-fish"),
       menuItem("Shellfish", tabName = "us-shell"),
+      menuItem("Import Refusals", tabName = "import-refusal"), # wwf
       menuItem("Download Data", tabName = "data-tables")
       #menuItem("Resources"), tabName ="resources",
       #menuItem("Contact", tabName = "contact")
@@ -212,6 +214,28 @@ dashboardPage(
                   
               ) # end div master
       ), # end us-shell tabItem
+      
+      
+      
+      
+      ## Shrimp Import Refusal - WWF ##
+      tabItem(tabName = "import-refusal",
+              div(class = "master",
+                  
+                  ## Global Pie Chart of Refusals
+                  mapmini_ui(id = "shrimp_refuse_map", 
+                             title_text = "Shrimp Import Refusals",
+                             sub_title_text = "Start exploring! Data includes time series from 2014 to 2018.",
+                             select_type = "slider",
+                             select_location = "below",
+                             slider_min = 2014, 
+                             slider_max = 2018, 
+                             slider_start = 2014,
+                             slider_sep = ""
+                  ) # end map mini ui import refusal
+                  
+                  ) # end div import refusal
+              ), # end tab item import refusal
       
       
       

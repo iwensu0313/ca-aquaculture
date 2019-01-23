@@ -9,3 +9,4 @@ Timeseries: 1998, 2005, 2013
 Format: CSV
 Metadata: https://quickstats.nass.usda.gov/src/glossary.pdf
 Notes: Queried for Census, Aquaculture, Food Fish/Mollusk, Sales (clicking the Get Data button should extract all data items, all years, and both state and national data. Data tables include sales (in $, head, and lb) and no. of operations per state. 2018 Aquaculture Census will be conducted in December.
+Resources:USDA 2013 Census of Aquaculture summary report (page 10) http://www.aquafeed.com/documents/1412204142_1.pdf

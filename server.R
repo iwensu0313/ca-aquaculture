@@ -104,6 +104,27 @@ function(input, output, session) {
   
   
   
+  
+  
+  
+  ## TESTING - WWF Shrimp Import Refusal ##
+  callModule(card_mapmini, "shrimp_refuse_map",
+             data = shrimp_refuse,
+             field = "input",
+             mini_chart = "pie", # what type of minichart
+             categories = c("SALMONELLA", "VETDRUGES", "NITROFURAN", "FILTHY"), # columns in data for chart categories
+             filter_field = YEAR, # user will select year
+             cols = ygb[c(50,100,150,197)], # chose four dispersed values in my ygb color palette
+             lon = 12, # default is US center
+             lat = 30, # default is US center
+             zoom = 2)
+  
+  
+  
+  
+  
+  
+  
   ## Download Data ##
 
   # Two ways to render DT
