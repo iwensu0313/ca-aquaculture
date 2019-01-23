@@ -1,9 +1,9 @@
 #' 
-#' Map Card Module
+#' Map Minichart Card Module
 #'
 #' This script contains two functions:
-#' \code{map_ui} generates the user interface for each card
-#' \code{card_map} generates the plot shown in a card
+#' \code{mapmini_ui} generates the user interface for each card
+#' \code{card_mapmini} generates the plot shown in a card
 #' 
 #' The functions together generate a box within a fluid row that has a width 
 #' of 12 (the whole page), title text, source text, a select input if applicable, 
@@ -16,9 +16,13 @@ library(shinydashboard)
 library(leaflet)
 library(rgdal)
 library(dplyr)
+library(RColorBrewer)
+library(sf)
+library(rworldmap)
+library(leaflet.minicharts)
 
 #'
-#' @title map_ui function
+#' @title mapmini_ui function
 #' 
 #' @description Generates the ui for cards.
 #' 
@@ -26,7 +30,7 @@ library(dplyr)
 #' the function inputs.
 #' 
 #' @details
-#' \code{map_ui} needs the text that will surround the map on 
+#' \code{mapmini_ui} needs the text that will surround the map on 
 #' the card as well as information about the select inputs if 
 #' applicable.
 #' 
@@ -52,13 +56,17 @@ library(dplyr)
 #'   \item "below"
 #'   \item NULL
 #' } 
+#' @param slider_min numeric, optional. Only specify if using slider input. Indicates the minimum value that can be selected.
+#' @param slider_max numeric, optional. Only specify if using slider input. Indicates the maximum value that can be selected.
+#' @param slider_start numeric, optional. Only specify if using slider input. Indicates the initial value of the slider.
+#' @param slider_sep character, optional. Slider numeric values are by default separated by "," at the thousands. Can set to "" if slider values are numeric but Year values. 
 #' @param select_choices list, optional. List of choices for the select input. Can be 
 #' defined in the global.r file as a variable in passed here 
 #' (e.g. in global.r: choices <- sort(unique(df$column)), in ui.r: select_choices=choices).
 #' Can also be a defined list (e.g. select_choices = list("Choice 1" = "choice_1", "Choice 2" = "choice_2")). 
 #' See \url{https://shiny.rstudio.com/reference/shiny/latest/selectInput.html}, for more information.
 #' @param select_label character, optional, text for above select input (e.g. "Select Gender")
-#' @param selected list, optional - unless using checkbox input, Defines the default selections 
+#' @param selected list, optional - unless using checkbox or slider input, Defines the default selections 
 #' for the map. Default checkbox inputs must be defined otherwise the map will default to
 #' no data.
 #' @param source_text character or list, optional. Data source information for map. If 
@@ -68,12 +76,16 @@ library(dplyr)
 #' 
 
 ## Card UI Function ##
-map_ui <- function(id, 
+mapmini_ui <- function(id, 
                    title_text = NULL,
                    sub_title_text = NULL,
-                   select_type = c(NULL, "radio", "drop_down", "checkboxes"),
+                   select_type = c(NULL, "radio", "drop_down", "slider", "checkboxes"),
                    select_location = c(NULL, "above", "below"),
-                   select_choices = c(""),
+                   slider_min = NULL, 
+                   slider_max = NULL, 
+                   slider_start = NULL,
+                   slider_sep = ",",
+                   select_choices = NULL, 
                    select_label = NULL, 
                    selected = NULL,
                    source_text = NULL,
@@ -98,6 +110,14 @@ map_ui <- function(id,
                             choices = select_choices,
                             label = p(select_label),
                             selected = selected)
+      
+    } else if (select_type == "slider") {
+      select <- sliderInput(ns("select"),
+                            label = p(select_label),
+                            min = slider_min,
+                            max = slider_max,
+                            value = slider_start,
+                            sep = slider_sep)
     } else {
       select <- checkboxGroupInput(ns("select"),
                                    choices = select_choices,
@@ -123,14 +143,14 @@ map_ui <- function(id,
 }
 
 #'
-#' @title card_map function
+#' @title card_mapmini function
 #' 
 #' @description Generates the leaflet map on each card.
 #' 
 #' @return A leaflet map object.
 #' 
 #' @details
-#' \code{card_map} needs the data, fields, colors, and labels for the map
+#' \code{card_mapmini} needs the data, fields, colors, and labels for the map
 #' 
 #' @param input autofilled by shiny.
 #' @param output autofilled by shiny.
@@ -155,113 +175,47 @@ map_ui <- function(id,
 #' 
 
 ## Card Server Function ##
-card_map <- function(input,
+card_mapmini <- function(input,
                      output,
                      session,
                      data,
                      field,
+                     mini_chart = c("pie", "bar", "polar-radius", "polar-area"),
+                     categories = NULL,
                      filter_field = NULL,
-                     display_field = NULL,
-                     display_units = NULL,
-                     color_palette = ygb,
-                     legend_title = NA,
-                     labels = NA,
-                     popup_title = NA,
-                     long = -95.7128906, # US longitudinal center
+                     cols = ygb,
+                     lon = -95.7128906, # US longitudinal center
                      lat = 37.0902, # US latitudinal center
                      zoom = 4
 ) {
   
-  # rename data
-  data_shp <- data
-  
-  # if not allowing user to select multiple inputs?
-  if (field != "input") {
-    output$plot <- renderLeaflet({
-      
-      # get popup for a single line
-      popup_text <- paste("<h5><strong>", paste(data_shp[[popup_title]],": ", sep=""), "</strong>", prettyNum(signif(data_shp[[field]],3), big.mark=",", scientific=FALSE), data_shp[[display_units]], "</h5>")
-      
-      # get color pal
-      pal <- colorQuantile(palette = color_palette,
-                           domain = data_shp[[field]],
-                           na.color = "#DCDCDC", alpha = 0.4)
-      
-      leaflet(data_shp,
-              options = leafletOptions(zoomControl = FALSE)) %>%
-        addPolygons(color = "#A9A9A9", 
-                    weight = 0.5, 
-                    smoothFactor = 0.5,
-                    opacity = 1.0, 
-                    fillOpacity = 0.7,
-                    fillColor = pal(data_shp[[field]]),
-                    popup = popup_text, 
-                    highlightOptions = highlightOptions(color = "white", 
-                                                        weight = 2,
-                                                        bringToFront = TRUE)) %>% 
-        addLegend_desc("bottomright",
-                       pal = pal,
-                       values = selected_data()[[display_field]],
-                       opacity = 1,
-                       labels = labels,
-                       decreasing = TRUE) %>% 
-        addProviderTiles(providers$CartoDB.Positron) %>%
-        setView(long, lat, zoom) 
-    })
-    
-  } else {
-    
     # if allowing user to select multiple input data
+    # `select` corresponds to `select` in UI above
     filter_field <- enquo(filter_field)
     
     selected_data <- reactive({
-      
-      df <- data_shp %>% 
+      df <- data %>% 
         filter(!!filter_field == input$select)
-      
       return(df)
-      
     })
     
     
     # render the map plot based on the selected data
     output$plot <- renderLeaflet({
       
-      
-      # get popup for a single line
-      popup_text <- paste("<h5><strong>", selected_data()[[popup_title]], ": ", "</strong>" ,       prettyNum(signif(selected_data()[[display_field]],3), big.mark=",", scientific=FALSE), selected_data()[[display_units]], "</h5>")
-      
-      
-      # get color pal
-      pal <- colorQuantile(palette = color_palette,
-                           domain = selected_data()[[display_field]],
-                           na.color = "#DCDCDC", alpha = 0.4)
-      
-      
-      leaflet(selected_data(),
-              options = leafletOptions(zoomControl = FALSE)) %>%
-        addPolygons(color = "#A9A9A9", 
-                    weight = 0.5, 
-                    smoothFactor = 0.5,
-                    opacity = 1.0, 
-                    fillOpacity = 0.7,
-                    fillColor = pal(selected_data()[[display_field]]),
-                    popup = popup_text, 
-                    highlightOptions = highlightOptions(color = "white", 
-                                                        weight = 2,
-                                                        bringToFront = TRUE)) %>% 
-        addLegend_desc("bottomright",
-                             pal = pal,
-                             values = selected_data()[[display_field]],
-                             opacity = 1,
-                             labels = labels,
-                             decreasing = TRUE) %>% 
-        addProviderTiles(providers$CartoDB.Positron
-                         #,options = providerTileOptions(noWrap = TRUE) ## prevents global
-        ) %>%
-        setView(long, lat, zoom)
+      leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
+        addProviderTiles(providers$CartoDB.Positron) %>%
+        setView(lon, lat, zoom) %>% 
+        addMinicharts(
+          selected_data()$LON, selected_data()$LAT,
+          type = mini_chart,
+          chartdata = selected_data()[, categories], 
+          colorPalette = cols, 
+          width = 60 * sqrt(selected_data()$TOTAL) / sqrt(max(selected_data()$TOTAL)),
+          transitionTime = 0)
+        
     })
     
-  }
+  
   
 }
