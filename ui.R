@@ -236,7 +236,7 @@ dashboardPage("California Aquaculture",
                                                p(tags$sup("1."), tags$a(href="https://www.accessdata.fda.gov/scripts/ImportRefusals/index.cfm", "Food and Drug Administration"), ", Import Refusal Report (2002-2018)"))
                                       ), # end of map ui
                                       
-                                      mapmini_ui(id = "shrimp_refuse_map",
+                                      mapmini_ui(id = "shrimp_refuse_pie",
                                                  title_text = "FDA Shrimp Import Refusals",
                                                  sub_title_text = "Start exploring! Data includes time series from 2014 to 2018.",
                                                  select_type = "slider",

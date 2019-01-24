@@ -123,8 +123,8 @@ function(input, output, session) {
   
   
   
-  callModule(card_mapmini, "shrimp_refuse_map",
-             data = shrimp_refuse,
+  callModule(card_mapmini, "shrimp_refuse_pie",
+             data = shrimp_refuse_pie,
              field = "input",
              mini_chart = "pie", # what type of minichart
              categories = c("SALMONELLA", "VETDRUGES", "NITROFURAN", "FILTHY"), # columns in data for chart categories
