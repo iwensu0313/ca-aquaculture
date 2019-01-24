@@ -24,40 +24,15 @@ ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200]
 
 ```
 
-# Test Global Mariculture Map
+# Test Shrimp Refusal Category Mini Pie Charts Map
 
 ## Read in Global Countries Shapefile 
 ```{r}
 
-# Super roundabout way of extracting country and lat lon info lol.
-# Add global countries spatial information to dataset
-global_shp <- joinCountryData2Map(shrimp_gather, joinCode = "NAME" , nameJoinColumn = "COUNTRY_NAME")
-
-# Take subset and covert to sf object for easier manipulation
-cntry_coord <- global_shp@data[,c(17,31,32)] %>% 
-  rename(COUNTRY_NAME = NAME)
-
-write.csv(cntry_coord, "data/country_lat_lon.csv")
-
-# cntry_spatial <- st_as_sf(cntry_coord, coords = c("LON", "LAT"), crs = 4326) %>% 
-#   rename(COUNTRY_NAME = NAME) %>% 
-#   mutate(COUNTRY_NAME = as.character(COUNTRY_NAME))
+cntry_coord <- read.csv("data/ref/country_lat_lon.csv")
 
 ```
 
-## Identify arguments for map_card
-```{r}
-# data = mar_global_map
-# filter_field = data$type
-# display_field = "map_data"
-# color_palette = ygb
-# legend_title = "Legend"
-# popup_title = "Seafood Production: "
-# popup_units = "pounds/person"
-# popup_add_field = "rgn_nam"
-# popup_add_field_title = "EEZ: "
-
-```
 
 ## Attach data to rgn shapefile
 
@@ -67,9 +42,6 @@ Check for countries that didn't get a lat/lon match.
 # Combine lat lon info with shrimp data.
 shrimp_spatial <- shrimp_summ %>% 
   left_join(cntry_coord, by = "COUNTRY_NAME")
-
-# South Korea, Cote d'Ivoire, and UAE didn't get matched. Fix some in cntry_coord and in shrimp_spatial as appropriate
-DT::datatable(shrimp_spatial)
 
 ```
 
@@ -85,48 +57,15 @@ data_shp <- data_shp[, colSums(data_shp != 0) > 0] %>%
 
 ```
 
-## Specify Attributes
-```{r}
-# # Get color pal
-# pal <- colorQuantile(palette = color_palette,
-#                      domain = data_shp$map_data,
-#                      na.color = "#00000000",
-#                      alpha = 0.4)
-# 
-# 
-# ## Popup attributes
-# popup_title = "Seafood Production: "
-# popup_add_field_title = "Country EEZ: "
-# 
-# popup_text <- paste("<h5><strong>", popup_title, "</strong>", as.character(signif(data_shp$map_data,3)), "lb/person", "</h5>",
-#                     "<h5><strong>", popup_add_field_title, "</strong>", data_shp$rgn_nam, "</h5>", sep=" ")
-# 
-# #prettyNum(data_shp$map_data, big.mark=",", scientific=FALSE)
-```
 
 ## Plot with leaflet!
 
+mini pie charts
 ```{r}
 
 col = ygb[c(50,100,150,197)]
 
 leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
-  # addPolygons(color = "#A9A9A9", 
-  #             weight = 0.5, 
-  #             smoothFactor = 0.5,
-  #             opacity = 1.0, 
-  #             fillOpacity = 1.0,
-  #             fillColor = ~pal(map_data),
-  #             popup = popup_text, 
-  #             highlightOptions = highlightOptions(color = "white", 
-  #                                                 weight = 2,
-  #                                                 bringToFront = TRUE)) %>% 
-  # addLegend("bottomright",
-  #           pal = pal,
-  #           values = ~map_data,
-  #           title = legend_title,
-  #           opacity = 1,
-  #           layerId = "colorLegend") %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(-9.718568, 34.331989, zoom = 2) %>% 
   addMinicharts(
@@ -137,54 +76,99 @@ leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
     width = 60 * sqrt(data_shp$TOTAL) / sqrt(max(data_shp$TOTAL)),
     transitionTime = 0)
  
-#   addMinicharts(data_shp$LON, data_shp$LAT,
-#                 type = "pie",
-#                 chartdata = data_shp[,c(3,4,5)],
-#                 colorPalette = ygb[1:])
+```
+
+
+
+
+# Testing Shrimp Refusal Chloropleth Map
+
+## Import Countries Shapefile
+
+Missing spatial data for Aruba, Hong Kong, and Singapore
+```{r}
+
+global <- st_read("data/ref/countries.shp")
+global_tidy <- global %>% 
+  select(COUNTRY_NAME = SOVEREIGNT)
 
 ```
 
-Testing Legend Customization
+## Combine Shapefile with Data
+
+`shrimp_summ` is from us-import-refusals.R
 ```{r}
-leaflet(data_shp,
+source('dataprep/us-import-refusals.R')
+
+# check country name matches
+setdiff(shrimp_summ$COUNTRY_NAME, global_tidy$COUNTRY_NAME)
+
+shrimp_data <- global_tidy %>% 
+  left_join(shrimp_summ, by="COUNTRY_NAME")
+ 
+```
+
+## Identify arguments for map_card
+```{r}
+
+shrimp_data <- shrimp_data %>%
+  filter(YEAR == 2018) %>% 
+  filter(!is.na(REFUSALS))
+
+data = shrimp_data
+#map_data = REFUSALS
+display_field = "REFUSALS"
+color_palette = ygb
+legend_title = "Legend"
+popup_title = "Country:"
+#popup_units = ""
+popup_add_field = "REFUSALS"
+popup_add_field_title = "Refusals: "
+
+```
+
+
+## Specify Attributes
+
+```{r}
+
+# Get color pal
+colorpal <- colorQuantile(palette = color_palette,
+                     domain = data$REFUSALS,
+                     na.color = "#00000000",
+                     alpha = 0.4)
+
+## Popup attributes
+
+popup_text <- paste("<h5><strong>", popup_title, data$COUNTRY_NAME, "</strong>","</h5>",
+                    "<h5><strong>", popup_add_field_title, "</strong>", data$REFUSALS, "</h5>", sep=" ")
+
+```
+
+## Plot with leaflet!
+
+chloropleth
+```{r}
+
+leaflet(data,
         options = leafletOptions(zoomControl = FALSE)) %>%
-  addPolygons(color = "#A9A9A9", 
-              weight = 0.5, 
+  addPolygons(color = "#A9A9A9",
+              weight = 0.5,
               smoothFactor = 0.5,
-              opacity = 1.0, 
-              fillOpacity = 0.7,
-              fillColor = ~pal(map_data),
-              popup = popup_text, 
-              highlightOptions = highlightOptions(color = "white", 
+              opacity = 1.0,
+              fillOpacity = 1.0,
+              fillColor = ~pal(REFUSALS),
+              popup = popup_text,
+              highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
-                                                  bringToFront = TRUE)) %>% 
-  addLegend("bottomright",
-            pal = pal,
-            values = ~map_data,
-            title = legend_title,
-            opacity = 1,
-            labFormat = labelFormat(
-              prefix = "(", 
-              suffix = ")%", 
-              between = ", ",
-              transform = identity
-              )
-            ) %>%
+                                                  bringToFront = TRUE)) %>%
+  addLegend_desc("bottomright",
+                             pal = colorpal,
+                             values = ~REFUSALS,
+                             opacity = 1,
+                             decreasing = TRUE) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
-      setView(-9.718568, 34.331989, zoom = 2)
-```
+  setView(12, 30, zoom = 2)
 
-***
-
-## Filter for Seaweed in `mar_global_map`
-```{r}
-
-mar_global_map <- read.csv("int/mar_global_map.csv")
-
-country <- mar_global_map %>% select(rgn_id,country) %>% distinct() %>% mutate(type = "prodPerCap")
-mar_global_map <- mar_global_map %>% 
-  filter(Taxon == "Seaweed") %>% 
-  full_join(country, by = c("rgn_id", "country","type"))
 
 ```
-

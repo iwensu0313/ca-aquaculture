@@ -71,8 +71,12 @@ library(dplyr)
 map_ui <- function(id, 
                    title_text = NULL,
                    sub_title_text = NULL,
-                   select_type = c(NULL, "radio", "drop_down", "checkboxes"),
+                   select_type = c(NULL, "radio", "drop_down", "slider", "checkboxes"),
                    select_location = c(NULL, "above", "below"),
+                   slider_min = NULL, 
+                   slider_max = NULL, 
+                   slider_start = NULL,
+                   slider_sep = ",",
                    select_choices = c(""),
                    select_label = NULL, 
                    selected = NULL,
@@ -98,6 +102,13 @@ map_ui <- function(id,
                             choices = select_choices,
                             label = p(select_label),
                             selected = selected)
+    } else if (select_type == "slider") {
+      select <- sliderInput(ns("select"),
+                            label = p(select_label),
+                            min = slider_min,
+                            max = slider_max,
+                            value = slider_start,
+                            sep = slider_sep)
     } else {
       select <- checkboxGroupInput(ns("select"),
                                    choices = select_choices,
@@ -144,11 +155,11 @@ map_ui <- function(id,
 #'   \item{If there is no input, this field is set to the name of the column being visualized.}
 #' }
 #' @param filter_field column name, this field defines the column on which to filter. Use this when `field` is set to "input"
-#' @param display_field column name, this field defines the column containing data to display
+#' @param popup_value column name, this field defines the column containing data to display
 #' @param color_palette character, defines the color palette for the map. The palette options come 
 #' from the RColorBrewer library, and the options can be viewed here: \url{http://www.datavis.ca/sasmac/brewerpal.html}
 #' @param legend_title character, optional. Defines the legend title for the map.
-#' @param popup_title character, optional. Defines the popup title for the map.
+#' @param popup_label character, optional. Defines the popup title for the map.
 #' @param popup_add_field column name, optional. Option to put another field in the popups. The field
 #' must be defined with the name of the dataframe and a "$" symbol (e.b. popup_add_field = tracts$neighborhood)
 #' @param popup_add_field_title character, title text for additional pop-up field. 
@@ -161,64 +172,24 @@ card_map <- function(input,
                      data,
                      field,
                      filter_field = NULL,
-                     display_field = NULL,
-                     display_units = NULL,
                      color_palette = ygb,
+                     color_palette_type = c('discrete', 'continuous'),
                      legend_title = NA,
                      labels = NA,
-                     popup_title = NA,
-                     long = -95.7128906, # US longitudinal center
+                     popup_label = NA,
+                     popup_value = NULL,
+                     popup_units = NULL,
+                     lon = -95.7128906, # US longitudinal center
                      lat = 37.0902, # US latitudinal center
                      zoom = 4
 ) {
-  
-  # rename data
-  data_shp <- data
-  
-  # if not allowing user to select multiple inputs?
-  if (field != "input") {
-    output$plot <- renderLeaflet({
-      
-      # get popup for a single line
-      popup_text <- paste("<h5><strong>", paste(data_shp[[popup_title]],": ", sep=""), "</strong>", prettyNum(signif(data_shp[[field]],3), big.mark=",", scientific=FALSE), data_shp[[display_units]], "</h5>")
-      
-      # get color pal
-      pal <- colorQuantile(palette = color_palette,
-                           domain = data_shp[[field]],
-                           na.color = "#DCDCDC", alpha = 0.4)
-      
-      leaflet(data_shp,
-              options = leafletOptions(zoomControl = FALSE)) %>%
-        addPolygons(color = "#A9A9A9", 
-                    weight = 0.5, 
-                    smoothFactor = 0.5,
-                    opacity = 1.0, 
-                    fillOpacity = 0.7,
-                    fillColor = pal(data_shp[[field]]),
-                    popup = popup_text, 
-                    highlightOptions = highlightOptions(color = "white", 
-                                                        weight = 2,
-                                                        bringToFront = TRUE)) %>% 
-        addLegend_desc("bottomright",
-                       pal = pal,
-                       values = selected_data()[[display_field]],
-                       opacity = 1,
-                       labels = labels,
-                       decreasing = TRUE) %>% 
-        addProviderTiles(providers$CartoDB.Positron) %>%
-        setView(long, lat, zoom) 
-    })
-    
-  } else {
     
     # if allowing user to select multiple input data
     filter_field <- enquo(filter_field)
     
     selected_data <- reactive({
-      
-      df <- data_shp %>% 
+      df <- data %>% 
         filter(!!filter_field == input$select)
-      
       return(df)
       
     })
@@ -229,13 +200,25 @@ card_map <- function(input,
       
       
       # get popup for a single line
-      popup_text <- paste("<h5><strong>", selected_data()[[popup_title]], ": ", "</strong>" ,       prettyNum(signif(selected_data()[[display_field]],3), big.mark=",", scientific=FALSE), selected_data()[[display_units]], "</h5>")
+      popup_text <- paste("<h5><strong>", selected_data()[[popup_label]], ": ", "</strong>" ,       prettyNum(signif(selected_data()[[popup_value]],3), big.mark=",", scientific=FALSE), selected_data()[[popup_units]], "</h5>")
       
       
-      # get color pal
+      # Creates palette using values from the entire dataset
+      if (color_palette_type == 'discrete'){
+        
+      # Legend broken up into quantiles
       pal <- colorQuantile(palette = color_palette,
-                           domain = selected_data()[[display_field]],
+                           domain = selected_data()[[popup_value]], 
                            na.color = "#DCDCDC", alpha = 0.4)
+      
+      } else if (color_palette_type == 'continuous'){
+        
+      # Legend is continuous color palette
+      pal <- colorNumeric(palette = color_palette,
+                          domain = selected_data()[[popup_value]],
+                          na.color = "#DCDCDC", alpha = 0.4)
+      }
+      
       
       
       leaflet(selected_data(),
@@ -245,23 +228,22 @@ card_map <- function(input,
                     smoothFactor = 0.5,
                     opacity = 1.0, 
                     fillOpacity = 0.7,
-                    fillColor = pal(selected_data()[[display_field]]),
+                    fillColor = pal(selected_data()[[popup_value]]),
                     popup = popup_text, 
                     highlightOptions = highlightOptions(color = "white", 
                                                         weight = 2,
                                                         bringToFront = TRUE)) %>% 
         addLegend_desc("bottomright",
-                             pal = pal,
-                             values = selected_data()[[display_field]],
-                             opacity = 1,
-                             labels = labels,
-                             decreasing = TRUE) %>% 
+                       pal = pal,
+                       values = selected_data()[[popup_value]],
+                       opacity = 1,
+                       title = legend_title,
+                       labels = labels,
+                       decreasing = TRUE) %>% 
         addProviderTiles(providers$CartoDB.Positron
-                         #,options = providerTileOptions(noWrap = TRUE) ## prevents global
         ) %>%
-        setView(long, lat, zoom)
+        setView(lon, lat, zoom)
     })
     
   }
   
-}

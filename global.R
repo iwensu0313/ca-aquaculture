@@ -22,8 +22,13 @@ library(shinyAce)
 library(DT)
 
 ## Color Palettes
-ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200] # blue shades
+# Eliminate super light yellow colors
+# Good for both colorQuantile() and colorNumeric()
+ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200) # Yellow, Green, Blue
+ygb_cols <- ygb[19:200] 
 
+OrRd <- colorRampPalette(brewer.pal(5, 'OrRd'))(200) # Orange, Red
+OrRd_cols <- OrRd[19:200]
 
 
 ## SOURCE EXTERNAL SCRIPTS ##

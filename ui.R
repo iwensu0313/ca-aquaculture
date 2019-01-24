@@ -2,6 +2,7 @@ source("global.R")
 
 ### Setting up the dashboard page
 
+# Here, dashboardPage is a modified function - see functions
 dashboardPage("California Aquaculture", 
               thead = tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
                                 
@@ -27,8 +28,20 @@ dashboardPage("California Aquaculture",
                          ## Food Fish Production
                          tabPanel("Food Fish",
                                   
-                                  
                                   div(class = "master",
+                                      
+                                      ## Tab Title
+                                      tab_title_ui(title = "Food Fish Production",
+                                                   lead = "",
+                                                   subtitle = "About the Data:",
+                                                   description = list("Food fish data excludes finfish categorized as sport fish, baitfish, or ornamental fish. Below you will find information on types of food fish species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture.  Farms include those producing fish eggs, fingerlings & fry, stockers, broodstock, as well as foodsize fish with sales of $1,000 or more. The fourth census will provide data for 2018 and will be available at the end of 2019, so stay tuned!")
+                                      ),
+                                      
+                                      
+                                      ## Baseline Metrics ##
+                                      summary_stats_ui(id = "ca_metrics",
+                                                       number_boxes = 3),
+                                          
                                       
                                       ## Plot CA Food Fish ##
                                       plot_ui(id = "ca_fish_plot",
@@ -57,6 +70,16 @@ dashboardPage("California Aquaculture",
                          tabPanel("Mollusk",
                                   
                                   div(class = "master",
+                                      
+                                      ## Tab Title
+                                      tab_title_ui(title = "Shellfish Production",
+                                                   lead = "Shellfish cultivation can significantly improve water quality, be environmentally sustainable, and contribute to the increase in protein demand.",
+                                                   subtitle = "About the Data:",
+                                                   description = list("Below you will find information on types of mollusk species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture. Shellfish species include clams, mussels, oysters, and abalones. Farms are defined as operations that have produced $1,000 or more in sales from aquaculture products. The 2018 USDA aquaculture census will be released in late 2019.")),
+                                      
+                                      ## Baseline Metrics ##
+                                      summary_stats_ui(id = "ca_metrics",
+                                                       number_boxes = 3),
                                       
                                       ## Plot CA Mollusk ##
                                       plot_ui(id = "ca_shell_plot",
@@ -89,6 +112,18 @@ dashboardPage("California Aquaculture",
                        
                        div(class = "master",
                            
+                           
+                           ## Tab Title
+                           tab_title_ui(title = "Farmed Seafood Imports",
+                                        lead = "Seafood imports can provide an idea of consumer demand, as the majority of our seafood is not local.",
+                                        subtitle = "About the Data:",
+                                        description = list("Below you will find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. Proper evaluation of demand will have to incorporate both domestic and foreign sources of seafood. The only products shown are those explicitly described as farmed.")
+                           ),
+                           
+                           ## Baseline Metrics ##
+                           summary_stats_ui(id = "ca_metrics",
+                                            number_boxes = 3),
+                           
                            ## Plot CA Seafood Import ##
                            plot_ui(id = "ca_import_plot",
                                    title_text = "California Farmed Seafood Imports",
@@ -118,13 +153,25 @@ dashboardPage("California Aquaculture",
               ), # end imports tab Panel
               
               
-              ## National & Global Data
-              navbarMenu("National & Global",
+              ## National Data
+              navbarMenu("National",
                          
-                         # US Food Fish Production
+                         # US Production
                          tabPanel("US Production",
                                   
                                   div(class = "master",
+                                      
+                                      tab_title_ui(title = "US Aquaculture Production",
+                                                   lead = "",
+                                                   subtitle = "About the Data:",
+                                                   description = list("Below you will find US production data from the US Department of Aquaculture Quick Stats database for food fish and mollusks. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Farms include facilities with sales of $1,000 or more. Total sales in dollars for US food fish production had to be estimated for 15 states due to undisclosed data. For shellfish production, total sales in dollars had to be estimated for Alaska, Georgia, Hawaii, Maine, Massachusetts, and Pennsylvania. These were estimated by multiplying the number of farm operations by the average US sales per operation for mollusks and food fish separately. The 2018 USDA aquaculture census will be released in late 2019.")),
+                                      
+                                      ## Baseline Metrics ##
+                                      summary_stats_ui(id = "fish_metrics",
+                                                       number_boxes = 3),
+                                      
+                                      summary_stats_ui(id = "shell_metrics",
+                                                       number_boxes = 3),
                                       
                                       ## Food Fish US Map
                                       map_ui(id = "fish_us_map",
@@ -160,26 +207,52 @@ dashboardPage("California Aquaculture",
                                   ) # end div
                          ), # end US prod tab panel
                          
+                         
+                         
                          tabPanel("Import Refusals",
                                   
                                   div(class = "master",
-                                      ## Global Pie Chart of Refusals
-                                      mapmini_ui(id = "shrimp_refuse_map", 
+                                      
+                                      tab_title_ui(title = "FDA Shrimp Import Refusals",
+                                                   lead = "Lead",
+                                                   subtitle = "About the Data:",
+                                                   description = "Description"),
+                                      
+                                      
+                                      ## Global Map of Refusals
+                                      map_ui(id = "shrimp_refuse_map",
+                                             title_text = paste0("Import Refusals"),
+                                             sub_title_text = "Start exploring! ",
+                                             select_type = "slider",
+                                             select_location = "below",
+                                             slider_min = 2002,
+                                             slider_max = 2018,
+                                             slider_start = 2018,
+                                             slider_sep = "",
+
+
+                                             source_text = list(
+                                               p("Sources:"),
+                                               p(tags$sup("1."), tags$a(href="https://www.accessdata.fda.gov/scripts/ImportRefusals/index.cfm", "Food and Drug Administration"), ", Import Refusal Report (2002-2018)"))
+                                      ), # end of map ui
+                                      
+                                      mapmini_ui(id = "shrimp_refuse_map",
                                                  title_text = "FDA Shrimp Import Refusals",
                                                  sub_title_text = "Start exploring! Data includes time series from 2014 to 2018.",
                                                  select_type = "slider",
                                                  select_location = "below",
-                                                 slider_min = 2014, 
-                                                 slider_max = 2018, 
-                                                 slider_start = 2014,
+                                                 slider_min = 2002,
+                                                 slider_max = 2018,
+                                                 slider_start = 2018,
                                                  slider_sep = ""
                                       ) # end map mini ui import refusal
+                                      
                                       
                                   ) # end div
                          ) # end shrimp import refusal tab panel
                          
                          
-              ), # end Regional & Global
+              ), # end National
               
               ## Data Download
               navbarMenu("Data Download",
@@ -187,6 +260,18 @@ dashboardPage("California Aquaculture",
                          tabPanel("USDA Census of Aquaculture",
                                   
                                   div(class = "master",
+                                      
+                                      h3("USDA Census of Aquaculture: Mollusk and Food Fish"),
+                                      
+                                      ## Summary
+                                      p("Below you will find the USDA Quick Stats data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data, allowing users to more easily search the data for categories of interest."),
+                                      p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                                      
+                                      tags$br(),
+                                      
+                                      p("Aquaculture sales in dollars, number of operations, head, and head per pound as reported by the US Department of Agriculture Census of Aquaculture in 1998, 2005, and 2013. Excluded wholesale and retail information. Data that was not disclosed by USDA to protect individual farms are left blank. The data table below is an intermediate, more tidied version of the", tags$a(href="https://quickstats.nass.usda.gov/", "original USDA data"), "."),
+                                      p(strong("Reading the data:")),
+                                      p("This data table combines subsets and totals. See", tags$a(href="https://raw.githubusercontent.com/iwensu0313/aqculture-data/master/data/int/USDA_Metadata.txt", "metadata documentation"), "for more information before using the data in analysis."),
 
                                   ## USDA Data Table
                                   dataTableOutput("usdaTable")
@@ -197,7 +282,18 @@ dashboardPage("California Aquaculture",
                          tabPanel("NOAA Fisheries Statistics Import",
                                   
                                   div(class = "master",
-
+                                      
+                                      h3("NOAA Statistics: All California Seafood Imports"),
+                                      
+                                      ## Summary
+                                      p("Below you will find the NOAA Fisheries data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data, allowing users to more easily search the data for categories of interest."),
+                                      p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                                      
+                                      tags$br(),
+                                      
+                                      
+                                     p("The California Farmed Seafood Imports plot only displays 'farmed' seafood import values. This tidied data table contains weight and dollar value of all California seafood imports as reported by NOAA from 2014 to 2017. Access original raw data here:", tags$a(href="https://www.st.nmfs.noaa.gov/commercial-fisheries/foreign-trade/applications/trade-by-specific-us-customs-district", "NOAA Fisheries Statistics"), "."),
+                                     
                                   ## NOAA Data Table
                                   dataTableOutput("noaaimportTable")
                                   
@@ -209,53 +305,6 @@ dashboardPage("California Aquaculture",
               # ) # end dashboard body
 ) # end nav page
 
-
-
-
-
-
-# 
-# ## Download Data ##
-# tabItem(tabName = "data-tables",
-#         div(class = "master",
-#             h1(strong("Aquaculture Data Sources")),
-#             
-#             tags$br(),
-#             
-#             ## Summary
-#             p("Below you will find the USDA and NOAA Fisheries data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data, allowing users to more easily search the data for categories of interest."),
-#             p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
-#             
-#             tags$br(),
-#             
-#             ## USDA Data Table Intro
-#             p(h3("USDA Census of Aquaculture: Mollusk and Food Fish")),
-#             p("Aquaculture sales in dollars, number of operations, head, and head per pound as reported by the US Department of Agriculture Census of Aquaculture in 1998, 2005, and 2013. Excluded wholesale and retail information. Data that was not disclosed by USDA to protect individual farms are left blank. The data table below is an intermediate, more tidied version of the", tags$a(href="https://quickstats.nass.usda.gov/", "original USDA data"), "."),
-#             p(strong("Reading the data:")),
-#             p("This data table combines subsets and totals. See", tags$a(href="https://raw.githubusercontent.com/iwensu0313/aqculture-data/master/data/int/USDA_Metadata.txt", "metadata documentation"), "for more information before using the data in analysis."),
-#             
-#             ## USDA Data Table
-#             fluidRow(
-#               column(12, 
-#                      div(dataTableOutput("usdaTable"))
-#               )
-#             ), # end table
-#             
-#             
-#             ## NOAA Data Table Intro
-#             p(h3("NOAA Statistics: All California Seafood Imports")),
-#             p("The California Farmed Seafood Imports plot only displays 'farmed' seafood import values. This tidied data table contains weight and dollar value of all California seafood imports as reported by NOAA from 2014 to 2017. Access original raw data here:", tags$a(href="https://www.st.nmfs.noaa.gov/commercial-fisheries/foreign-trade/applications/trade-by-specific-us-customs-district", "NOAA Fisheries Statistics"), "."),
-#             
-#             ## NOAA Data Table
-#             fluidRow(
-#               column(12, 
-#                      div(dataTableOutput("noaaimportTable"))
-#               )
-#             ) # end table
-#             
-#         ) # end div master
-# ) # end data tabItem
-# 
 
 
 

@@ -40,7 +40,7 @@ rgns_leaflet <- us_states(resolution = "low") %>%
 ## Identify arguments for map_card
 ```{r}
 
-data = fish_US_map
+data = fish_us_map
 filter_field = data$type
 display_field = "map_data"
 color_palette = ygb
@@ -56,17 +56,19 @@ popup_add_field = "State"
 
 Define data table: `fish_US_map` is prepared in prod.Rmd
 ```{r}
-data <- fish_US_map %>% 
+data_shp <- fish_us_map %>% 
   filter(type == "OPERATIONS")
 ```
 
 Filter out territories
 ```{r}
-
-data_shp <- rgns_leaflet %>%
-  full_join(data, by = "state") %>% 
-  filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>% 
+data_shp <- data_shp %>%
+  filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>%
   mutate(map_data = ifelse(is.na(map_data), 0, map_data))
+# data_shp <- rgns_leaflet %>%
+#   full_join(data, by = "state") %>%
+#   filter(!state %in% c("PUERTO RICO", "DISTRICT OF COLUMBIA")) %>%
+#   mutate(map_data = ifelse(is.na(map_data), 0, map_data))
   
 ```
 

@@ -110,7 +110,6 @@ mapmini_ui <- function(id,
                             choices = select_choices,
                             label = p(select_label),
                             selected = selected)
-      
     } else if (select_type == "slider") {
       select <- sliderInput(ns("select"),
                             label = p(select_label),
@@ -164,11 +163,11 @@ mapmini_ui <- function(id,
 #'   \item{If there is no input, this field is set to the name of the column being visualized.}
 #' }
 #' @param filter_field column name, this field defines the column on which to filter. Use this when `field` is set to "input"
-#' @param display_field column name, this field defines the column containing data to display
+#' @param popup_value column name, this field defines the column containing data to display
 #' @param color_palette character, defines the color palette for the map. The palette options come 
 #' from the RColorBrewer library, and the options can be viewed here: \url{http://www.datavis.ca/sasmac/brewerpal.html}
 #' @param legend_title character, optional. Defines the legend title for the map.
-#' @param popup_title character, optional. Defines the popup title for the map.
+#' @param popup_label character, optional. Defines the popup title for the map.
 #' @param popup_add_field column name, optional. Option to put another field in the popups. The field
 #' must be defined with the name of the dataframe and a "$" symbol (e.b. popup_add_field = tracts$neighborhood)
 #' @param popup_add_field_title character, title text for additional pop-up field. 

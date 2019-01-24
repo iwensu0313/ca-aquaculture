@@ -17,7 +17,7 @@ function(input, output, session) {
              y = "Value",
              color_group = "Species",
              filter_field = "Year",
-             colors = cols,
+             colors = ygb_cols,
              plot_type = "bar",
              mode = NULL,
              tooltip_text = ~paste("No. of Farms:", Value, 
@@ -33,7 +33,7 @@ function(input, output, session) {
              y = "Value",
              color_group = "Species",
              filter_field = "Year",
-             colors = cols,
+             colors = ygb_cols,
              plot_type = "bar",
              mode = NULL,
              tooltip_text = ~paste("No. of Farms:", Value,
@@ -49,7 +49,7 @@ function(input, output, session) {
              y = "Dollars",
              color_group = "Country",
              filter_field = "Product",
-             colors = cols,
+             colors = ygb_cols,
              plot_type = "scatter",
              mode = "lines+markers",
              tooltip_text = ~paste("Imported from", StrCap(tolower(Country), method="word"),
@@ -73,11 +73,12 @@ function(input, output, session) {
              data = fish_us_map,
              field = "input",
              filter_field = type, # type of data to plot
-             display_field = "map_data",
-             display_units = "units",
+             popup_value = "map_data",
+             popup_units = "units",
              color_palette = ygb,
+             color_palette_type = "discrete",
              legend_title = "Legend",
-             popup_title = "state")
+             popup_label = "state")
   
 
   
@@ -95,19 +96,33 @@ function(input, output, session) {
              data = shell_us_map,
              field = "input",
              filter_field = type, # type of data to plot
-             display_field = "map_data",
-             display_units = "units",
+             popup_value = "map_data",
+             popup_units = "units",
              color_palette = ygb,
+             color_palette_type = "discrete",
              legend_title = "Legend",
-             popup_title = "state")
+             popup_label = "state")
   
   
   
   
+  ## FDA Shrimp Import Refusal ##
+  callModule(card_map, "shrimp_refuse_map",
+             data = shrimp_refuse_map,
+             field = "input",
+             filter_field = YEAR, # slider data filter
+             color_palette = OrRd,
+             color_palette_type = "continuous",
+             popup_label = "COUNTRY_NAME",
+             popup_value = "REFUSALS",
+             popup_units = "Units",
+             legend_title = "Legend",
+             lon = 12,
+             lat = 30,
+             zoom = 2)
   
   
   
-  ## TESTING - WWF Shrimp Import Refusal ##
   callModule(card_mapmini, "shrimp_refuse_map",
              data = shrimp_refuse,
              field = "input",
@@ -128,11 +143,6 @@ function(input, output, session) {
   ## Download Data ##
 
   # Two ways to render DT
-  # output$usdaTable <- renderDT(
-  #   USDA_shell, # data
-  #   class = "display nowrap compact", # style
-  #   filter = "top" # location of column filters
-  # )
   
   output$usdaTable <- renderDataTable(
     datatable(data = usdaTable,
