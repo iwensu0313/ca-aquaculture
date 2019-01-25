@@ -111,7 +111,7 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                            
                            ## Tab Title
                            tab_title(title = "Farmed Seafood Imports",
-                                        lead = "\"By value, nearly 90 percent of the seafood we eat comes from abroad, over half of it from aquaculture. Driven by imports, the U.S. seafood trade deficit has grown to $14 billion in 2016.\" - NOAA Fishery Statistics",
+                                        lead = "\"By value, nearly 90 percent of the seafood we eat comes from abroad, over half of it from aquaculture. Driven by imports, the U.S. seafood trade deficit has grown to $14 billion in 2016. Although a small producer, the United States.. supplies a variety of advanced technology, feed, equipment, and investment capital to other producers around the world.\" - NOAA Fishery Statistics",
                                         subtitle = "About the Data:",
                                         description = list("Below you will find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. The only products shown are those explicitly described as farmed. According to the NOAA Fisheries website, \"the value for U.S. imports is generally the market value in the foreign (exporting) country and, therefore, excludes U.S. import duties, freight charges and insurance from the foreign country to the United States.\"")
                            ),
@@ -149,24 +149,24 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
               
               ## Other Data (Keep?) ##
               navbarMenu("More",
-                         
-                         
+
+
                          ## US Production
                          tabPanel("US Production",
-                                  
+
                                   div(class = "master",
-                                      
+
                                       tab_title(title = "US Aquaculture Production",
-                                                   lead = "",
+                                                   lead = "\"The first aquaculture census was conducted in 1998, in response to the intense need for an accurate measure of the aquaculture sector. The aquaculture Census collects detailed information relating to production volume and methods, surface water acres and sources, sales, point of first sale outlets, and aquaculture distributed for restoration, conservation, enhancement, or recreational purposes.\" - USDA Census of Aquaculture",
                                                    subtitle = "About the Data:",
                                                    description = list("Below you will find US production data from the US Department of Aquaculture Quick Stats database for food fish and mollusks. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Farms include facilities with sales of $1,000 or more. Total sales in dollars for US food fish production had to be estimated for 15 states due to undisclosed data. For mollusk production, total sales in dollars had to be estimated for Alaska, Georgia, Hawaii, Maine, Massachusetts, and Pennsylvania. These were estimated by multiplying the number of farm operations by the average US sales per operation for mollusks and food fish separately. The 2018 USDA aquaculture census will be released in late 2019.")),
-                                      
-                                      
-                                      ## Baseline Metrics 
+
+
+                                      ## Baseline Metrics
                                       summary_stats_ui(id = "fish_metrics",
                                                        number_boxes = 3),
-                                      
-                                      
+
+
                                       ## Food Fish US Map
                                       map_ui(id = "fish_us_map",
                                              title_text = paste0("Food Fish Aquaculture Sales in 2013"),
@@ -183,13 +183,13 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                                                p("Sources:"),
                                                p(tags$sup("1."), tags$a(href="https://quickstats.nass.usda.gov/", "US Department of Agriculture"), ", Quick Stats Census (2013)"))
                                       ), # end of map ui
-                                      
-                                      
+
+
                                       ## Baseline Metrics
                                       summary_stats_ui(id = "shell_metrics",
                                                        number_boxes = 3),
-                                      
-                                      
+
+
                                       ## Mollusk US Map
                                       map_ui(id = "shell_us_map",
                                              title_text = paste0("Mollusk Aquaculture Sales in 2013"),
@@ -203,57 +203,57 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                                                p("Sources:"),
                                                p(tags$sup("1."), tags$a(href="https://quickstats.nass.usda.gov/", "US Department of Agriculture"), ", Quick Stats Census (2013)"))
                                       ) # end of map ui
-                                      
+
                                   ) # end div
-                         ), # end US prod tab panel
-                         
-                         
-                         
-                         ## FDA Import Refusals ##
-                         tabPanel("FDA Import Refusals",
-                                  
-                                  div(class = "master",
-                                      
-                                      tab_title(title = "FDA Shrimp Import Refusals",
-                                                   subtitle = "About the Data:",
-                                                   description = "Below you will find data on US shrimp imports that were refused from the Food and Drug Administration database. Data includes the number of refusals per country from 2002 to 2018 as well as percentage of refusals due to presence of salmonella, filth, nitrofurans (a type of drug used in antibiotics), and veterinary drugs."),
-                                      
-                                      
-                                      ## Shrimp Refusals Map
-                                      map_ui(id = "shrimp_refuse_map",
-                                             title_text = paste0("Import Refusals"),
-                                             sub_title_text = "Start exploring! Click on specific countries to see the number of shrimp imports that were refused by the FDA for that year. Use the slider to view import refusal data from 2002 to 2018.",
-                                             select_type = "slider",
-                                             select_location = "below",
-                                             slider_min = 2002,
-                                             slider_max = 2018,
-                                             slider_start = 2018,
-                                             slider_sep = "",
+                         ) # end US prod tab panel
+#,
 
 
-                                             source_text = list(
-                                               p("Sources:"),
-                                               p(tags$sup("1."), tags$a(href="https://www.accessdata.fda.gov/scripts/ImportRefusals/index.cfm", "Food and Drug Administration"), ", Import Refusal Report (2002-2018)"))
-                                      ), # end of map ui
-                                      
-                                      ## Shrimp Refusals Map Minichart
-                                      mapmini_ui(id = "shrimp_refuse_pie",
-                                                 title_text = "FDA Shrimp Import Refusals",
-                                                 sub_title_text = "Start exploring! This map shows the percentage of shrimp import refusals per country that were due to presence of salmonella, nitrofurans (antibiotics), filth, or use of veterinary drugs.",
-                                                 select_type = "slider",
-                                                 select_location = "below",
-                                                 slider_min = 2002,
-                                                 slider_max = 2018,
-                                                 slider_start = 2018,
-                                                 slider_sep = ""
-                                      ) # end map mini ui import refusal
-                                      
-                                      
-                                  ) # end div
-                         ) # end shrimp import refusal tab panel
-                         
-                         
-              ), # end National
+                         # ## FDA Import Refusals ##
+                         # tabPanel("FDA Import Refusals",
+                         # 
+                         #          div(class = "master",
+                         # 
+                         #              tab_title(title = "FDA Shrimp Import Refusals",
+                         #                           subtitle = "About the Data:",
+                         #                           description = "Below you will find data on US shrimp imports that were refused from the Food and Drug Administration database. Data includes the number of refusals per country from 2002 to 2018 as well as percentage of refusals due to presence of salmonella, filth, nitrofurans (a type of drug used in antibiotics), and veterinary drugs."),
+                         # 
+                         # 
+                         #              ## Shrimp Refusals Map
+                         #              map_ui(id = "shrimp_refuse_map",
+                         #                     title_text = paste0("Import Refusals"),
+                         #                     sub_title_text = "Start exploring! Click on specific countries to see the number of shrimp imports that were refused by the FDA for that year. Use the slider to view import refusal data from 2002 to 2018.",
+                         #                     select_type = "slider",
+                         #                     select_location = "below",
+                         #                     slider_min = 2002,
+                         #                     slider_max = 2018,
+                         #                     slider_start = 2018,
+                         #                     slider_sep = "",
+                         # 
+                         # 
+                         #                     source_text = list(
+                         #                       p("Sources:"),
+                         #                       p(tags$sup("1."), tags$a(href="https://www.accessdata.fda.gov/scripts/ImportRefusals/index.cfm", "Food and Drug Administration"), ", Import Refusal Report (2002-2018)"))
+                         #              ), # end of map ui
+                         # 
+                         #              ## Shrimp Refusals Map Minichart
+                         #              mapmini_ui(id = "shrimp_refuse_pie",
+                         #                         title_text = "FDA Shrimp Import Refusals",
+                         #                         sub_title_text = "Start exploring! This map shows the percentage of shrimp import refusals per country that were due to presence of salmonella, nitrofurans (antibiotics), filth, or use of veterinary drugs.",
+                         #                         select_type = "slider",
+                         #                         select_location = "below",
+                         #                         slider_min = 2002,
+                         #                         slider_max = 2018,
+                         #                         slider_start = 2018,
+                         #                         slider_sep = ""
+                         #              ) # end map mini ui import refusal
+                         # 
+                         # 
+                         #          ) # end div
+                         # ) # end shrimp import refusal tab panel
+
+
+              ), # end More tab
               
               ## Data Download
               navbarMenu("Data Download",
@@ -266,12 +266,18 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                                       
                                       ## Summary
                                       p("Below you will find the USDA Quick Stats data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data, allowing users to more easily search the data for categories of interest."),
-                                      p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                                      
+                                      ## About the data
+                                      p("Aquaculture sales in dollars, number of operations, head, and head per pound as reported by the US Department of Agriculture Census of Aquaculture in 1998, 2005, and 2013. Excluded wholesale and retail information. Data that was not disclosed by USDA to protect individual farms are left blank. The data table below is an intermediate, more tidied version of the", tags$a(href="https://quickstats.nass.usda.gov/", "original USDA data"), "."),
                                       
                                       tags$br(),
                                       
-                                      p("Aquaculture sales in dollars, number of operations, head, and head per pound as reported by the US Department of Agriculture Census of Aquaculture in 1998, 2005, and 2013. Excluded wholesale and retail information. Data that was not disclosed by USDA to protect individual farms are left blank. The data table below is an intermediate, more tidied version of the", tags$a(href="https://quickstats.nass.usda.gov/", "original USDA data"), "."),
-                                      p(strong("Reading the data:")),
+                                      ##  how to download
+                                      h5(strong("Downloading the Data:")),
+                                      p("The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                                      
+                                      ## Reading the data
+                                      h5(strong("Documentation:")),
                                       p("This data table combines subsets and totals. See", tags$a(href="https://raw.githubusercontent.com/iwensu0313/aqculture-data/master/data/int/USDA_Metadata.txt", "metadata documentation"), "for more information before using the data in analysis."),
 
                                   ## USDA Data Table
@@ -279,6 +285,7 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                                   
                                   ) # end div
                                   ), # end usda census tabPanel
+                         
 
                          tabPanel("NOAA Fisheries Statistics Import",
                                   
@@ -288,12 +295,16 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                                       
                                       ## Summary
                                       p("Below you will find the NOAA Fisheries data that were used to create the maps and plots in this dashboard. They are tidied versions of the original raw data, allowing users to more easily search the data for categories of interest."),
-                                      p(strong("Downloading the Data:"), "The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
+                                      
+                                      ## About the Data
+                                      p("The California Farmed Seafood Imports plot only displays 'farmed' seafood import values. This tidied data table contains weight and dollar value of all California seafood imports as reported by NOAA from 2014 to 2017. Access original raw data here:", tags$a(href="https://www.st.nmfs.noaa.gov/commercial-fisheries/foreign-trade/applications/trade-by-specific-us-customs-district", "NOAA Fisheries Statistics"), "."),
                                       
                                       tags$br(),
                                       
+                                      ## downloading
+                                      h5(strong("Downloading the Data:")),
+                                      p("The download button only downloads the subset of the table that is shown. To download the entire table, first select 'Show All Entries' then press 'Download'."),
                                       
-                                     p("The California Farmed Seafood Imports plot only displays 'farmed' seafood import values. This tidied data table contains weight and dollar value of all California seafood imports as reported by NOAA from 2014 to 2017. Access original raw data here:", tags$a(href="https://www.st.nmfs.noaa.gov/commercial-fisheries/foreign-trade/applications/trade-by-specific-us-customs-district", "NOAA Fisheries Statistics"), "."),
                                      
                                   ## NOAA Data Table
                                   dataTableOutput("noaaimportTable")

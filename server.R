@@ -2,14 +2,14 @@
 function(input, output, session) {
   
   
-  ## California Baseline Metrics ##
-  callModule(summary_stats, "ca_metrics",
-             number_boxes = 3,
-             statistic = list("67%", "64%", "$84M"),
-             text = list("of shellfish farms in CA cultivated Pacific Oysters and 59% of food fish farms grew Catfish.",
-                         "of CA aquaculture sales in 2013 came from food fish and shellfish, totalling $37 M and $17 M respectively.",
-                         "Sales of all California aquaculture products in 2013, with a total of 124 operating farms."))
-  
+  # ## California Baseline Metrics ##
+  # callModule(summary_stats, "ca_metrics",
+  #            number_boxes = 3,
+  #            statistic = list("67%", "64%", "$84M"),
+  #            text = list("of mollusk farms in CA cultivated Pacific Oysters and 59% of food fish farms grew Catfish.",
+  #                        "of CA aquaculture sales in 2013 came from food fish and mollusk, totalling $37 M and $17 M respectively.",
+  #                        "Sales of all California aquaculture products in 2013, with a total of 124 operating farms."))
+  # 
   
   
   ## California Mollusk Plot ##
@@ -24,8 +24,8 @@ function(input, output, session) {
              mode = NULL,
              tooltip_text = ~paste("No. of Farms:", Value, 
                                    "<br>Species:", StrCap(tolower(Species), method="word"), sep=" "),
-             xaxis_label = "Type of Shellfish",
-             yaxis_label = "Number of Shellfish Farms",
+             xaxis_label = "Type of Mollusk",
+             yaxis_label = "Number of Mollusk Farms",
              yaxis_range = c(0,20))
   
   
@@ -87,17 +87,17 @@ function(input, output, session) {
   
 
   
-  ## US Shellfish Aquaculture Baseline Metrics ##
+  ## US Mollusk Aquaculture Baseline Metrics ##
   callModule(summary_stats, "shell_metrics",
              number_boxes = 3,
              statistic = list("55%", "45%", "52%"),
-             text = list("of US shellfish sales are oysters, 38% are clams and 4% are mussels.",
-                         "of shellfish aquaculture sales were produced in Washington during 2013.",
-                         "of shellfish farms are in Florida, Massachusetts, and Washington."))
+             text = list("of US mollusk sales are oysters, 38% are clams and 4% are mussels.",
+                         "of mollusk aquaculture sales were produced in Washington during 2013.",
+                         "of mollusk farms are in Florida, Massachusetts, and Washington."))
   
   
   
-  ## Shellfish Aquaculture US Map ##
+  ## Mollusk Aquaculture US Map ##
   callModule(card_map, "shell_us_map",
              data = shell_us_map,
              field = "input",
