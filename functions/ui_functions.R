@@ -54,16 +54,16 @@ dashboardPage =
 
 # tab_title
 tab_title <- function(title, 
-                      lead,
+                      lead = NULL,
                       subtitle,
                       description) {
   
   fluidRow(box(
     h1(strong(title)),
-    #tags$div(class = "title_section", h3(lead)),
+    tags$div(class = "title_section", lead),
     tags$br(),
     h4(paste(subtitle)),
-    tags$i(description),
+    p(description),
     width = 12)
   )
   

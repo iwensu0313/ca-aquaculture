@@ -36,15 +36,15 @@ dashboardPage("California Aquaculture",
                                       
                                       ## Tab Title
                                       tab_title(title = "Food Fish Production",
-                                                   lead = "",
-                                                   subtitle = "About the Data:",
-                                                   description = list("Food fish data excludes finfish categorized as sport fish, baitfish, or ornamental fish. Below you will find information on types of food fish species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture.  Farms include those producing fish eggs, fingerlings & fry, stockers, broodstock, as well as foodsize fish with sales of $1,000 or more. The fourth census will provide data for 2018 and will be available at the end of 2019, so stay tuned!")
+                                                lead = "\"Food fish is the largest category of aquaculture product, accounting for more than half of aquaculture sales. Food fish includes fish raised primarily for food, as well as eggs from food fish.\" - USDA Census of Aquaculture",
+                                                subtitle = "About the Data:",
+                                                description = list("Food fish data excludes finfish categorized as sport fish, baitfish, or ornamental fish. Below you will find information on types of food fish species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture.  Farms include those producing fish eggs, fingerlings & fry, stockers, broodstock, as well as foodsize fish with sales of $1,000 or more. The fourth census will provide data for 2018 and will be available at the end of 2019, so stay tuned!")
                                       ),
                                       
                                       
                                       ## Food Fish Bar Graph
                                       plot_ui(id = "ca_fish_plot",
-                                              title_text = "California Food Fish Operations",
+                                              title_text = "What are we Cultivating?",
                                               sub_title_text = "Select different years to view change in number of farms cultivating each species. Hover over bars to view data. Double-click or single-click on legend categories to view a subset of the data. This plot excludes aquaculture products categorized as sport fish, ornamental fish, and baitfish.",
                                               select_type = "radio",
                                               select_location = "above",
@@ -72,14 +72,15 @@ dashboardPage("California Aquaculture",
                                       
                                       
                                       ## Tab Title
-                                      tab_title(title = "Shellfish Production",
-                                                   lead = "Shellfish cultivation can significantly improve water quality, be environmentally sustainable, and contribute to the increase in protein demand.",
+                                      tab_title(title = "Mollusk Production",
+                                                   lead = "\"Mollusks are the second largest aquaculture category,
+with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aquaculture",
                                                    subtitle = "About the Data:",
-                                                   description = list("Below you will find information on types of mollusk species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture. Shellfish species include clams, mussels, oysters, and abalones. Farms are defined as operations that have produced $1,000 or more in sales from aquaculture products. The 2018 USDA aquaculture census will be released in late 2019.")),
+                                                   description = list("Below you will find information on types of mollusk species cultivated in California in 2013, 2005, and 1998. Information is from the USDA Census of Aquaculture. Mollusk species include clams, mussels, oysters, and abalones. Farms are defined as operations that have produced $1,000 or more in sales from aquaculture products. The 2018 USDA aquaculture census will be released in late 2019.")),
                                      
-                                      ## Shellfish Bar Graph
+                                      ## Mollusk Bar Graph
                                       plot_ui(id = "ca_shell_plot",
-                                              title_text = "California Shellfish Operations",
+                                              title_text = "What are we Cultivating?",
                                               sub_title_text = "Select different years to view change in number of farms cultivating each species. Hover over bars to view data. Double-click or single-click on legend categories to view a subset of the data. In 1998, the census only recorded 3 operating mussel farms in California (not shown below).",
                                               select_type = "radio",
                                               select_location = "above",
@@ -110,9 +111,9 @@ dashboardPage("California Aquaculture",
                            
                            ## Tab Title
                            tab_title(title = "Farmed Seafood Imports",
-                                        lead = "Seafood imports can provide an idea of consumer demand, as the majority of our seafood is not local.",
+                                        lead = "\"By value, nearly 90 percent of the seafood we eat comes from abroad, over half of it from aquaculture. Driven by imports, the U.S. seafood trade deficit has grown to $14 billion in 2016.\" - NOAA Fishery Statistics",
                                         subtitle = "About the Data:",
-                                        description = list("Below you will find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. Proper evaluation of demand will have to incorporate both domestic and foreign sources of seafood. The only products shown are those explicitly described as farmed.")
+                                        description = list("Below you will find information about seafood imports from 2014 to 2017. This data comes from the NOAA Fisheries Statistics database. The only products shown are those explicitly described as farmed. According to the NOAA Fisheries website, \"the value for U.S. imports is generally the market value in the foreign (exporting) country and, therefore, excludes U.S. import duties, freight charges and insurance from the foreign country to the United States.\"")
                            ),
                            
 
@@ -158,7 +159,7 @@ dashboardPage("California Aquaculture",
                                       tab_title(title = "US Aquaculture Production",
                                                    lead = "",
                                                    subtitle = "About the Data:",
-                                                   description = list("Below you will find US production data from the US Department of Aquaculture Quick Stats database for food fish and mollusks. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Farms include facilities with sales of $1,000 or more. Total sales in dollars for US food fish production had to be estimated for 15 states due to undisclosed data. For shellfish production, total sales in dollars had to be estimated for Alaska, Georgia, Hawaii, Maine, Massachusetts, and Pennsylvania. These were estimated by multiplying the number of farm operations by the average US sales per operation for mollusks and food fish separately. The 2018 USDA aquaculture census will be released in late 2019.")),
+                                                   description = list("Below you will find US production data from the US Department of Aquaculture Quick Stats database for food fish and mollusks. The information displayed is from the most recent, comprehensive, available source: the USDA 2013 Census Aquaculture. Farms include facilities with sales of $1,000 or more. Total sales in dollars for US food fish production had to be estimated for 15 states due to undisclosed data. For mollusk production, total sales in dollars had to be estimated for Alaska, Georgia, Hawaii, Maine, Massachusetts, and Pennsylvania. These were estimated by multiplying the number of farm operations by the average US sales per operation for mollusks and food fish separately. The 2018 USDA aquaculture census will be released in late 2019.")),
                                       
                                       
                                       ## Baseline Metrics 
@@ -189,9 +190,9 @@ dashboardPage("California Aquaculture",
                                                        number_boxes = 3),
                                       
                                       
-                                      ## Shellfish US Map
+                                      ## Mollusk US Map
                                       map_ui(id = "shell_us_map",
-                                             title_text = paste0("Shellfish Aquaculture Sales in 2013"),
+                                             title_text = paste0("Mollusk Aquaculture Sales in 2013"),
                                              sub_title_text = "Start exploring! Select type of data to view: 1) sales in dollars 2) total farm operations. Click on states to see values. It may take a few seconds to load. The data in the map categorizes countries into 4 quantiles with 75-100% being the top producing states. Don't forget to check out Alaska and Hawaii!",
                                              select_type = "radio",
                                              select_location = "above",
@@ -215,13 +216,13 @@ dashboardPage("California Aquaculture",
                                       
                                       tab_title(title = "FDA Shrimp Import Refusals",
                                                    subtitle = "About the Data:",
-                                                   description = "Description"),
+                                                   description = "Below you will find data on US shrimp imports that were refused from the Food and Drug Administration database. Data includes the number of refusals per country from 2002 to 2018 as well as percentage of refusals due to presence of salmonella, filth, nitrofurans (a type of drug used in antibiotics), and veterinary drugs."),
                                       
                                       
                                       ## Shrimp Refusals Map
                                       map_ui(id = "shrimp_refuse_map",
                                              title_text = paste0("Import Refusals"),
-                                             sub_title_text = "Start exploring! ",
+                                             sub_title_text = "Start exploring! Click on specific countries to see the number of shrimp imports that were refused by the FDA for that year. Use the slider to view import refusal data from 2002 to 2018.",
                                              select_type = "slider",
                                              select_location = "below",
                                              slider_min = 2002,
@@ -238,7 +239,7 @@ dashboardPage("California Aquaculture",
                                       ## Shrimp Refusals Map Minichart
                                       mapmini_ui(id = "shrimp_refuse_pie",
                                                  title_text = "FDA Shrimp Import Refusals",
-                                                 sub_title_text = "Start exploring! Data includes time series from 2014 to 2018.",
+                                                 sub_title_text = "Start exploring! This map shows the percentage of shrimp import refusals per country that were due to presence of salmonella, nitrofurans (antibiotics), filth, or use of veterinary drugs.",
                                                  select_type = "slider",
                                                  select_location = "below",
                                                  slider_min = 2002,

@@ -1,4 +1,5 @@
-@import url('//fonts.googleapis.com/css?family=Economica|Lato:400,700');
+@import url('//fonts.googleapis.com/css?family=Lato:400,400i');
+@import url('//fonts.googleapis.com/css?family=Economica');
 
 /* GLOBAL SETTINGS */
 
@@ -18,6 +19,10 @@ h1 {
 h2, h3, h4{
   font-family: 'Lato', sans-serif;
   font-weight: 700;
+}
+
+p {
+ font-family: 'Lato', sans-serif; 
 }
 
 
@@ -183,11 +188,14 @@ h2, h3, h4{
 
 .title_section {
 	padding: 1.2%;
-	background-color: #acd1d4;
-	color: white;
-	border-radius: 5px;
+/*	background-color: #acd1d4;
+	color: white; */
+	border-radius: 10px;
 	border: solid #acd1d4;
   border-width: 1px 1px;
+  font-style: italic;
+  font-size: 20px;
+  font-family: 'Lato', sans-serif;
 }
 
 
