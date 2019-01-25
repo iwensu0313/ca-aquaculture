@@ -45,7 +45,7 @@ dashboardPage("California Aquaculture",
                                       ## Food Fish Bar Graph
                                       plot_ui(id = "ca_fish_plot",
                                               title_text = "What are we Cultivating?",
-                                              sub_title_text = "Select different years to view change in number of farms cultivating each species. Hover over bars to view data. Double-click or single-click on legend categories to view a subset of the data. This plot excludes aquaculture products categorized as sport fish, ornamental fish, and baitfish.",
+                                              sub_title_text = "Select different years to view change in number of farms cultivating each species. Hover over bars to view data. Double-click or single-click on legend categories to view a subset of the data.",
                                               select_type = "radio",
                                               select_location = "above",
                                               select_choice = c(
