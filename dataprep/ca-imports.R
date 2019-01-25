@@ -87,11 +87,12 @@ summary_plot <- combine_prod %>%
   mutate(Year = as.character(Year))  # so the x-axis values don't show half years
 
 ## Tidy for Plotting
-# Combine total imports per country into data table
+# Combine total imports into CA over time into data table
 totals <- summary_plot %>% 
-  group_by(Year, Country) %>% 
+  group_by(Year) %>% 
   summarise(Dollars = sum(Dollars)) %>% 
-  mutate(Product = "ALL PRODUCTS") %>% 
+  mutate(Product = "ALL PRODUCTS",
+         Country = "ALL COUNTRIES") %>% 
   as.data.frame()
 
 ca_import_plot <- summary_plot %>%
@@ -109,50 +110,3 @@ write.csv(ca_import_plot, "data/output/ca_import_plot.csv")
 noaaimportTable <- read.csv("data/int/noaa_ca_imports.csv") %>% 
   arrange(desc(Year))
 
-# Was testing something....
-# Plot timeseries of product values 
-# Group by and aggregate mean value per category
-
-# plot_rate <- dollas %>% 
-#   select(Year, Product, AllAvgRate) %>%
-#   mutate(Category = case_when(
-#     str_detect(Product, "^ABALONE") ~ "Abalone",
-#     str_detect(Product, "AGAR") ~ "Aquatic Plants",
-#     str_detect(Product, "^ANCHOVY") ~ "Anchovy",
-#     str_detect(Product, "^AQUATIC INVERTEBRATES") ~ "Aquatic Invertebrates",
-#     str_detect(Product, ".*MACKEREL.*") ~ "Mackerel",
-#     str_detect(Product, "BONITO CANNED") ~ "Bonito Canned",
-#     str_detect(Product, "^BONITO YELLOWTAIL") ~ "Bonito Yellowtail",
-#     str_detect(Product, "Butterfish") ~ "Anchovy",
-#     str_detect(Product, "^CARP CATFISH EELS") ~ "Carp, Catfish, Eels, Misc",
-#     str_detect(Product, "^CATFISH") ~ "Catfish"
-#   )) %>%
-#   distinct() %>% 
-#   na.omit() %>%  # remove species you haven't categorized yet 
-#   group_by(Year, Category) %>% 
-#   summarize(AvgRateCat = mean(AllAvgRate)) %>% # aggreg per category
-#   ungroup()
-
-# my_plot <- ggplot(plot_rate, aes(x=Year, y=AvgRateCat)) + 
-#   geom_line(aes(col=Category))
-# 
-# ggplotly(my_plot)
-# 
-# 
-# ## Summarize information
-# ### Total Value Imported!
-# plot_total <- dollas %>%
-#   select(Year, Product, TotalValue, TotalKilos) %>% 
-#   arrange(Year, desc(TotalValue)) %>% 
-#   distinct() %>% 
-#   #filter(grepl('Farmed', Product, ignore.case =TRUE))
-#   filter(Year == 2017) %>% 
-#   top_n(20, TotalValue)
-# 
-# ### Set manual palette from viridis pkg
-# pal <- viridis(length(unique(plot_total$Product)))
-# 
-# my_plot <- ggplot(plot_total, aes(x=Year, y=TotalValue)) + 
-#   geom_line(aes(col=Product)) +
-#   scale_colour_manual(name = "Product", values = pal) +
-#   theme_minimal()
