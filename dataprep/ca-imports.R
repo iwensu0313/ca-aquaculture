@@ -97,7 +97,8 @@ totals <- summary_plot %>%
 ca_import_plot <- summary_plot %>%
   select(Year, Product, Country, Dollars) %>% 
   rbind(totals) %>% 
-  arrange(desc(Year))
+  arrange(desc(Year)) %>%
+  mutate(Country = map_chr(Country, capStr))
 
 write.csv(ca_import_plot, "data/output/ca_import_plot.csv")
 

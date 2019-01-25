@@ -300,7 +300,7 @@ card_plot <- function(input,
                  marker = marker,
                  text = tooltip_text, 
                  hoverinfo = "text") %>%
-      layout(font = list(family = "Lora", size = 14),
+      layout(font = list(family = "Lato", size = 14),
              xaxis = list(title = xaxis_label, 
                           fixedrange = TRUE, 
                           linecolor = "#A9A9A9",

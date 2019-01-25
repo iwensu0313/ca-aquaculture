@@ -41,7 +41,11 @@ ca_shell_plot <- ca %>%
   filter(Unit == "OPERATIONS",
          !Species %in% c("MOLLUSKS", "CLAMS", "OYSTERS"),
          Product_Type == "ALL PRODUCTS") %>% 
-  mutate(Species = as.factor(as.character(Species))) # remove previous factor info, and change back so only the current Species are translated to factors
+  mutate(Species = as.factor(as.character(Species)))
+
+# Convert ALL CAPS to just first letter caps
+ca_shell_plot$Species <- map_chr(ca_shell_plot$Species, capStr)
+ca_shell_plot$State <- map_chr(ca_shell_plot$State, capStr)
 
 write.csv(ca_shell_plot, "data/output/ca_shell_plot.csv")
 
@@ -50,7 +54,7 @@ write.csv(ca_shell_plot, "data/output/ca_shell_plot.csv")
 
 ## CA Food Fish 
 
-# Data from Table 1 and 9 from USDA 2013 Census Report 
+# Data for QA/QC from Table 1 and 9 from USDA 2013 Census Report 
 # all CA farms 2013 124 $85,583,000 (Above avg?)
 # all CA farms 2005 118, $69,607,000 (abov avg?)
 # food fish farms 2013 71 $37,395,000
@@ -71,6 +75,7 @@ ca_fish <- all_sales %>%
   select(-State_Code, -Commodity, -Wholesale_Type)
 
 
+
 ## Tidy for Plotting
 # Select Farm Operations data
 # Had to factorize species so legend categories constant across filtered datasets
@@ -79,7 +84,9 @@ ca_fish_plot <- ca_fish %>%
          !Species %in% c("FOOD FISH", "CARP"),
          Product_Type == "ALL PRODUCTS") %>% 
   mutate(Species = as.character(Species)) %>% # remove prev factors 
-  mutate(Species = ifelse(str_detect(Species, "^HYBRID.*"), "STRIPED BASS", Species)) %>%  # simplify striped bass name for graphing
-  mutate(Species = as.factor(Species))  # convert existing sp to factors
+  mutate(Species = ifelse(str_detect(Species, "^HYBRID.*"), "STRIPED BASS", Species)) %>%   # simplify striped bass name for graphing
+  mutate(Species = as.factor(Species),  # convert existing sp to factors
+         Species = map_chr(Species, capStr), # convert to first letter caps
+         State = map_chr(State, capStr)) # convert ot first letter caps
   
 write.csv(ca_fish_plot, "data/output/ca_fish_plot.csv")  

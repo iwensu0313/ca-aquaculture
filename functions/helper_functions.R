@@ -1,22 +1,42 @@
-## Custom format for leaflet in map_card
+## Custom Functions
 
+
+# capStr
+capStr <- function(x) { # x = ca_fish_plot$Species
+  
+  y <- tolower(x) # tolower can coerce factor objects into character objects
+  
+  s <- strsplit(y, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2),
+        sep="", collapse=" ")
+
+  }
+
+name <- c("zip code", "state", "final count")
+
+map_chr(name, capStr)
+
+
+# addLegend_desc
+## Leaflet Add Legend Descending Values 
+## in map_card
 addLegend_desc <- function (map, 
-                                  position = c("topright", "bottomright", "bottomleft", 
-                                                    "topleft"), 
-                                  pal, 
-                                  values, 
-                                  na.label = "NA", 
-                                  bins = 7, 
-                                  colors, 
-                                  opacity = 0.5, 
-                                  labels = NULL, 
-                                  labFormat = labelFormat(), 
-                                  title = NULL, 
-                                  className = "info legend", 
-                                  layerId = NULL, 
-                                  group = NULL, 
-                                  data = getMapData(map), 
-                                  decreasing = FALSE) {
+                            position = c("topright", "bottomright", "bottomleft", 
+                                         "topleft"), 
+                            pal, 
+                            values, 
+                            na.label = "NA", 
+                            bins = 7, 
+                            colors, 
+                            opacity = 0.5, 
+                            labels = NULL, 
+                            labFormat = labelFormat(), 
+                            title = NULL, 
+                            className = "info legend", 
+                            layerId = NULL, 
+                            group = NULL, 
+                            data = getMapData(map), 
+                            decreasing = FALSE) {
   position <- match.arg(position)
   type <- "unknown"
   na.color <- NULL

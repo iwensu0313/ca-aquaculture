@@ -16,11 +16,11 @@ frontp = function()
       div(class = "intro-divider"), 
       
       # Additional information
-      tags$p("This project strives to provide the most relevant information. Sources of aquaculture data include the US Department of Agriculture Quick Stats, NOAA Fisheries Statistics Cumulative Trade, and the Food and Drug Administration Import Refusal database. Currently you can explore data specific to California as well as a summary of US production. Data will continuously be added to this site over time!"),
+      tags$p("This project strives to provide the most relevant and accurate information. Sources of aquaculture data include the US Department of Agriculture Quick Stats, NOAA Fisheries Statistics Cumulative Trade, and the Food and Drug Administration Import Refusal database. Currently you can explore data specific to California as well as a summary of US production. Data will continuously be added to this site over time!"),
       
       tags$p("Contact",
              tags$a(href="https://iwensu0313.github.io", "Iwen Su"), 
-             "with any questions, feedback, or collaboration requests."),
+             "with any questions or feedback."),
       
       # Two hyperlink boxes: more info
       div(class = "box-con",

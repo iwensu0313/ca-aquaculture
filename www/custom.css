@@ -1,32 +1,53 @@
-@import url('//fonts.googleapis.com/css?family=Rokkitt|Lato:400,700');
+@import url('//fonts.googleapis.com/css?family=Economica|Lato:400,700');
 
-/* master div settings */
+/* GLOBAL SETTINGS */
+
+/* Master Div Settings */
 .master {
   min-width: 700px;
   max-width: 700px;
 }
 
-/* main text elements */
-h1, h2, h3, h4{
+/* Main Text Elements */
+h1 {
+  font-family: 'Economica', sans-serif;
+  font-size: 50px;
+  font-weight: 800;
+  color: #666666;
+}
+h2, h3, h4{
   font-family: 'Lato', sans-serif;
   font-weight: 700;
 }
 
 
 
-/* Nav Bar Modification */
-/* Fix width (manually adjusted)
+/* HEADER */
+
+/* Dashboard Page Header Photo */
+.aq-brand {
+   float: none;
+   height: auto;
+   padding-top: 26px;
+   padding-bottom: 24px;
+}
+
+
+
+/* NAVIGATION BAR */
+
+/* fix width (manually adjusted)
    Looks better than the automatic widths if fixed correctly. */
 .navbar-default > .container {
    width: 740px;
 }
 
-/* Hide title and arrows */
+/* hide title and arrows */
 .navbar-header, .navbar-default .caret {
    display: none;
 }
 
-/* Set fonts */
+/* set fonts */
 .navbar-default .navbar-nav > li > a, .dropdown-menu > li > a {
    font-family: 'Lato', sans-serif;
    font-size: 16px;
@@ -37,13 +58,13 @@ h1, h2, h3, h4{
    font-weight: 400;
 }
 
-/* Navbar background */
+/* navbar background */
 .navbar-default {
    background-color: transparent;
    border-color: transparent;
 }
 
-/* Top-level nav buttons */
+/* top-level nav buttons */
 .navbar-default .navbar-nav > li {
    border-top: 2px solid transparent;
 }
@@ -59,11 +80,11 @@ h1, h2, h3, h4{
    background-color: transparent;
 }
 
-/* Drop-down navigation box */
+/* drop-down navigation box */
 .dropdown-menu {
    background-color: #e6e6e6;
 }
-/* Drop-down navigation buttons */
+/* drop-down navigation buttons */
 .dropdown-menu > li > a:hover {
    color: inherit;
    background-color: inherit;
@@ -76,109 +97,32 @@ h1, h2, h3, h4{
 
 
 
-/*.aq-topbar {
-   height: 6px;
-   background: transparent linear-gradient(to right, #157BA3 0%, #96D602 100%) repeat scroll 0% 0%;
-   margin-left: -15px;
-   margin-right: -15px;
-}*/
+/* FRONT PAGE */
 
-.aq-brand {
-   float: none;
-   height: auto;
-   padding-top: 26px;
-   padding-bottom: 24px;
-}
-
-
-
-/* Main Header Modification */
-/* Not using MAIN HEADER section ATM */
-/* main header text */
-.main-header .logo {
-  font-family: "Rokkitt";
-  font-weight: bold;
-  font-size: 24px;
-}
-
-/* main header */
-.skin-blue .main-header .logo {
-  background-color: #123752;
-}
-
-/* main header when hovered*/
-.skin-blue .main-header .logo:hover {
-  background-color: #123752;
-}
-
-/* main nav bar (rest of the header) */
-.skin-blue .main-header .navbar {
-  background-color: #123752;
-}
-
-
-
-/* Side Bar Modification */
-/* Not using SIDE BAR section ATM */
-/* main sidebar */
-.skin-blue .main-sidebar {
-  background-color: #708FA3;
-  font-size: 15px;
-  font-family: 'Lato', sans-serif;
-}
-
-/* active selected tab in the sidebarmenu */
-.skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-  background-color: #123752;
-}
-
-/* other links in the sidebarmenu */
-.skin-blue .main-sidebar .sidebar .sidebar-menu a{
-  background-color: #708FA3;
-  color: white;
-}
-
-/* links in the sidebarmenu when hovered */
-.skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-  background-color: #123752;
-}
-
-/* toggle button when hovered  */                  
-.skin-blue .main-header .navbar .sidebar-toggle:hover{
-  background-color: #123752;
-}
-
-
-
-/* front banner style */
+/* photo banner and text */
 .front-banner {
    position: relative;
    max-width: 700px;  /* Max width of image banner */
    margin: 0 auto; /* Center image banner */
 }
-
 .front-banner .content-box {
   color: #f1f1f1; /* Grey text */
   background-color: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
   max-width: 250px;
-  width: 250px; /* Percent of front banner width */
-  height: 120px; /* Not working */
+  width: 250px; /* width of shaded box in front banner */
+  height: 140px; /* height of shaded box in front banner */
   position: absolute;
   top: 0; /* top-0, bottom-1 */
   right: 1; /* right-0, left-1 */
-  padding: 20px 20px;
+  padding: 15px 15px 15px 15px;
 }
-
 .front-banner .content-box .text {
-  font-family: 'Lato', sans-serif;
-  font-size: 28px;
+  font-family: 'Economica', sans-serif;
+  font-size: 40px;
   font-weight: bold;
 }
 
-
-
-
-/* Intro text */
+/* intro text */
 .intro-text {
    font-family: 'Lato', sans-serif;
    font-weight: 700;
@@ -186,8 +130,7 @@ h1, h2, h3, h4{
    color: black;
 }
 
-
-/* Intro divider style */
+/* intro divider style */
 .intro-divider {
    height: 6px;
    background: linear-gradient(to left, #DCF1C3 0%, #253494 100%);
@@ -195,22 +138,19 @@ h1, h2, h3, h4{
    margin-bottom: 20px;
 }
 
-
-
-/* Home page box settings */ 
+/* more info boxes */ 
 .box-con {
    height: 130px;
    margin-top: 10px;
    margin-bottom: 10px;
 }
-
 .box {
    height: 100%;
    padding: 12px;
    padding-top: 15px;
 }
 
-/* First homepage box */ 
+/* first more info box */ 
 .box-more {
    float: left;
    width: 33%;
@@ -223,8 +163,7 @@ h1, h2, h3, h4{
    background-color: #3F3F3F;
 }
 
-
-/* Second homepage box*/ 
+/* second more info box*/ 
 .box-rear {
    float: right;
    width: 64%;
@@ -240,8 +179,8 @@ h1, h2, h3, h4{
 
 
 
+/* TAB TITLE */
 
-/* commitment text style */
 .title_section {
 	padding: 1.2%;
 	background-color: #acd1d4;
@@ -250,6 +189,69 @@ h1, h2, h3, h4{
 	border: solid #acd1d4;
   border-width: 1px 1px;
 }
+
+
+
+
+
+/* ARCHIVED */
+
+/* Main Header Modification */
+/* Not using MAIN HEADER section ATM */
+/* main header text */
+/*.main-header .logo {
+/* font-family: "Rokkitt";
+  font-weight: bold;
+  font-size: 24px;
+}
+
+/* main header */
+/*.skin-blue .main-header .logo {
+/*  background-color: #123752;
+}
+
+/* main header when hovered*/
+/*.skin-blue .main-header .logo:hover {
+/*  background-color: #123752;
+}
+
+/* main nav bar (rest of the header) */
+/*.skin-blue .main-header .navbar {
+/*  background-color: #123752;
+}
+
+
+
+/* Side Bar Modification */
+/* Not using SIDE BAR section ATM */
+/* main sidebar */
+/*.skin-blue .main-sidebar {
+/*  background-color: #708FA3;
+  font-size: 15px;
+  font-family: 'Lato', sans-serif;
+}
+
+/* active selected tab in the sidebarmenu */
+/*.skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
+  background-color: #123752;
+}
+
+/* other links in the sidebarmenu */
+/*.skin-blue .main-sidebar .sidebar .sidebar-menu a{
+/*  background-color: #708FA3;
+  color: white;
+}
+
+/* links in the sidebarmenu when hovered */
+/*.skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
+/*  background-color: #123752;
+}
+
+/* toggle button when hovered  */                  
+/*.skin-blue .main-header .navbar .sidebar-toggle:hover{
+/*  background-color: #123752;
+}
+
 
 
 

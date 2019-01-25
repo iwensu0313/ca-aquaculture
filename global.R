@@ -40,10 +40,8 @@ source("modules/summary_stats_card.R")
 source("modules/map_minichart_card.R")
 
 ## source functions
-source("functions/tab_title.R")
-source("functions/addLegend_desc.R")
-source("functions/dashboardPage.R")
-source("functions/aq_header.R")
+source("functions/helper_functions.R")
+source("functions/ui_functions.R")
 
 ## source front page css/html customization
 source("front_page.R")
@@ -55,14 +53,13 @@ options(scipen = 999,
 
 
 
+## CA AQUACULTURE DATA SOURCES ##
+source("dataprep/ca-prod.R")
+source("dataprep/ca-imports.R")
 
 ## US AQUACULTURE DATA SOURCES ##
 source("dataprep/us-fish.R")
 source("dataprep/us-shell.R") # combines us-fish and us-shell
-
-## CA AQUACULTURE DATA SOURCES ##
-source("dataprep/ca-aqua.R")
-source("dataprep/ca-imports.R")
 
 ## SHRIMP IMPORT REFUSALS ##
 source("dataprep/us-import-refusals.R")

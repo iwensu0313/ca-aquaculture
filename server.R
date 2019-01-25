@@ -10,6 +10,8 @@ function(input, output, session) {
                          "of CA aquaculture sales in 2013 came from food fish and shellfish, totalling $37 M and $17 M respectively.",
                          "Sales of all California aquaculture products in 2013, with a total of 124 operating farms."))
   
+  
+  
   ## California Mollusk Plot ##
   callModule(card_plot, "ca_shell_plot",
              df = ca_shell_plot,
@@ -25,6 +27,8 @@ function(input, output, session) {
              xaxis_label = "Type of Shellfish",
              yaxis_label = "Number of Shellfish Farms",
              yaxis_range = c(0,20))
+  
+  
   
   ## California Food Fish Plot ##
   callModule(card_plot, "ca_fish_plot",
@@ -42,6 +46,8 @@ function(input, output, session) {
              yaxis_label = "Number of Fish Farms",
              yaxis_range = c(0,52)) # Set y-axis range
   
+  
+  
   ## California Seafood Import Plot ##
   callModule(card_plot, "ca_import_plot",
              df = ca_import_plot,
@@ -52,11 +58,10 @@ function(input, output, session) {
              colors = ygb_cols,
              plot_type = "scatter",
              mode = "lines+markers",
-             tooltip_text = ~paste("Imported from", StrCap(tolower(Country), method="word"),
+             tooltip_text = ~paste("Imported from", Country,
                                    "<br>Sales:", prettyNum(Dollars, big.mark = ","), "USD", sep=" "),
              xaxis_label = "Year",
              yaxis_label = "Sales in US Dollars")
-  
   
   
   
@@ -65,7 +70,7 @@ function(input, output, session) {
              number_boxes = 3,
              statistic = list("51%", "$203 M", "35%"),
              text = list("of sales in USD are from catfish, followed by trout at 15%, and bass at 7%.",
-                         "in finfish aquaculture products was sold in Mississippi, the highest food fish producing state.",
+                         "in finfish aquaculture products were sold in Mississippi, the highest food fish producing state.",
                          "of food fish farms were located in Mississippi, Alabama, and North Carolina."))
   
   ## Finfish Aquaculture US Map ##
@@ -82,14 +87,15 @@ function(input, output, session) {
   
 
   
-  
   ## US Shellfish Aquaculture Baseline Metrics ##
   callModule(summary_stats, "shell_metrics",
              number_boxes = 3,
              statistic = list("55%", "45%", "52%"),
              text = list("of US shellfish sales are oysters, 38% are clams and 4% are mussels.",
-                         "of shellfish aquaculture sales was produced in Washington during 2013.",
+                         "of shellfish aquaculture sales were produced in Washington during 2013.",
                          "of shellfish farms are in Florida, Massachusetts, and Washington."))
+  
+  
   
   ## Shellfish Aquaculture US Map ##
   callModule(card_map, "shell_us_map",
@@ -102,7 +108,6 @@ function(input, output, session) {
              color_palette_type = "discrete",
              legend_title = "Legend",
              popup_label = "state")
-  
   
   
   
@@ -120,7 +125,6 @@ function(input, output, session) {
              lon = 12,
              lat = 30,
              zoom = 2)
-  
   
   
   callModule(card_mapmini, "shrimp_refuse_pie",
