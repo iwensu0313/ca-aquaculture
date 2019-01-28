@@ -167,50 +167,65 @@ shrimp_refuse_pie <- shrimp_spatial %>%
 ref_summ <- shrimp_gather %>%
   group_by(YEAR, COUNTRY_NAME, REFUSAL_CHARGES) %>%
   tally() %>%
-  ungroup() %>% 
+  ungroup() %>%
   rename(REFUSAL_COUNT = n)
 
 unique(ref_summ$REFUSAL_CHARGES) # 45 reasons
-test <- ref_summ %>% filter(COUNTRY_NAME == "India")
+
+test <- ref_summ %>% 
+  filter(COUNTRY_NAME == "India") %>% 
+  mutate(DESCRIPTION = case_when(
+    str_detect(REFUSAL_CHARGES, "SALMONELLA") ~ "SALMONELLA",
+    str_detect(REFUSAL_CHARGES, "NITROFURAN") ~ "NITROFURAN",
+    str_detect(REFUSAL_CHARGES, "FILTHY") ~ "FILTHY",
+    str_detect(REFUSAL_CHARGES, "VETDRUGES") ~ "VET. DRUGS")) 
+  
+test <- test %>% 
+  mutate(DESCRIPTION = if_else(is.na(DESCRIPTION), "OTHER", DESCRIPTION))
 
 ## Test Plot
-color_group = ~REFUSAL_CHARGES
+color_group = ~DESCRIPTION
 colors = ygb_cols
-plot_type = "scatter"
-mode = "lines+markers"
+plot_type = "bar"
+#mode = "lines+markers"
 line = list(width=3)
 marker = list(size=6)
-tooltip_text = paste("Charge: ", test$REFUSAL_CHARGES,
+tooltip_text = paste("Charge: ", test$DESCRIPTION,
                       "<br>Refused:", test$REFUSAL_COUNT, "Imports", sep=" ")
 xaxis_label = "Year"
 yaxis_label = "Number of Charges"
 
 
-p <- plot_ly(test, 
+p <- plot_ly(test,
              x = ~YEAR,
              y = ~REFUSAL_COUNT,
-             color = color_group, 
+             color = color_group,
              colors = colors,
-             type = plot_type, 
-             line = line, 
-             mode = mode, 
+             type = plot_type,
+             line = line,
+            # mode = mode,
              marker = marker,
-             text = tooltip_text, 
+             text = tooltip_text,
              hoverinfo = "text") %>%
-  layout(font = list(family = "Lato", size = 14),
-         xaxis = list(title = xaxis_label, 
-                      fixedrange = TRUE, 
-                      linecolor = "#A9A9A9",
-                      categoryorder = xaxis_categoryorder,
-                      categoryarray = xaxis_categoryarray), 
-         yaxis = list(title = yaxis_label, 
-                      fixedrange = TRUE, 
-                      linecolor = "#A9A9A9",
-                      ticksuffix = tick_suffix,
-                      tickprefix = tick_prefix, 
-                      zeroline = FALSE, 
-                      range = yaxis_range),
-         annotations = annotations,
-         margin = list(b = xaxis_margin)) %>%
-  config(displayModeBar = F)
+  layout(yaxis = list(title = "Refusal Charge Count"), 
+         barmode = "stack",
+         xaxis = list(title = "Year",
+                      dtick = 1,
+                      tickangle = 45))
+  # layout(font = list(family = "Lato", size = 14),
+  #        xaxis = list(title = xaxis_label,
+  #                     fixedrange = TRUE,
+  #                     linecolor = "#A9A9A9",
+  #                     categoryorder = xaxis_categoryorder,
+  #                     categoryarray = xaxis_categoryarray),
+  #        yaxis = list(title = yaxis_label,
+  #                     fixedrange = TRUE,
+  #                     linecolor = "#A9A9A9",
+  #                     ticksuffix = tick_suffix,
+  #                     tickprefix = tick_prefix,
+  #                     zeroline = FALSE,
+  #                     range = yaxis_range),
+  #        annotations = annotations,
+  #        margin = list(b = xaxis_margin)) %>%
+  # config(displayModeBar = F)
 p
