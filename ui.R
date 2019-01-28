@@ -205,52 +205,52 @@ with 2013 sales of $329 million, up 62 percent from 2005.\" - USDA Census of Aqu
                                       ) # end of map ui
 
                                   ) # end div
-                         ) # end US prod tab panel
+                         ), # end US prod tab panel
 #,
 
 
-                         # ## FDA Import Refusals ##
-                         # tabPanel("FDA Import Refusals",
-                         # 
-                         #          div(class = "master",
-                         # 
-                         #              tab_title(title = "FDA Shrimp Import Refusals",
-                         #                           subtitle = "About the Data:",
-                         #                           description = "Below you will find data on US shrimp imports that were refused from the Food and Drug Administration database. Data includes the number of refusals per country from 2002 to 2018 as well as percentage of refusals due to presence of salmonella, filth, nitrofurans (a type of drug used in antibiotics), and veterinary drugs."),
-                         # 
-                         # 
-                         #              ## Shrimp Refusals Map
-                         #              map_ui(id = "shrimp_refuse_map",
-                         #                     title_text = paste0("Import Refusals"),
-                         #                     sub_title_text = "Start exploring! Click on specific countries to see the number of shrimp imports that were refused by the FDA for that year. Use the slider to view import refusal data from 2002 to 2018.",
-                         #                     select_type = "slider",
-                         #                     select_location = "below",
-                         #                     slider_min = 2002,
-                         #                     slider_max = 2018,
-                         #                     slider_start = 2018,
-                         #                     slider_sep = "",
-                         # 
-                         # 
-                         #                     source_text = list(
-                         #                       p("Sources:"),
-                         #                       p(tags$sup("1."), tags$a(href="https://www.accessdata.fda.gov/scripts/ImportRefusals/index.cfm", "Food and Drug Administration"), ", Import Refusal Report (2002-2018)"))
-                         #              ), # end of map ui
-                         # 
-                         #              ## Shrimp Refusals Map Minichart
-                         #              mapmini_ui(id = "shrimp_refuse_pie",
-                         #                         title_text = "FDA Shrimp Import Refusals",
-                         #                         sub_title_text = "Start exploring! This map shows the percentage of shrimp import refusals per country that were due to presence of salmonella, nitrofurans (antibiotics), filth, or use of veterinary drugs.",
-                         #                         select_type = "slider",
-                         #                         select_location = "below",
-                         #                         slider_min = 2002,
-                         #                         slider_max = 2018,
-                         #                         slider_start = 2018,
-                         #                         slider_sep = ""
-                         #              ) # end map mini ui import refusal
-                         # 
-                         # 
-                         #          ) # end div
-                         # ) # end shrimp import refusal tab panel
+                         ## FDA Import Refusals ##
+                         tabPanel("FDA Import Refusals",
+
+                                  div(class = "master",
+
+                                      tab_title(title = "FDA Shrimp Import Refusals",
+                                                   subtitle = "About the Data:",
+                                                   description = "Below you will find data on US shrimp imports that were refused from the Food and Drug Administration database. Data includes the number of refusals per country from 2002 to 2018 as well as percentage of refusals due to presence of salmonella, filth, nitrofurans (a type of drug used in antibiotics), and veterinary drugs."),
+
+
+                                      ## Shrimp Refusals Map
+                                      map_ui(id = "shrimp_refuse_map",
+                                             title_text = paste0("Import Refusals"),
+                                             sub_title_text = "Start exploring! Click on specific countries to see the number of shrimp imports that were refused by the FDA for that year. Use the slider to view import refusal data from 2002 to 2018.",
+                                             select_type = "slider",
+                                             select_location = "below",
+                                             slider_min = 2002,
+                                             slider_max = 2018,
+                                             slider_start = 2018,
+                                             slider_sep = "",
+
+
+                                             source_text = list(
+                                               p("Sources:"),
+                                               p(tags$sup("1."), tags$a(href="https://www.accessdata.fda.gov/scripts/ImportRefusals/index.cfm", "Food and Drug Administration"), ", Import Refusal Report (2002-2018)"))
+                                      ), # end of map ui
+
+                                      ## Shrimp Refusals Map Minichart
+                                      mapmini_ui(id = "shrimp_refuse_pie",
+                                                 title_text = "FDA Shrimp Import Refusals",
+                                                 sub_title_text = "Start exploring! This map shows the percentage of shrimp import refusals per country that were due to presence of salmonella, nitrofurans (antibiotics), filth, or use of veterinary drugs.",
+                                                 select_type = "slider",
+                                                 select_location = "below",
+                                                 slider_min = 2002,
+                                                 slider_max = 2018,
+                                                 slider_start = 2018,
+                                                 slider_sep = ""
+                                      ) # end map mini ui import refusal
+
+
+                                  ) # end div
+                         ) # end shrimp import refusal tab panel
 
 
               ), # end More tab

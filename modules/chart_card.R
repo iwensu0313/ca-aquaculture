@@ -79,19 +79,7 @@ plot_ui <- function(id,
                     source_text = NULL) {
   
   ns <- NS(id)
-  
-  # # Check select_type inputs
-  # select_type_args <- c(NULL, "radio", "drop_down", "checkboxes")
-  # assert_that(select_type %in% select_type_args,
-  #             msg = paste("select_type value of", select_type, 
-  #                         "must be either 'radio', 'drop_down', 'checkboxes', or NULL", sep = " "))
-  # 
-  # # Check select_location inputs
-  # select_location_args <- c(NULL, "above", "below")
-  # assert_that(select_location %in% select_location_args,
-  #             msg = paste("select_location value of", select_location, 
-  #                         "must be either 'above', 'below', or NULL", sep = " "))
-  
+
   # Output w/o selection
   if (missing(select_type) == TRUE) {
     items <- plotlyOutput(ns("plot"))
@@ -220,7 +208,7 @@ card_plot <- function(input,
                       colors = NULL, 
                       plot_type,
                       tooltip_text = NULL,
-                      xaxis_label = "Year",
+                      xaxis_label = "",
                       yaxis_label = "",
                       yaxis_range = c("None", "None"),
                       tick_suffix = "",
@@ -259,9 +247,11 @@ card_plot <- function(input,
   
   if (plot_type == "bar") {
     marker = list(line=list(color="#202C39", width=0))
+    
   } else if (mode == "lines+markers") {
     line = list(width=3)
     marker = list(size=6)
+    
   } else if (mode == "markers") {
     line = list(width=0)
     marker = list(size=15, line=list(color="#202C39", width=1))

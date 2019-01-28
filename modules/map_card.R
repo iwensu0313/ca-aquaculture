@@ -173,7 +173,7 @@ card_map <- function(input,
                      field,
                      filter_field = NULL,
                      color_palette = ygb,
-                     color_palette_type = c('discrete', 'continuous'),
+                     color_palette_type = c('numeric', 'quantile'),
                      legend_title = NA,
                      labels = NA,
                      popup_label = NA,
@@ -204,14 +204,14 @@ card_map <- function(input,
       
       
       # Creates palette using values from the entire dataset
-      if (color_palette_type == 'discrete'){
+      if (color_palette_type == 'quantile'){
         
       # Legend broken up into quantiles
       pal <- colorQuantile(palette = color_palette,
                            domain = selected_data()[[popup_value]], 
                            na.color = "#DCDCDC", alpha = 0.4)
       
-      } else if (color_palette_type == 'continuous'){
+      } else if (color_palette_type == 'numeric'){
         
       # Legend is continuous color palette
       pal <- colorNumeric(palette = color_palette,

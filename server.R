@@ -117,7 +117,7 @@ function(input, output, session) {
              field = "input",
              filter_field = YEAR, # slider data filter
              color_palette = OrRd,
-             color_palette_type = "continuous",
+             color_palette_type = "quantile",
              popup_label = "COUNTRY_NAME",
              popup_value = "REFUSALS",
              popup_units = "Units",
@@ -133,6 +133,12 @@ function(input, output, session) {
              mini_chart = "pie", # what type of minichart
              categories = c("SALMONELLA", "VETDRUGES", "NITROFURAN", "FILTHY"), # columns in data for chart categories
              filter_field = YEAR, # user will select year
+             lon_field = "LON", # col name of lon
+             lat_field = "LAT", # col name of lat
+             chart_width = "REFUSAL_NUM", # width determined by
+             label_title = "COUNTRY_NAME",
+             label_value = "REFUSAL_NUM",
+             label_unit = "Refusals",
              cols = ygb[c(50,100,150,197)], # chose four dispersed values in my ygb color palette
              lon = 12, # default is US center
              lat = 30, # default is US center

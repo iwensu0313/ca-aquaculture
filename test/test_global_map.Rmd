@@ -26,8 +26,11 @@ ygb <- colorRampPalette(brewer.pal(5,'YlGnBu'))(200); cols <- ygb[19:200]
 
 # Test Shrimp Refusal Category Mini Pie Charts Map
 
-## Read in Global Countries Shapefile 
+## Read in FDA data, Global Countries Shapefile 
 ```{r}
+
+# create shrimp_summ from us-import-refusals.R
+shrimp_summ
 
 cntry_coord <- read.csv("data/ref/country_lat_lon.csv")
 
@@ -48,12 +51,15 @@ shrimp_spatial <- shrimp_summ %>%
 Select for just 2018 data and 4 refusal reasons to test
 ```{r}
 
+# data_shp <- shrimp_spatial 
 data_shp <- shrimp_spatial %>%
-  filter(YEAR == 2018)
+ filter(YEAR == 2018)
 
-data_shp <- data_shp[, colSums(data_shp != 0) > 0] %>% 
-  select(YEAR, COUNTRY_NAME, LAT, LON, SALMONELLA, VETDRUGES, NITROFURAN, FILTHY) %>% 
-  mutate(TOTAL = SALMONELLA + VETDRUGES + NITROFURAN + FILTHY)
+# remove reasons refusals that weren't recorded for any country
+#data_shp <- data_shp[, colSums(data_shp != 0) > 0] %>% 
+  
+data_shp <- data_shp %>% 
+  select(YEAR, COUNTRY_NAME, LAT, LON, SALMONELLA, VETDRUGES, NITROFURAN, FILTHY, REFUSAL_NUM) 
 
 ```
 
@@ -64,17 +70,30 @@ mini pie charts
 ```{r}
 
 col = ygb[c(50,100,150,197)]
+test <- shrimp_refuse_pie %>% 
+  filter(YEAR == 2018)
 
-leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
+# pie
+leaflet(test,options = leafletOptions(zoomControl = FALSE)) %>%
+  # addPopups(~LON, ~LAT, ~paste(as.character(REFUSAL_NUM), " Refusals")) %>% 
+  # addMarkers(~LON, ~LAT,
+  #            label = ~paste(as.character(REFUSAL_NUM), " Refusals")) %>% 
+    addLabelOnlyMarkers(~LON, ~LAT,
+               label = ~paste(COUNTRY_NAME, ": ",
+                              as.character(REFUSAL_NUM), 
+                              " Refusals"),
+               labelOptions = labelOptions(textsize = "13px")) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(-9.718568, 34.331989, zoom = 2) %>% 
   addMinicharts(
-    data_shp$LON, data_shp$LAT,
+    test$LON, test$LAT,
     type = "pie",
-    chartdata = data_shp[, c("SALMONELLA", "VETDRUGES", "NITROFURAN", "FILTHY")], 
+    chartdata = test[, c("SALMONELLA", "VETDRUGES", "NITROFURAN", "FILTHY")], 
     colorPalette = col, 
-    width = 60 * sqrt(data_shp$TOTAL) / sqrt(max(data_shp$TOTAL)),
+    width = 60 * sqrt(test$REFUSAL_NUM) / sqrt(max(test$REFUSAL_NUM)),
+    #time = test$YEAR, # for time lapse
     transitionTime = 0)
+
  
 ```
 

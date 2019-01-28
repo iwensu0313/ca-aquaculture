@@ -182,6 +182,12 @@ card_mapmini <- function(input,
                      mini_chart = c("pie", "bar", "polar-radius", "polar-area"),
                      categories = NULL,
                      filter_field = NULL,
+                     lon_field,
+                     lat_field,
+                     chart_width = NULL,
+                     label_title = NULL,
+                     label_value = NULL,
+                     label_unit = NULL,
                      cols = ygb,
                      lon = -95.7128906, # US longitudinal center
                      lat = 37.0902, # US latitudinal center
@@ -196,6 +202,7 @@ card_mapmini <- function(input,
       df <- data %>% 
         filter(!!filter_field == input$select)
       return(df)
+      
     })
     
     
@@ -205,12 +212,26 @@ card_mapmini <- function(input,
       leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
         addProviderTiles(providers$CartoDB.Positron) %>%
         setView(lon, lat, zoom) %>% 
+        addMarkers(selected_data()[[lon_field]],
+                   selected_data()[[lat_field]],
+                   label = paste(selected_data()[[label_title]],
+                                 ": ",
+                                 selected_data()[[label_value]],
+                                 label_unit)) %>%
+        # addLabelOnlyMarkers(
+        #   selected_data()[[lon_field]],
+        #   selected_data()[[lat_field]],
+        #   label = paste(selected_data()[[label_title]], ": ",
+        #                  as.character(selected_data()[[label_value]]),
+        #                 label_unit),
+        #   labelOptions = labelOptions(textsize = "13px")) %>%
         addMinicharts(
-          selected_data()$LON, selected_data()$LAT,
+          selected_data()[[lon_field]], 
+          selected_data()[[lat_field]],
           type = mini_chart,
           chartdata = selected_data()[, categories], 
           colorPalette = cols, 
-          width = 60 * sqrt(selected_data()$TOTAL) / sqrt(max(selected_data()$TOTAL)),
+          width = 60 * sqrt(selected_data()[[chart_width]]) / sqrt(max(selected_data()[[chart_width]])),
           transitionTime = 0)
         
     })
