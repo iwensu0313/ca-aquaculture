@@ -4,7 +4,7 @@ frontp = function()
       
       # Create homepage title banner and image
       div(class = "front-banner",
-          tags$img(src = "img/home-banner-crop.jpg", style="width:100%"),
+          tags$img(src = "img/home-banner-crop.jpg", title = "Photo by Charlotte Coneybeer on Unsplash", style="width:100%"),
           div(class = "content-box", 
               tags$p(class = "text", "Farming our Waters"))
         ),
