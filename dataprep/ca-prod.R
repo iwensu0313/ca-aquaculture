@@ -41,11 +41,9 @@ ca_shell_plot <- ca %>%
   filter(Unit == "OPERATIONS",
          !Species %in% c("MOLLUSKS", "CLAMS", "OYSTERS"),
          Product_Type == "ALL PRODUCTS") %>% 
-  mutate(Species = as.factor(as.character(Species)))
-
-# Convert ALL CAPS to just first letter caps
-ca_shell_plot$Species <- map_chr(ca_shell_plot$Species, capStr)
-ca_shell_plot$State <- map_chr(ca_shell_plot$State, capStr)
+  mutate(Species = map_chr(Species, capStr), # to first letter caps
+       State = map_chr(State, capStr), # convert ot first letter caps
+       Species = as.factor(Species))
 
 write.csv(ca_shell_plot, "data/output/ca_shell_plot.csv")
 
@@ -85,8 +83,8 @@ ca_fish_plot <- ca_fish %>%
          Product_Type == "ALL PRODUCTS") %>% 
   mutate(Species = as.character(Species)) %>% # remove prev factors 
   mutate(Species = ifelse(str_detect(Species, "^HYBRID.*"), "STRIPED BASS", Species)) %>%   # simplify striped bass name for graphing
-  mutate(Species = as.factor(Species),  # convert existing sp to factors
-         Species = map_chr(Species, capStr), # convert to first letter caps
-         State = map_chr(State, capStr)) # convert ot first letter caps
+  mutate(Species = map_chr(Species, capStr), # convert to first letter caps
+         State = map_chr(State, capStr), # convert ot first letter caps
+         Species = as.factor(Species))  # convert existing sp to factors) 
   
 write.csv(ca_fish_plot, "data/output/ca_fish_plot.csv")  
