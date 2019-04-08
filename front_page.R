@@ -21,7 +21,7 @@ frontp = function()
       tags$p("Contact",
              tags$a(href="https://iwensu0313.github.io", "Iwen Su"), 
              "with any questions or feedback. For US-specific data, check out the",
-             tags$a(href="https://iwensu.shinyapps.io/us-aqculture-data", "US Aquaculture Dashboard.")),
+             tags$a(href="https://iwensu.shinyapps.io/us-aquaculture/", "US Aquaculture Dashboard.")),
       
       # Two hyperlink boxes: more info
       div(class = "box-con",
